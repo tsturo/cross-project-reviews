@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cross-Project AI Reviews — Visma Tech Lithuania</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --magenta: #E10078;
+    --ink: #131211;
+    --paper: #F6F2EA;
+    --paper-warm: #FBFAF7;
+    --hairline: #E4DED2;
+    --muted: #6B6258;
+    --in-loop: #1F6FEB;
+    --on-loop: #C2410C;
+    --target: #15803D;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    background: #1A1A1A; color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden;
+  }
+  .stage {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .slide {
+    width: 1280px; height: 720px;
+    background: var(--paper);
+    display: none;
+    position: relative;
+    padding: 64px 80px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    border-radius: 4px;
+    transform-origin: center;
+    flex-direction: column;
+  }
+  .slide.active { display: flex; }
+
+  /* Slide header chrome */
+  .slide::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--magenta);
+  }
+  .slide-meta {
+    position: absolute; top: 24px; left: 80px; right: 80px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .slide-meta .brand { color: var(--magenta); font-weight: 600; }
+  .slide-footer {
+    position: absolute; bottom: 24px; left: 80px; right: 80px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.08em; color: var(--muted);
+  }
+
+  /* Typography */
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--magenta); font-weight: 600;
+    margin-bottom: 16px;
+  }
+  h1.display {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 88px; line-height: 1.02; letter-spacing: -0.02em;
+    margin: 0 0 24px; color: var(--ink);
+  }
+  h1.display em { font-style: italic; }
+  h1.display .dot { color: var(--magenta); }
+  h2.title {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 56px; line-height: 1.05; letter-spacing: -0.015em;
+    margin: 8px 0 16px; color: var(--ink);
+  }
+  h2.title em { font-style: italic; }
+  h2.title .dot { color: var(--magenta); }
+  .intent {
+    font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: 22px; color: var(--muted); line-height: 1.4;
+    max-width: 880px; margin: 0 0 32px;
+  }
+  .body p { font-size: 19px; line-height: 1.55; margin: 0 0 16px; color: #2a2620; }
+  .body p strong { font-weight: 600; }
+  .body ul { padding-left: 22px; margin: 8px 0 16px; }
+  .body li { font-size: 19px; line-height: 1.6; margin-bottom: 8px; color: #2a2620; }
+
+  /* Slide variants */
+  .slide.dark {
+    background: var(--ink); color: var(--paper);
+  }
+  .slide.dark .slide-meta, .slide.dark .slide-footer { color: rgba(246,242,234,0.5); }
+  .slide.dark .slide-meta .brand { color: var(--magenta); }
+  .slide.dark h1.display, .slide.dark h2.title { color: var(--paper); }
+  .slide.dark .body p, .slide.dark .body li { color: rgba(246,242,234,0.85); }
+  .slide.dark .intent { color: rgba(246,242,234,0.6); }
+
+  /* Cover */
+  .cover-stack { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+  .cover-stack .super {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--magenta); font-weight: 600; margin-bottom: 24px;
+  }
+  .cover-stack .title-xl {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 124px; line-height: 0.95; letter-spacing: -0.025em;
+    color: var(--paper); margin: 0 0 32px;
+  }
+  .cover-stack .title-xl em { font-style: italic; color: rgba(255,255,255,0.85); }
+  .cover-stack .title-xl .dot { color: var(--magenta); }
+  .cover-stack .sub {
+    font-size: 22px; color: rgba(246,242,234,0.7); max-width: 640px; line-height: 1.4;
+  }
+  .cover-byline {
+    position: absolute; bottom: 64px; left: 80px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    letter-spacing: 0.1em; color: rgba(246,242,234,0.6);
+  }
+  .cover-byline .name { color: var(--paper); font-weight: 500; }
+
+  /* Quote slide */
+  .quote-block {
+    display: flex; flex-direction: column; justify-content: center; height: 100%;
+  }
+  .quote-block blockquote {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: 56px; line-height: 1.12; letter-spacing: -0.012em;
+    color: var(--paper); margin: 0 0 40px;
+    max-width: 1080px;
+  }
+  .quote-block blockquote em { font-style: italic; }
+  .quote-block blockquote .accent { color: var(--magenta); font-style: italic; }
+  .attrib {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    letter-spacing: 0.1em; color: rgba(246,242,234,0.7);
+    border-left: 2px solid var(--magenta); padding-left: 16px;
+  }
+  .attrib .name { color: var(--paper); font-weight: 600; }
+
+  /* Two column */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 56px;
+    flex: 1; align-items: stretch; margin-top: 8px;
+  }
+  .col-card {
+    background: var(--paper-warm);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 32px;
+    display: flex; flex-direction: column;
+  }
+  .col-card .num {
+    font-family: 'Fraunces', serif; font-size: 88px; line-height: 1;
+    color: var(--magenta); margin-bottom: 12px; font-weight: 400;
+  }
+  .col-card h3 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 32px; line-height: 1.1; margin: 0 0 16px;
+  }
+  .col-card p { font-size: 17px; line-height: 1.55; color: var(--muted); margin: 0 0 8px; }
+
+  /* Maturity grid */
+  .maturity {
+    flex: 1; display: grid;
+    grid-template-columns: 180px repeat(5, 1fr);
+    grid-template-rows: auto 1fr 1fr;
+    gap: 8px; margin-top: 16px;
+  }
+  .maturity .head {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; justify-content: center;
+    padding: 8px;
+  }
+  .maturity .rowlbl {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 12px;
+  }
+  .maturity .rowlbl .pos {
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 22px;
+    line-height: 1.1;
+  }
+  .maturity .rowlbl .pos.in { color: var(--in-loop); }
+  .maturity .rowlbl .pos.on { color: var(--on-loop); }
+  .maturity .rowlbl .desc {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); margin-top: 4px; letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .maturity .cell {
+    background: var(--paper-warm); border: 1px solid var(--hairline);
+    border-radius: 6px; padding: 14px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; min-height: 110px; position: relative;
+  }
+  .maturity .cell.empty {
+    background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(0,0,0,0.025) 6px 7px);
+    border: 1px dashed var(--hairline);
+  }
+  .maturity .cell .emoji { font-size: 40px; line-height: 1; margin-bottom: 6px; }
+  .maturity .cell .lvl {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .maturity .cell .label {
+    font-size: 12px; color: var(--ink); font-weight: 500; line-height: 1.2;
+  }
+  .maturity .cell.target {
+    border-color: var(--magenta);
+    box-shadow: 0 0 0 2px rgba(225,0,120,0.18) inset;
+  }
+  .maturity .target-arrow {
+    position: absolute; left: 50%; top: -22px;
+    transform: translateX(-50%);
+    font-family: 'Fraunces', serif; font-size: 13px; color: var(--magenta);
+    font-style: italic; white-space: nowrap;
+  }
+
+  /* Stats slide */
+  .stat-grid {
+    flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+    margin-top: 16px;
+  }
+  .stat {
+    background: var(--paper-warm); border: 1px solid var(--hairline);
+    border-radius: 8px; padding: 28px 24px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .stat .big {
+    font-family: 'Fraunces', serif; font-size: 96px; line-height: 1;
+    font-weight: 400; color: var(--ink);
+  }
+  .stat .big .pct { font-size: 56px; color: var(--magenta); }
+  .stat .lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase;
+    margin-top: 16px;
+  }
+  .stat .sub {
+    font-size: 14px; color: #2a2620; margin-top: 4px; line-height: 1.3;
+  }
+
+  /* Lists is/isnt */
+  .versus { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; flex: 1; margin-top: 8px; }
+  .versus h3 {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 16px;
+  }
+  .versus .col.is h3 { color: var(--magenta); }
+  .versus ul { list-style: none; padding: 0; margin: 0; }
+  .versus li {
+    font-family: 'Fraunces', serif; font-size: 22px; line-height: 1.35;
+    padding: 14px 0; border-bottom: 1px solid var(--hairline);
+  }
+  .versus li:last-child { border-bottom: none; }
+
+  /* Flow */
+  .flow {
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    gap: 18px;
+  }
+  .flow-row {
+    display: flex; align-items: stretch; gap: 16px;
+  }
+  .flow-step {
+    flex: 1; background: var(--paper-warm); border: 1px solid var(--hairline);
+    border-radius: 8px; padding: 20px 22px; position: relative;
+  }
+  .flow-step .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--magenta); letter-spacing: 0.08em; font-weight: 600;
+  }
+  .flow-step h4 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 22px; margin: 6px 0 8px;
+  }
+  .flow-step p { font-size: 14px; line-height: 1.4; color: var(--muted); margin: 0; }
+  .flow-arrow {
+    align-self: center; font-family: 'Fraunces', serif; font-size: 28px;
+    color: var(--magenta); font-style: italic;
+  }
+
+  /* Principles */
+  .principles { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 36px; margin-top: 12px; align-content: start; }
+  .principle { padding: 14px 0; border-top: 1px solid var(--hairline); }
+  .principle .lead {
+    font-family: 'Fraunces', serif; font-size: 22px; line-height: 1.25;
+  }
+  .principle .desc { font-size: 14px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+
+  /* Mockup slides */
+  .mockup-frame {
+    flex: 1; display: flex; flex-direction: column;
+    margin-top: 4px; min-height: 0;
+  }
+  .mockup-frame .mockup-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .mockup-frame .mockup-meta h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 36px; margin: 0; line-height: 1;
+  }
+  .mockup-frame .mockup-meta h2 em { font-style: italic; }
+  .mockup-frame .mockup-meta .role {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--magenta); letter-spacing: 0.08em; text-transform: uppercase;
+    font-weight: 600;
+  }
+  .mockup-frame .intent { margin: 0 0 14px; font-size: 18px; }
+  .mockup-frame .frame-wrap {
+    flex: 1; min-height: 0;
+    background: white; border: 1px solid var(--hairline); border-radius: 6px;
+    overflow: hidden; position: relative;
+  }
+  .mockup-frame iframe {
+    width: 100%; height: 100%; border: 0; display: block;
+    background: white;
+  }
+  .mockup-callouts {
+    display: flex; gap: 12px; margin-top: 12px;
+  }
+  .mockup-callouts .pill {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 10px; border: 1px solid var(--hairline);
+    background: var(--paper-warm); border-radius: 999px; color: #2a2620;
+  }
+  .mockup-callouts .pill.accent { border-color: var(--magenta); color: var(--magenta); }
+
+  /* Side by side mockups */
+  .mockup-pair {
+    flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-height: 0;
+  }
+  .mockup-pair .card {
+    background: white; border: 1px solid var(--hairline); border-radius: 6px;
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .mockup-pair .card .cap {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); padding: 8px 12px;
+    border-bottom: 1px solid var(--hairline); background: var(--paper-warm);
+  }
+  .mockup-pair iframe {
+    flex: 1; width: 100%; border: 0; background: white;
+  }
+
+  /* Roadmap */
+  .roadmap { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px; margin-top: 8px; }
+  .phase {
+    display: grid; grid-template-columns: 140px 1fr auto;
+    gap: 24px; align-items: start;
+    padding: 18px 22px; background: var(--paper-warm);
+    border: 1px solid var(--hairline); border-radius: 8px;
+  }
+  .phase .pname {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--magenta); letter-spacing: 0.1em; font-weight: 600;
+  }
+  .phase .ptitle {
+    font-family: 'Fraunces', serif; font-size: 22px; line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .phase .pbody { font-size: 14px; line-height: 1.45; color: var(--muted); }
+  .phase .pdur {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase;
+    align-self: center;
+  }
+
+  /* Asks */
+  .asks { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 18px 32px; margin-top: 12px; align-content: start; }
+  .ask {
+    padding: 18px 20px; background: var(--paper-warm);
+    border: 1px solid var(--hairline); border-radius: 8px;
+    border-left: 3px solid var(--magenta);
+  }
+  .ask h4 {
+    font-family: 'Fraunces', serif; font-size: 22px; margin: 0 0 6px; font-weight: 500;
+  }
+  .ask p { font-size: 14px; line-height: 1.45; color: var(--muted); margin: 0; }
+
+  /* Nav */
+  .nav {
+    position: fixed; bottom: 16px; right: 16px;
+    display: flex; gap: 8px; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: rgba(255,255,255,0.7); letter-spacing: 0.08em;
+    background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  .nav button {
+    background: transparent; border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85); width: 28px; height: 28px;
+    border-radius: 50%; cursor: pointer; font-size: 14px;
+  }
+  .nav button:hover { background: rgba(255,255,255,0.1); }
+  .nav .pos { min-width: 60px; text-align: center; }
+  .progress {
+    position: fixed; bottom: 0; left: 0; height: 3px; background: var(--magenta);
+    transition: width 0.3s ease;
+  }
+  .help {
+    position: fixed; bottom: 16px; left: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: rgba(255,255,255,0.5); letter-spacing: 0.08em;
+  }
+  .help kbd {
+    background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px;
+    font-family: inherit; margin: 0 2px;
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 1. COVER -->
+  <section class="slide active dark" data-name="cover">
+    <div class="slide-meta">
+      <span class="brand">Visma Tech Lithuania · Competence Center</span>
+      <span>1 / 26</span>
+    </div>
+    <div class="cover-stack">
+      <div class="super">Proposal · May 2026</div>
+      <h1 class="title-xl">Cross-project<br/><em>AI reviews<span class="dot">.</span></em></h1>
+      <p class="sub">Two reviews a year. One step up the AI ladder.<br/>A peer-exchange app for the AI-powered Visma.</p>
+    </div>
+    <div class="cover-byline">
+      <span class="name">Tomek Szturo</span> &nbsp;·&nbsp; tomasz.szturo@visma.com &nbsp;·&nbsp; 2026-05-12
+    </div>
+  </section>
+
+  <!-- 2. VISION QUOTE -->
+  <section class="slide dark" data-name="vision">
+    <div class="slide-meta">
+      <span class="brand">The 2026 vision</span>
+      <span>2 / 26</span>
+    </div>
+    <div class="quote-block">
+      <blockquote>
+        “2026 must be the year Visma developers <span class="accent">stop writing code manually</span>, at least as the default way of working.”
+      </blockquote>
+      <div class="attrib">
+        <div class="name">T. Alexander Lystad</div>
+        <div>CTO, Visma · AI Adoption Strategy 2026</div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>AI Adoption Strategy 2026</span>
+      <span>visma.com</span>
+    </div>
+  </section>
+
+  <!-- 3. TWO GOALS -->
+  <section class="slide" data-name="goals">
+    <div class="slide-meta">
+      <span><span class="brand">Visma</span> · Strategy 2026</span>
+      <span>3 / 26</span>
+    </div>
+    <div class="eyebrow" style="margin-top:32px">Two strategic shifts</div>
+    <h2 class="title">From assistance to <em>agency<span class="dot">.</span></em></h2>
+    <div class="two-col">
+      <div class="col-card">
+        <div class="num">01</div>
+        <h3>AI-assisted &rarr; AI-powered</h3>
+        <p>Developers stop writing code manually. Default is agentic. Coaching, peer learning, and orchestration jams build the muscle.</p>
+      </div>
+      <div class="col-card">
+        <div class="num">02</div>
+        <h3>Output &rarr; Outcomes</h3>
+        <p>From shipping features to validating impact. BAs, QAs, DevOps stay close to the code. Discovery, prototyping, measured results.</p>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Source: AI Adoption Strategy 2026 deck</span>
+      <span>2026-05-12</span>
+    </div>
+  </section>
+
+  <!-- 4. WHY CROSS-PROJECT REVIEWS -->
+  <section class="slide" data-name="why">
+    <div class="slide-meta">
+      <span><span class="brand">The opportunity</span> · context</span>
+      <span>4 / 26</span>
+    </div>
+    <div class="eyebrow" style="margin-top:32px">The tradition</div>
+    <h2 class="title">Cross-project reviews <em>worked<span class="dot">.</span></em></h2>
+    <p class="intent">For years Visma engineers did 1–2 cross-project code reviews per year. Outside eyes catch what inside eyes miss. People learn faster from peers than from courses.</p>
+    <div class="body" style="max-width: 980px;">
+      <p><strong>What's different in 2026.</strong> Code is no longer the artifact that matters most — <em>how an engineer works with AI</em> is. A reviewer at a higher maturity stage carries the most concrete, transferable knowledge in the company. We should make that exposure routine.</p>
+      <p><strong>The hypothesis.</strong> Pair every engineer once or twice a year with someone strictly above them on the AI maturity rank. Make the session about workflow, prompting, verification, orchestration — not architecture nitpicks. Capture short feedback. Let the org see what's spreading.</p>
+    </div>
+    <div class="slide-footer"><span>Context</span><span>2026-05-12</span></div>
+  </section>
+
+  <!-- 5. MATURITY MODEL -->
+  <section class="slide" data-name="maturity">
+    <div class="slide-meta">
+      <span><span class="brand">Foundation</span> · AI Skill Maturity Levels</span>
+      <span>5 / 26</span>
+    </div>
+    <div class="eyebrow" style="margin-top:32px">The shared language</div>
+    <h2 class="title">A two-dimensional <em>maturity grid<span class="dot">.</span></em></h2>
+    <p class="intent" style="margin-bottom: 4px;">Set in the Q1 / Q4 AI Skill Check-in between coach and coachee. Vertical: who controls the loop. Horizontal: complexity of the setup.</p>
+    <div class="maturity">
+      <div class="head"></div>
+      <div class="head">Level 1</div>
+      <div class="head">Level 2</div>
+      <div class="head">Level 3</div>
+      <div class="head">Level 4</div>
+      <div class="head">Level 5</div>
+
+      <div class="rowlbl">
+        <div class="pos in">Human-in-the-loop</div>
+        <div class="desc">Gates each action</div>
+      </div>
+      <div class="cell"><div class="emoji">🚶</div><div class="lvl">L1 · in</div><div class="label">No / minimal AI</div></div>
+      <div class="cell"><div class="emoji">🛴</div><div class="lvl">L2 · in</div><div class="label">IDE agent, permissioned</div></div>
+      <div class="cell target"><div class="target-arrow">↑ Alex's Goal: cross here</div><div class="emoji">🚲</div><div class="lvl">L3 · in</div><div class="label">CLI agent, permissioned</div></div>
+      <div class="cell"><div class="emoji">🏍️</div><div class="lvl">L4 · in</div><div class="label">Multi CLI, permissioned</div></div>
+      <div class="cell empty"><div class="lvl">—</div></div>
+
+      <div class="rowlbl">
+        <div class="pos on">Human-on-the-loop</div>
+        <div class="desc">Supervises, lets agents run</div>
+      </div>
+      <div class="cell empty"><div class="lvl">—</div></div>
+      <div class="cell"><div class="emoji">🏍️</div><div class="lvl">L2 · on</div><div class="label">IDE agent, YOLO</div></div>
+      <div class="cell target"><div class="target-arrow">↓ to here</div><div class="emoji">🏎️</div><div class="lvl">L3 · on</div><div class="label">CLI agent, YOLO</div></div>
+      <div class="cell"><div class="emoji">✈️</div><div class="lvl">L4 · on</div><div class="label">Multi CLI, YOLO</div></div>
+      <div class="cell"><div class="emoji">🚀</div><div class="lvl">L5 · on</div><div class="label">Orchestrator / fleet</div></div>
+    </div>
+    <div class="slide-footer"><span>Source: AI Skill Maturity Levels · Visma Tech LT</span><span>5 / 26</span></div>
+  </section>
+
+  <!-- 6. ALEX'S GOAL -->
+  <section class="slide dark" data-name="alex-goal">
+    <div class="slide-meta">
+      <span class="brand">Alex's Goal</span>
+      <span>6 / 26</span>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center; height: 100%; max-width: 1050px;">
+      <div class="eyebrow" style="color: rgba(225,0,120,0.9);">The transition</div>
+      <h2 class="title" style="font-size: 76px;">From <em style="color:#7aa9ff;">gating the bicycle</em><br/>to <em style="color:#ffae73;">supervising the race car<span class="dot">.</span></em></h2>
+      <div class="body" style="margin-top: 24px;">
+        <p style="font-size: 22px; max-width: 880px; line-height: 1.45;">The single biggest skill shift this year is the move from <strong>Level&nbsp;3 in-the-loop</strong> (carefully approving every step) to <strong>Level&nbsp;3 on-the-loop</strong> (letting a single agent run end-to-end and supervising).</p>
+        <p style="font-size: 22px; max-width: 880px; line-height: 1.45;">It's where trust and competence meet. It's what the cross-project review is built to accelerate.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Alex's Goal · Visma framework</span><span>2026-05-12</span></div>
+  </section>
+
+  <!-- 7. Q1 SNAPSHOT -->
+  <section class="slide" data-name="snapshot">
+    <div class="slide-meta">
+      <span><span class="brand">The gap</span> · 2026 Q1 results</span>
+      <span>7 / 26</span>
+    </div>
+    <div class="eyebrow" style="margin-top:32px">Where we are right now</div>
+    <h2 class="title">Snapshot of <em>Q1<span class="dot">.</span></em></h2>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="big">86<span class="pct">%</span></div>
+        <div>
+          <div class="lbl">Completed check-ins</div>
+          <div class="sub">209 of 242 engineers · the rest are silent</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="big">67<span class="pct">%</span></div>
+        <div>
+          <div class="lbl">At Level 3+ <em style="font-style:italic">(Alex's goal)</em></div>
+          <div class="sub">140 of 209 · the majority crossed</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="big">26<span class="pct">%</span></div>
+        <div>
+          <div class="lbl">Orchestrating agents</div>
+          <div class="sub">54 of 209 · the spreaders</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="big">4<span class="pct">%</span></div>
+        <div>
+          <div class="lbl">At Level 5</div>
+          <div class="sub">8 of 209 · the small but vital cohort of teachers</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Q1 2026 AI Skill Check-ins</span><span>7 / 26</span></div>
+  </section>
+
+  <!-- 8. IS / ISN'T -->
+  <section class="slide" data-name="is-isnt">
+    <div class="slide-meta">
+      <span><span class="brand">Positioning</span> · what this app is</span>
+      <span>8 / 26</span>
+    </div>
+    <div class="eyebrow" style="margin-top:32px">Scope</div>
+    <h2 class="title">What this <em>is<span class="dot">,</span></em> and what it isn't.</h2>
+    <div class="versus">
+      <div class="col is">
+        <h3>It is</h3>
+        <ul>
+          <li>A peer exposure tool — book sessions, capture what was learned</li>
+          <li>About best practices, prompting, verification, orchestration</li>
+          <li>A way to surface insights and themes across the org</li>
+          <li>A way to make existing AI champions discoverable</li>
+          <li>A coach's workspace for arranging high-leverage pairings</li>
+        </ul>
+      </div>
+      <div class="col isnt">
+        <h3>It isn't</h3>
+        <ul>
+          <li>The place where AI maturity levels get set — that's the coach 1×1 check-in</li>
+          <li>A replacement for team code review</li>
+          <li>A performance evaluation system</li>
+          <li>A Slack / approval workflow — that stays out-of-band</li>
+          <li>An LMS or training catalog</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Positioning</span><span>8 / 26</span></div>
+  </section>
+
+  <!-- 9. CORE LOOP -->
+  <section class="slide" data-name="loop">
+    <div class="slide-meta">
+      <span><span class="brand">How it works</span> · core loop</span>
+      <span>9 / 26</span>
+    </div>
+    <div class="eyebrow" style="margin-top:32px">One cycle</div>
+    <h2 class="title">Six-month cycle, <em>four moves<span class="dot">.</span></em></h2>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-step">
+          <div class="num">01 · COACH</div>
+          <h4>Pick a reviewer one level above</h4>
+          <p>App suggests the top 5 candidates by rank, project diversity, and load. Coach agrees the pairing in Slack/email, then records it.</p>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-step">
+          <div class="num">02 · BOTH</div>
+          <h4>Schedule a 1–1.5 hour session</h4>
+          <p>MVP: a date is recorded. Phase 2: pick from free/busy slots and the meeting lands in both Google calendars.</p>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-step">
+          <div class="num">03 · BOTH</div>
+          <h4>The session: workflow, not code</h4>
+          <p>The reviewee walks through how they actually work with AI. The reviewer shows what one rung up looks like.</p>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-step">
+          <div class="num">04 · BOTH</div>
+          <h4>Short feedback, both directions</h4>
+          <p>Reviewer notes observed maturity + one habit to adopt. Reviewee notes top thing learned + what they'll try in two weeks.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Core loop</span><span>9 / 26</span></div>
+  </section>
+
+  <!-- 10. KEY PATTERNS -->
+  <section class="slide" data-name="patterns">
+    <div class="slide-meta">
+      <span><span class="brand">Patterns</span> · design principles</span>
+      <span>10 / 26</span>
+    </div>
+    <div class="eyebrow" style="margin-top:32px">Ten guardrails</div>
+    <h2 class="title">Patterns the app <em>commits to<span class="dot">.</span></em></h2>
+    <div class="principles">
+      <div class="principle">
+        <div class="lead">Approval lives out-of-band</div>
+        <div class="desc">Coach agrees the pairing in Slack/email. The app records the agreed pairing — no in-app accept/decline ping-pong.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">Levels are read, never set in the normal flow</div>
+        <div class="desc">Levels come from the Q1/Q4 check-in. The app reads them. A coach can manually record one if missing.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">Strict-greater matching</div>
+        <div class="desc">Reviewer's rank on the 9-cell grid is strictly higher than the reviewee's. Exposure is the point.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">One sidebar, not four apps</div>
+        <div class="desc">Engineers who coach see both nav areas. Role-mixed users get one workspace.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">Anonymity boundary, labeled</div>
+        <div class="desc">BG / MD see aggregates. Raw feedback only on the reviewee's own session detail. Every screen labels its audience.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">Stale data is flagged, not hidden</div>
+        <div class="desc">Unverified levels, old surveys, last-import date — all surfaced as nudge banners, never silent.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">Magenta is reserved</div>
+        <div class="desc">Visma magenta `#E10078` only for the one primary action per screen. Level and status palettes never collide with it.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">Auto-pair is a safety net</div>
+        <div class="desc">If a coach is silent for too long, the system pairs and notifies. Manual remains the norm; auto is the floor.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">Email is the only system channel in MVP</div>
+        <div class="desc">No Slack bot. Confirmations, T-24h, T-3d, overdue, digest — all email. Quiet hours and rate caps honored.</div>
+      </div>
+      <div class="principle">
+        <div class="lead">Cross-project means cross-project</div>
+        <div class="desc">Reviewer and reviewee must be on different projects. Cross-company is allowed and slightly preferred.</div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Design principles</span><span>10 / 26</span></div>
+  </section>
+
+  <!-- 11. CONSIDERATIONS -->
+  <section class="slide" data-name="considerations">
+    <div class="slide-meta">
+      <span><span class="brand">Considerations</span> · open questions</span>
+      <span>11 / 26</span>
+    </div>
+    <div class="eyebrow" style="margin-top:32px">Things to land before launch</div>
+    <h2 class="title">What we still <em>need to decide<span class="dot">.</span></em></h2>
+    <div class="asks">
+      <div class="ask"><h4>GDPR & retention</h4><p>Raw feedback is personal data. Proposal: retain 2 years raw + indefinite aggregates. Confirm with Visma DPO.</p></div>
+      <div class="ask"><h4>Coach coverage</h4><p>~16% of employees in the master sheet have no coach assigned. Backfill before cycle starts or these engineers are stuck.</p></div>
+      <div class="ask"><h4>Brand verification</h4><p>Magenta `#E10078` is our default. Need confirmation against Visma's brand kit before public rollout.</p></div>
+      <div class="ask"><h4>Cycle cadence</h4><p>6-month cycles match "1–2 reviews/year". Quarterly is more pressure but more learning. Pick one.</p></div>
+      <div class="ask"><h4>Cross-company allowed?</h4><p>Visma has several legal entities. We assume yes; HR sign-off needed for contract / IP boundaries.</p></div>
+      <div class="ask"><h4>Calendar scopes</h4><p>Phase 2 needs Google Calendar OAuth scope. Workspace admin approval required.</p></div>
+    </div>
+    <div class="slide-footer"><span>Open questions</span><span>11 / 26</span></div>
+  </section>
+
+  <!-- 12. SECTION DIVIDER: WALKTHROUGH -->
+  <section class="slide dark" data-name="divider-walkthrough">
+    <div class="slide-meta">
+      <span class="brand">Walkthrough · part 2</span>
+      <span>12 / 26</span>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center; height: 100%; max-width: 1000px;">
+      <div class="eyebrow">Now let's look at it</div>
+      <h1 class="title-xl" style="font-family:'Fraunces',serif; font-weight:400; font-size:104px; line-height:0.98; letter-spacing:-0.025em; color: var(--paper); margin: 0 0 24px;">
+        From login to <em style="color:rgba(255,255,255,0.85)">admin<span style="color: var(--magenta)">.</span></em>
+      </h1>
+      <p style="font-family:'Fraunces',serif; font-style:italic; font-size:24px; color: rgba(246,242,234,0.6); max-width: 720px; line-height: 1.4;">
+        Each screen is a real Tailwind HTML mockup — embedded live below. Use arrow keys to step through.
+      </p>
+    </div>
+    <div class="slide-footer"><span>Walkthrough</span><span>12 / 26</span></div>
+  </section>
+
+  <!-- 13. LOGIN -->
+  <section class="slide" data-name="login">
+    <div class="slide-meta">
+      <span><span class="brand">Login</span> · Google OAuth · @visma.com</span>
+      <span>13 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>01.</em> Login</h2>
+        <span class="role">All users</span>
+      </div>
+      <p class="intent">Two-panel: brand identity and the L1→L5 ladder on the left, single Google CTA on the right. Domain-restricted.</p>
+      <div class="frame-wrap"><iframe src="../ux/screens/01-auth-and-dashboard/login.html" title="Login mockup"></iframe></div>
+      <div class="mockup-callouts">
+        <span class="pill accent">Magenta CTA only</span>
+        <span class="pill">L1→L5 ladder</span>
+        <span class="pill">Visma-domain gate</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span>01 · Login</span><span>13 / 26</span></div>
+  </section>
+
+  <!-- 14. ENGINEER DASHBOARD -->
+  <section class="slide" data-name="dashboard">
+    <div class="slide-meta">
+      <span><span class="brand">Engineer</span> · home</span>
+      <span>14 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>02.</em> Engineer dashboard</h2>
+        <span class="role">Engineer</span>
+      </div>
+      <p class="intent">Next session up top; level shown as read-only; nudges for overdue feedback; recent sessions. Self-assessment is a soft prompt, not a blocker.</p>
+      <div class="frame-wrap"><iframe src="../ux/screens/01-auth-and-dashboard/dashboard.html" title="Engineer dashboard"></iframe></div>
+      <div class="mockup-callouts">
+        <span class="pill accent">NextSessionCard hero</span>
+        <span class="pill">LevelBadge (read-only)</span>
+        <span class="pill">Overdue nudge</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span>02 · Engineer dashboard</span><span>14 / 26</span></div>
+  </section>
+
+  <!-- 15. SESSIONS LIST + DETAIL -->
+  <section class="slide" data-name="sessions">
+    <div class="slide-meta">
+      <span><span class="brand">Engineer</span> · sessions</span>
+      <span>15 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>03.</em> My sessions &amp; session detail</h2>
+        <span class="role">Engineer</span>
+      </div>
+      <p class="intent">Tabbed list (reviewer / reviewee / past). Detail has prep notes, scheduling, and the feedback CTA. Two role-specific variants of the same shell.</p>
+      <div class="mockup-pair">
+        <div class="card"><div class="cap">My sessions — list view</div><iframe src="../ux/screens/02-engineer-sessions/sessions-list.html"></iframe></div>
+        <div class="card"><div class="cap">Session detail — as reviewee</div><iframe src="../ux/screens/02-engineer-sessions/session-detail-reviewee.html"></iframe></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>03 · Sessions</span><span>15 / 26</span></div>
+  </section>
+
+  <!-- 16. FEEDBACK FORMS -->
+  <section class="slide" data-name="feedback">
+    <div class="slide-meta">
+      <span><span class="brand">Engineer</span> · feedback forms</span>
+      <span>16 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>04.</em> Feedback forms</h2>
+        <span class="role">Engineer</span>
+      </div>
+      <p class="intent">Reviewer→reviewee: long-form (observed maturity, tooling, prompting, verification, orchestration, one habit to adopt). Reviewee→reviewer: shorter (what they learned, what they'll try). Both autosave drafts.</p>
+      <div class="mockup-pair">
+        <div class="card"><div class="cap">Reviewer → reviewee · long-form</div><iframe src="../ux/screens/03-feedback-forms/feedback-reviewer.html"></iframe></div>
+        <div class="card"><div class="cap">Reviewee → reviewer · short</div><iframe src="../ux/screens/03-feedback-forms/feedback-reviewee.html"></iframe></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>04 · Feedback forms</span><span>16 / 26</span></div>
+  </section>
+
+  <!-- 17. PROFILE -->
+  <section class="slide" data-name="profile">
+    <div class="slide-meta">
+      <span><span class="brand">Engineer</span> · profile</span>
+      <span>17 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>05.</em> Profile (level is read-only)</h2>
+        <span class="role">Engineer</span>
+      </div>
+      <p class="intent">Where the engineer sees their current maturity stage, history of changes, and past review feedback. Level is shown — never edited here.</p>
+      <div class="frame-wrap"><iframe src="../ux/screens/04-profile/profile.html" title="Profile"></iframe></div>
+      <div class="mockup-callouts">
+        <span class="pill">LevelTimeline</span>
+        <span class="pill">Level set via coach check-in</span>
+        <span class="pill accent">Read-only badge</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span>05 · Profile</span><span>17 / 26</span></div>
+  </section>
+
+  <!-- 18. COACH ROSTER -->
+  <section class="slide" data-name="coach-roster">
+    <div class="slide-meta">
+      <span><span class="brand">Coach</span> · coachee roster</span>
+      <span>18 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>06.</em> Coachee roster</h2>
+        <span class="role">Coach</span>
+      </div>
+      <p class="intent">The coach's primary workspace. Each coachee with level, last review date, status. Inline expand shows suggested reviewers. Auto-pair warning state included.</p>
+      <div class="mockup-pair">
+        <div class="card"><div class="cap">Normal mid-cycle</div><iframe src="../ux/screens/05-coach-roster/roster-normal.html"></iframe></div>
+        <div class="card"><div class="cap">T-1d before auto-pair</div><iframe src="../ux/screens/05-coach-roster/roster-autopair-warning.html"></iframe></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>06 · Coach roster</span><span>18 / 26</span></div>
+  </section>
+
+  <!-- 19. COACHEE DETAIL + ASSIGN -->
+  <section class="slide" data-name="coachee-detail">
+    <div class="slide-meta">
+      <span><span class="brand">Coach</span> · coachee detail · assign</span>
+      <span>19 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>07.</em> Coachee detail &amp; pairing</h2>
+        <span class="role">Coach</span>
+      </div>
+      <p class="intent">Top 5 candidates ranked, with reason chips. The "record the pairing you agreed on" modal makes it clear approval lives out-of-band.</p>
+      <div class="mockup-pair">
+        <div class="card"><div class="cap">Coachee detail · suggestions</div><iframe src="../ux/screens/06-coachee-detail/coachee-detail.html"></iframe></div>
+        <div class="card"><div class="cap">Assignment recorder modal</div><iframe src="../ux/screens/06-coachee-detail/assignment-recorder.html"></iframe></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>07 · Coachee detail · assign</span><span>19 / 26</span></div>
+  </section>
+
+  <!-- 20. ASSIGNMENTS BOARD -->
+  <section class="slide" data-name="assignments-board">
+    <div class="slide-meta">
+      <span><span class="brand">Coach</span> · assignments board</span>
+      <span>20 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>08.</em> Assignments board</h2>
+        <span class="role">Coach</span>
+      </div>
+      <p class="intent">Everything this cycle in one table — both directions (you coach the reviewee / you coach the reviewer). Two feedback checkmarks track completion explicitly.</p>
+      <div class="frame-wrap"><iframe src="../ux/screens/07-coach-assignments/assignments-board.html" title="Assignments board"></iframe></div>
+      <div class="mockup-callouts">
+        <span class="pill">4 MetricTiles</span>
+        <span class="pill">Reviewer + reviewee feedback ticks</span>
+        <span class="pill accent">Single primary CTA</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span>08 · Assignments board</span><span>20 / 26</span></div>
+  </section>
+
+  <!-- 21. INSIGHTS COMPLETION -->
+  <section class="slide" data-name="insights-completion">
+    <div class="slide-meta">
+      <span><span class="brand">Business Group / MD</span> · completion</span>
+      <span>21 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>09.</em> Completion insights</h2>
+        <span class="role">BG · MD</span>
+      </div>
+      <p class="intent">How is the program running. Completion rate per BG and project, on-track vs lagging, multi-cycle sparklines. Aggregated only — no individual identification.</p>
+      <div class="frame-wrap"><iframe src="../ux/screens/08-insights/insights-completion.html" title="Insights completion"></iframe></div>
+      <div class="mockup-callouts">
+        <span class="pill">Aggregated only</span>
+        <span class="pill">BG · project · cycle filters</span>
+        <span class="pill accent">Export CTA</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span>09 · Completion</span><span>21 / 26</span></div>
+  </section>
+
+  <!-- 22. INSIGHTS LEVELS -->
+  <section class="slide" data-name="insights-levels">
+    <div class="slide-meta">
+      <span><span class="brand">Business Group / MD</span> · level distribution</span>
+      <span>22 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>10.</em> Level distribution &amp; shift</h2>
+        <span class="role">BG · MD</span>
+      </div>
+      <p class="intent">Where the org is on the maturity grid, cycle over cycle. The number you want to grow: % of engineers above the L3 line, % crossed to on-the-loop.</p>
+      <div class="frame-wrap"><iframe src="../ux/screens/08-insights/insights-levels.html" title="Insights levels"></iframe></div>
+      <div class="mockup-callouts">
+        <span class="pill">L1→L5 palette</span>
+        <span class="pill">Cycle-over-cycle delta</span>
+        <span class="pill">Survey freshness banner</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span>10 · Level distribution</span><span>22 / 26</span></div>
+  </section>
+
+  <!-- 23. ADMIN CYCLES -->
+  <section class="slide" data-name="admin-cycles">
+    <div class="slide-meta">
+      <span><span class="brand">Admin</span> · cycle management</span>
+      <span>23 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>11.</em> Cycle management</h2>
+        <span class="role">Admin</span>
+      </div>
+      <p class="intent">Cycles are the unit of work. Create with target filter ("everyone whose last review was before X"), set auto-pair date, tune scoring weights.</p>
+      <div class="mockup-pair">
+        <div class="card"><div class="cap">Cycle list</div><iframe src="../ux/screens/09-admin-cycles/cycle-list.html"></iframe></div>
+        <div class="card"><div class="cap">Cycle editor — editing an active cycle</div><iframe src="../ux/screens/09-admin-cycles/cycle-editor-edit-active.html"></iframe></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>11 · Admin cycles</span><span>23 / 26</span></div>
+  </section>
+
+  <!-- 24. ADMIN IMPORTS + OVERRIDE -->
+  <section class="slide" data-name="admin-imports">
+    <div class="slide-meta">
+      <span><span class="brand">Admin</span> · imports &amp; level entry</span>
+      <span>24 / 26</span>
+    </div>
+    <div class="mockup-frame">
+      <div class="mockup-meta">
+        <h2><em>12.</em> Imports &amp; manual level entry</h2>
+        <span class="role">Admin · Coach</span>
+      </div>
+      <p class="intent">Sheet sync with dry-run, error surfacing per row. Manual level entry is for the edge case — a coach completed a check-in and wants to record the result here until the in-app check-in form lands in Phase 4.</p>
+      <div class="mockup-pair">
+        <div class="card"><div class="cap">Sheet imports</div><iframe src="../ux/screens/10-admin-imports/imports.html"></iframe></div>
+        <div class="card"><div class="cap">Record a level from a check-in</div><iframe src="../ux/screens/10-admin-imports/level-override.html"></iframe></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>12 · Imports &amp; level entry</span><span>24 / 26</span></div>
+  </section>
+
+  <!-- 25. EMAILS + ROADMAP -->
+  <section class="slide" data-name="emails-roadmap">
+    <div class="slide-meta">
+      <span><span class="brand">Reminders</span> &amp; roadmap</span>
+      <span>25 / 26</span>
+    </div>
+    <div class="mockup-frame" style="flex: 0 0 auto; margin-bottom: 12px;">
+      <div class="mockup-meta">
+        <h2><em>13.</em> Email reminders</h2>
+        <span class="role">All</span>
+      </div>
+      <p class="intent" style="margin-bottom: 0;">Pairing recorded · session in 24h · feedback overdue · auto-pair imminent · cycle digest. Quiet hours and per-category opt-outs honored.</p>
+    </div>
+    <div class="roadmap">
+      <div class="phase">
+        <span class="pname">MVP</span>
+        <div>
+          <div class="ptitle">Phase 1 — Dashboards, manual pairing, feedback, email</div>
+          <div class="pbody">Data import, three dashboards, manual reviewer assignment, both feedback forms, BG/MD read-only view, email confirmations and reminders.</div>
+        </div>
+        <span class="pdur">4–6 weeks</span>
+      </div>
+      <div class="phase">
+        <span class="pname">P2</span>
+        <div>
+          <div class="ptitle">Phase 2 — Google Calendar</div>
+          <div class="pbody">freebusy lookup, propose 3 slots, event creation on both calendars, notifications audit trail.</div>
+        </div>
+        <span class="pdur">+2 weeks</span>
+      </div>
+      <div class="phase">
+        <span class="pname">P3</span>
+        <div>
+          <div class="ptitle">Phase 3 — Auto-pair &amp; theme extraction</div>
+          <div class="pbody">Daily auto-pair sweep, cohort level-shift analytics, LLM-extracted feedback themes via AI Gateway, admin form versioning.</div>
+        </div>
+        <span class="pdur">+3 weeks</span>
+      </div>
+      <div class="phase">
+        <span class="pname">P4</span>
+        <div>
+          <div class="ptitle">Phase 4 — In-app AI Skill Check-in</div>
+          <div class="pbody">Coach + coachee fill the check-in form together inside the app. The app becomes the source of truth for levels.</div>
+        </div>
+        <span class="pdur">TBD</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span>13 · Reminders &amp; roadmap</span><span>25 / 26</span></div>
+  </section>
+
+  <!-- 26. ASKS / CLOSING -->
+  <section class="slide dark" data-name="asks">
+    <div class="slide-meta">
+      <span class="brand">What we need next</span>
+      <span>26 / 26</span>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center; height: 100%; max-width: 1100px;">
+      <div class="eyebrow" style="color: rgba(225,0,120,0.95);">Closing</div>
+      <h1 class="title-xl" style="font-family:'Fraunces',serif; font-weight:400; font-size:88px; line-height:1; letter-spacing:-0.025em; color: var(--paper); margin: 0 0 32px;">
+        Build it<span style="color: var(--magenta);">?</span>
+      </h1>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px 32px;">
+        <div class="ask" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.1); border-left-color: var(--magenta);">
+          <h4 style="color: var(--paper);">A sponsor and a deadline</h4>
+          <p style="color: rgba(246,242,234,0.7);">Name the BG that pilots Cycle H2·2026. Six-month commitment.</p>
+        </div>
+        <div class="ask" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.1); border-left-color: var(--magenta);">
+          <h4 style="color: var(--paper);">DPO sign-off</h4>
+          <p style="color: rgba(246,242,234,0.7);">Retention policy approval. We default to 2y raw + indefinite aggregates.</p>
+        </div>
+        <div class="ask" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.1); border-left-color: var(--magenta);">
+          <h4 style="color: var(--paper);">A coach-coverage backfill</h4>
+          <p style="color: rgba(246,242,234,0.7);">Close the ~16% of employees with no coach on file.</p>
+        </div>
+        <div class="ask" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.1); border-left-color: var(--magenta);">
+          <h4 style="color: var(--paper);">Brand verification</h4>
+          <p style="color: rgba(246,242,234,0.7);">Confirm magenta `#E10078` and any motion / type kit constraints.</p>
+        </div>
+      </div>
+      <p style="font-family:'Fraunces',serif; font-style:italic; font-size: 26px; color: rgba(246,242,234,0.7); margin-top: 36px;">
+        Then 4–6 weeks to MVP, ready for the next cycle.
+      </p>
+    </div>
+    <div class="slide-footer"><span>Thank you</span><span>tomasz.szturo@visma.com</span></div>
+  </section>
+
+</div>
+
+<div class="progress" id="progress" style="width: 4%;"></div>
+<div class="nav">
+  <button id="prev" aria-label="Previous">‹</button>
+  <span class="pos" id="pos">1 / 26</span>
+  <button id="next" aria-label="Next">›</button>
+</div>
+<div class="help">
+  Navigate <kbd>←</kbd><kbd>→</kbd> · <kbd>space</kbd> next · <kbd>f</kbd> fullscreen · <kbd>g</kbd> grid
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const stage = document.getElementById('stage');
+  const progress = document.getElementById('progress');
+  const pos = document.getElementById('pos');
+  let idx = 0;
+
+  function scaleStage() {
+    const w = window.innerWidth, h = window.innerHeight;
+    const scale = Math.min(w / 1280, h / 720) * 0.95;
+    slides.forEach(s => s.style.transform = `scale(${scale})`);
+  }
+
+  function show(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, j) => s.classList.toggle('active', j === idx));
+    progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+    pos.textContent = `${idx + 1} / ${slides.length}`;
+    if (history.replaceState) history.replaceState(null, '', '#' + (idx + 1));
+  }
+
+  function next() { show(idx + 1); }
+  function prev() { show(idx - 1); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { show(0); }
+    else if (e.key === 'End') { show(slides.length - 1); }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  window.addEventListener('resize', scaleStage);
+
+  // Hash-based deep link
+  const hashIdx = parseInt(location.hash.replace('#', ''), 10);
+  if (!isNaN(hashIdx) && hashIdx >= 1 && hashIdx <= slides.length) idx = hashIdx - 1;
+
+  scaleStage();
+  show(idx);
+</script>
+</body>
+</html>

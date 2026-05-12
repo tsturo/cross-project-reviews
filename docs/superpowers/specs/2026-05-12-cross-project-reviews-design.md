@@ -6,9 +6,16 @@
 
 ## 1. Goal
 
-Bring back the practice of 1–2 cross-project code reviews per engineer per year, but refocus the session on **best practices, insights, and feedback around AI-powered ways of working**, not on grading the code itself.
+Bring back the practice of 1–2 cross-project code reviews per engineer per year, refocused on **how engineers work** in 2026 — not on grading individual lines of code.
 
-The reviewer is someone operating at a higher AI maturity stage, so every session is a guided exposure to a more advanced way of working. The reviewee leaves with concrete habits to try; the reviewer sharpens their own articulation by teaching. Both submit short feedback so the org can see what's spreading.
+The session covers, in roughly equal weight:
+
+- **Architecture & design patterns** — event-driven design, CQRS, sagas, message queues, Kafka / pub-sub, Elasticsearch / search strategy, caching, service boundaries, idempotency.
+- **Clean code & engineering hygiene** — SOLID, DRY, KISS, testability, naming, refactoring discipline, code organization.
+- **Testing, observability, security** — test strategy, telemetry, threat modeling, secrets, dependency hygiene.
+- **AI-powered workflow** — how the engineer uses AI (tooling, prompting, verification, orchestration). The AI dimension is one of four, not the only one.
+
+AI maturity matters as a **pairing mechanic** — the reviewer is at a higher rank on the maturity grid, so the reviewee gets exposure to more advanced ways of working. But the *content* of the conversation is broader: an L4 engineer talking to an L2 might spend more time on event sourcing than on prompts.
 
 ### Non-goals (explicitly out of scope)
 
@@ -107,20 +114,31 @@ A cycle is typically **6 months** (matches the "1–2 reviews per year" rhythm).
 
 ## 6. Matching rules
 
-**Hard constraints** (filter — anyone not matching is excluded):
+**Hard constraints** — every pairing must satisfy all of these. The system filters out anyone who fails. The constraints are what make this *cross*-project, not within-team:
 
-- `reviewer.rank > reviewee.rank` on the 9-cell maturity rank from §4 (strict; reviewers at top of rank — `on-L5` — pair with each other if both are reviewees, flagged).
-- Different `project` (this is *cross*-project review).
-- Reviewer has ≤ 2 active assignments in the current cycle (load cap).
-- Pair hasn't reviewed each other in the previous 2 cycles.
+1. `reviewer.rank > reviewee.rank` on the 9-cell maturity grid from §4 (strict; reviewers at the top of the rank — `on-L5` — pair with each other if both end up as reviewees, flagged).
+2. **Different `project`.** The single most important rule. Same project = within-project review, not what this program is for.
+3. **Different `coach`.** Sharing a coach means sharing the same direct-management context. Cross-coach is the cleanest test of "outside eyes".
+4. **No prior pairing in the previous 2 cycles** (~1 year). Avoid repeat exposure that adds little new perspective.
+5. **Reviewer load cap** — at most 2 active assignments per cycle.
+6. **Both employees are active** in the cycle's target population (not on leave, not pending offboarding).
+7. **Same primary language** or both speak the lingua franca (English). Soft-checked via profile; flagged not blocked.
 
-**Soft scoring** (rank among eligible):
+**Soft scoring** (rank among eligible candidates):
 
-- Same `company` (legal entity) +1 — Visma has several; cross-company is allowed but HR/contract details make same-company simpler.
-- Different tech stack +1 (broader exposure).
-- Reviewer level == reviewee + 1 preferred over level + 3 (closer is usually more useful).
-- Lower current load preferred.
-- "AI Skill Utilization = Skill Fit" preferred over "Overqualified".
+| Signal | Weight | Rationale |
+|---|---|---|
+| Different `company` (legal entity) | +1 | Broader exposure; Visma has several entities |
+| Different tech stack | +1 | A .NET engineer learning event sourcing from a Python engineer is the whole point |
+| Different BG | +1 | Cross-BG perspective on architecture patterns |
+| Reviewer rank ≈ reviewee rank + 1 | +2 | Closer rank is usually more useful than a chasm |
+| Reviewer rank ≥ reviewee rank + 3 | −1 | Very large gap can feel patronizing |
+| Lower current reviewer load | +1 per slot free | Spread the work |
+| `AI Skill Utilization = Skill Fit` | +0.5 | Stable practitioners are better teachers than struggling ones |
+
+**Auto-pair** uses the same hard filter + soft score, picks top-1, and notifies coach + both parties. If no candidate passes the hard filter, the assignment is left unfilled and surfaced to admin with a flag (`unmatched: no eligible reviewer`).
+
+**Validation surface.** Every assignment — whether picked by a coach or auto-paired — runs the hard filter again at the moment of creation. If a constraint fails (e.g. the suggested reviewer got promoted to a new project between suggestion and recording), the form rejects with a specific error: "Cannot pair: same project (Visma.net Expense 755)".
 
 The coach sees the top ~5 ranked candidates with a reason ("Level 4, .NET, different BG, 0/2 load"). They pick; they can also search and override.
 
@@ -132,24 +150,50 @@ Two short forms (one per side), filled within 7 days of the session. Anonymized 
 
 ### Reviewer → Reviewee form
 
-Mix of Likert (1–5) and short free text:
+Four sections; each ≈ equal weight. Likert (1–5) + short free text.
 
-1. **Observed AI maturity** — what level did this person actually operate at? (1–5; can diverge from declared)
-2. **Tool stack** — what AI tooling did they use during the session?
-3. **Prompting & context-setting** — strength + one growth area.
-4. **Verification habits** — do they trust output blindly, spot-check, or systematically verify?
-5. **Agent orchestration** — N/A · emerging · solid · advanced.
-6. **Architecture & clean-code** — single Likert + free text. Lower weight than the AI dimensions.
-7. **One concrete habit they should adopt from your workflow.**
-8. **One thing they're doing well that you'll steal.**
+**Section 1 — Architecture & design patterns**
+
+1. Strength: which architectural decision or pattern did they use well? (free text)
+2. Growth area: which architecture / pattern would have served them better? (free text — e.g. "event sourcing for the audit log instead of a side table")
+3. Overall architectural awareness (Likert).
+
+**Section 2 — Clean code & engineering hygiene**
+
+4. SOLID / DRY / KISS application (Likert + one example each way).
+5. Testability and test coverage of the change (Likert + comment).
+6. Code organization & naming (Likert + comment).
+
+**Section 3 — Testing, observability, security**
+
+7. Test strategy fit (unit / integration / contract — Likert + comment).
+8. Telemetry & observability (logs, metrics, traces — Likert).
+9. Security / threat-model awareness (Likert + comment if flagged).
+
+**Section 4 — AI-powered workflow**
+
+10. Observed AI maturity — what cell on the 9-grid did they operate at? (cell picker + can diverge from declared)
+11. Tool stack — what AI tooling did they use? (multi-select)
+12. Prompting & context-setting — strength + growth (paired text).
+13. Verification habits — radio (blind / spot-check / systematic).
+
+**Section 5 — Wrap-up**
+
+14. One concrete habit (any section) they should adopt from your workflow.
+15. One thing they're doing well that you'll steal.
+
+The form is long. We accept that — a real review session is 1–1.5h, the form takes ~10 min. Autosave drafts. Don't require every Likert; sections can be skipped if not observed during the session ("not covered").
 
 ### Reviewee → Reviewer form
 
-1. Was the reviewer's level genuinely higher in practice? (yes / sort-of / no)
-2. Top thing learned.
-3. What you'll try in the next 2 weeks.
+Short — keep momentum.
+
+1. Was the reviewer's stage genuinely higher in practice across topics that matter to you? (yes / mostly / partially / no)
+2. **Top thing learned** — can be architecture, clean code, testing, security, AI workflow, anything.
+3. **What you'll try in the next 2 weeks** — concrete commitment.
 4. Quality of session (Likert).
-5. Optional: feedback for the program.
+5. Coverage check — which topics were actually covered? (multi-select: Architecture · Clean code · Testing · Observability · Security · AI workflow · Other)
+6. Optional: feedback for the program.
 
 Forms are **versioned**; admin can edit between cycles without losing history.
 
@@ -271,6 +315,12 @@ Email is the only system-driven channel in MVP (Slack is out). Every send is log
 - Level-shift cohort analytics.
 - Free-text feedback theme extraction (LLM via AI Gateway).
 - Admin UI for cycle creation & form versioning.
+
+### Phase 4 — In-app AI Skill Check-in (target: TBD)
+
+The quarterly AI Skill Check-in conversation between coach and coachee currently happens outside this app. Phase 4 adds it as a co-filled form: coach and coachee meet, walk through Toolkit + Workflow questions together, and the resulting `(level, loop_position)` is recorded directly to `ai_levels` with `source = 'checkin'`. This makes the app the source of truth for levels (replacing the external sheet import).
+
+This is a separate workflow from cross-project reviews — same data model, different ceremony.
 
 ## 13. Risks & open questions
 

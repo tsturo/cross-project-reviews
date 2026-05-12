@@ -137,8 +137,8 @@ Checklist — each row is a single screen a downstream agent can take.
 
 | Form | Filled by | When | Fields (conceptual) | Submit / Cancel |
 |---|---|---|---|---|
-| **ReviewerFeedbackForm** | Reviewer | ≤ 7 days post-session | Observed level (1–5), tool stack (multi-select), prompting strength + growth (text), verification habits (radio), agent orchestration (radio), architecture (Likert + text), one habit to adopt (text), one thing they're doing well (text) | Submit closes assignment; Cancel saves draft locally. |
-| **RevieweeFeedbackForm** | Reviewee | ≤ 7 days post-session | Reviewer level higher in practice? (yes/sort-of/no), top thing learned (text), what you'll try in 2 weeks (text), session quality (Likert), program feedback (optional text) | Submit closes their side; Cancel saves draft. |
+| **ReviewerFeedbackForm** | Reviewer | ≤ 7 days post-session | 4 weighted sections (Architecture & patterns, Clean code, Testing/observability/security, AI workflow) each with Likert + text; wrap-up (one habit, one thing to steal). See spec §7. | Submit closes assignment; Cancel saves draft locally. |
+| **RevieweeFeedbackForm** | Reviewee | ≤ 7 days post-session | Reviewer stage actually higher? (Likert), top thing learned (text), what you'll try in 2 weeks (text), session quality (Likert), coverage check (multi-select of topics covered), program feedback (optional). See spec §7. | Submit closes their side; Cancel saves draft. |
 | **AssignmentRecorder** | Coach | After agreeing pairing out-of-band | Reviewee (prefilled), reviewer (picked or searched), note (optional), confirm-out-of-band checkbox | Submit creates assignment; Cancel returns to coachee detail. |
 | **AdminCycleForm** | Admin | Once per cycle | Name, start date, end date, auto-pair date, target filter (last-review-before date, BG/company scope) | Submit creates/updates cycle; Cancel discards. |
 | **SelfAssessmentForm** | Engineer | When level is missing / stale (> 6 months) | 5-question version of the survey mapped to L1–L5 + confidence | Submit writes `ai_levels` row (`source = survey`); Cancel re-prompts next login. |
