@@ -501,8 +501,8 @@
     <h2 class="title">Cross-project reviews <em>worked<span class="dot">.</span></em></h2>
     <p class="intent">For years Visma engineers did 1–2 cross-project code reviews per year. Outside eyes catch what inside eyes miss. People learn faster from peers than from courses.</p>
     <div class="body" style="max-width: 980px;">
-      <p><strong>What's different in 2026.</strong> Code is no longer the artifact that matters most — <em>how an engineer works with AI</em> is. A reviewer at a higher maturity stage carries the most concrete, transferable knowledge in the company. We should make that exposure routine.</p>
-      <p><strong>The hypothesis.</strong> Pair every engineer once or twice a year with someone strictly above them on the AI maturity rank. Make the session about workflow, prompting, verification, orchestration — not architecture nitpicks. Capture short feedback. Let the org see what's spreading.</p>
+      <p><strong>What's different in 2026.</strong> The mix of skills that makes someone good has shifted. Architecture and patterns (event sourcing, CQRS, queues, search), clean code, testing, observability, and security still matter — and on top of that, <em>how you work with AI agents</em>. The most valuable peers carry knowledge across all of these.</p>
+      <p><strong>The hypothesis.</strong> Once or twice a year, pair every engineer with someone who's a step ahead on the AI maturity rank. Use that hour and a half to share practices — architecture, code quality, testing, and AI workflow. Capture short feedback. Let the org see what's spreading.</p>
     </div>
     <div class="slide-footer"><span>Context</span><span>2026-05-12</span></div>
   </section>
@@ -618,9 +618,9 @@
         <h3>It is</h3>
         <ul>
           <li>A peer exposure tool — book sessions, capture what was learned</li>
-          <li>About best practices, prompting, verification, orchestration</li>
+          <li>About engineering practices: architecture, patterns, clean code, testing, security, AI workflow</li>
           <li>A way to surface insights and themes across the org</li>
-          <li>A way to make existing AI champions discoverable</li>
+          <li>A way to make practitioners (any topic) discoverable</li>
           <li>A coach's workspace for arranging high-leverage pairings</li>
         </ul>
       </div>
@@ -663,14 +663,14 @@
       <div class="flow-row">
         <div class="flow-step">
           <div class="num">03 · BOTH</div>
-          <h4>The session: workflow, not code</h4>
-          <p>The reviewee walks through how they actually work with AI. The reviewer shows what one rung up looks like.</p>
+          <h4>The session: practices, not just code</h4>
+          <p>Walk through architecture, patterns, clean code, testing, observability, security, AI workflow. The reviewer shows what one rung up looks like across these.</p>
         </div>
         <div class="flow-arrow">›</div>
         <div class="flow-step">
           <div class="num">04 · BOTH</div>
           <h4>Short feedback, both directions</h4>
-          <p>Reviewer notes observed maturity + one habit to adopt. Reviewee notes top thing learned + what they'll try in two weeks.</p>
+          <p>Reviewer fills 4 weighted sections + wrap-up. Reviewee notes top thing learned + what they'll try in two weeks.</p>
         </div>
       </div>
     </div>
@@ -695,8 +695,8 @@
         <div class="desc">Levels come from the Q1/Q4 check-in. The app reads them. A coach can manually record one if missing.</div>
       </div>
       <div class="principle">
-        <div class="lead">Strict-greater matching</div>
-        <div class="desc">Reviewer's rank on the 9-cell grid is strictly higher than the reviewee's. Exposure is the point.</div>
+        <div class="lead">Four hard cross-project rules</div>
+        <div class="desc">Different project · different coach · no prior pair in 2 cycles · reviewer rank strictly higher. Re-validated at the moment of recording.</div>
       </div>
       <div class="principle">
         <div class="lead">One sidebar, not four apps</div>
@@ -842,7 +842,7 @@
         <h2><em>04.</em> Feedback forms</h2>
         <span class="role">Engineer</span>
       </div>
-      <p class="intent">Reviewer→reviewee: long-form (observed maturity, tooling, prompting, verification, orchestration, one habit to adopt). Reviewee→reviewer: shorter (what they learned, what they'll try). Both autosave drafts.</p>
+      <p class="intent">Reviewer form: 4 weighted sections — Architecture &amp; patterns · Clean code · Testing/Observability/Security · AI workflow — plus a wrap-up. Reviewee form: shorter, with a coverage check. Both autosave drafts.</p>
       <div class="mockup-pair">
         <div class="card"><div class="cap">Reviewer → reviewee · long-form</div><iframe src="../ux/screens/03-feedback-forms/feedback-reviewer.html"></iframe></div>
         <div class="card"><div class="cap">Reviewee → reviewer · short</div><iframe src="../ux/screens/03-feedback-forms/feedback-reviewee.html"></iframe></div>
@@ -904,7 +904,7 @@
         <h2><em>07.</em> Coachee detail &amp; pairing</h2>
         <span class="role">Coach</span>
       </div>
-      <p class="intent">Top 5 candidates ranked, with reason chips. The "record the pairing you agreed on" modal makes it clear approval lives out-of-band.</p>
+      <p class="intent">Top 5 candidates — each must pass the hard cross-project rules (different project · different coach · no prior pair · higher rank). Reason chips show soft signals. The recorder modal re-validates the rules at submit time.</p>
       <div class="mockup-pair">
         <div class="card"><div class="cap">Coachee detail · suggestions</div><iframe src="../ux/screens/06-coachee-detail/coachee-detail.html"></iframe></div>
         <div class="card"><div class="cap">Assignment recorder modal</div><iframe src="../ux/screens/06-coachee-detail/assignment-recorder.html"></iframe></div>
