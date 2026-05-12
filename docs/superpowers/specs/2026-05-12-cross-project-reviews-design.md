@@ -6,10 +6,13 @@
 
 ## 1. Goal
 
-Bring back the practice of 1–2 cross-project code reviews per engineer per year, but refocus the session on **how the reviewee works with AI**, not on the code itself. The reviewer is always someone with a strictly higher AI-adoption level, so each session is a guided exposure to a more advanced way of working.
+Bring back the practice of 1–2 cross-project code reviews per engineer per year, but refocus the session on **best practices, insights, and feedback around AI-powered ways of working**, not on grading the code itself.
+
+The reviewer is someone operating at a higher AI maturity stage, so every session is a guided exposure to a more advanced way of working. The reviewee leaves with concrete habits to try; the reviewer sharpens their own articulation by teaching. Both submit short feedback so the org can see what's spreading.
 
 ### Non-goals (explicitly out of scope)
 
+- **Setting AI maturity levels.** Levels are set in the quarterly AI Skill Check-in conversation between coach and coachee, outside this app. This app reads levels, it doesn't write them in the normal flow. (A future phase may host the check-in form itself; not MVP.)
 - Replacing day-to-day code review inside teams.
 - Performance evaluation — feedback is developmental, not appraisal-grade.
 - Tracking individual prompts or AI tool usage telemetry.
@@ -42,19 +45,32 @@ ReviewCycle (id, name, starts_at, ends_at, auto_pair_after)
 
 Approval between coach and reviewer happens out-of-band (Slack / email / hallway). The coach only records the agreed pairing in the app — no in-app accept/decline flow.
 
-## 4. AI adoption level
+## 4. AI maturity (read-only input from check-ins)
 
-Single integer 1–5, using the framework already used in the existing survey:
+Visma's AI Skill Maturity model is **two-dimensional**:
 
-1. No AI / completion only
-2. IDE agent, permission per action
-3. CLI agent, permissioned
-4. Multiple CLI agents in parallel
-5. Orchestrator / fleet
+- **Axis 1 — Level (1–5):** complexity of the agentic setup.
+- **Axis 2 — Loop position:** *Human-in-the-loop* (gates each action) vs *Human-on-the-loop* (lets agents run, supervises).
 
-**Source of truth:** latest survey response per employee. Re-survey quarterly. Coaches can override (with a reason) — overrides win until the next survey.
+Vehicle metaphors used in Visma's deck:
 
-**Missing data:** if no survey and no override, default to Level 2 and flag the employee as "level unverified" on the coach dashboard. Coach is nudged to set it before assigning.
+| Level | Human-in-the-loop | Human-on-the-loop |
+|---|---|---|
+| L1 | 🚶 Walker (no/minimal AI) | — |
+| L2 | 🛴 Scooter (IDE agent, permissioned) | 🏍️ Motorbike (IDE agent, YOLO) |
+| L3 | 🚲 Bicycle (CLI agent, permissioned) | 🏎️ Race car (CLI single agent, YOLO) |
+| L4 | 🏍️ Motorbike (multi CLI, permissioned) | ✈️ Plane (multi CLI, YOLO) |
+| L5 | — | 🚀 Rocket (orchestrator / fleet) |
+
+**Alex's Goal** (the org-wide aspiration): cross from L3 in-loop (bicycle) to L3 on-loop (race car) — the transition from gating to supervising.
+
+**Source of truth:** the AI Skill Check-in conversation between coach and coachee (Q1 / Q4). Levels live in HR-side systems and are imported into this app; this app does **not** set levels in the normal flow.
+
+**Stored as:** `(level: 1..5, loop_position: 'in' | 'on')` plus `source`, `set_at`, `set_by`, optional `reason`. Displayed as a level number + vehicle glyph + loop indicator everywhere a level appears.
+
+**Matching uses a derived rank** that orders the 9 cells (in-L1 < in-L2 < on-L2 < in-L3 < on-L3 < in-L4 < on-L4 < on-L5) so the reviewer is always strictly above the reviewee on that rank.
+
+**Missing data:** if no level on file, display "unverified" badge and exclude from matching until the coach records one from the check-in (manual entry screen — admin/coach only).
 
 ## 5. Review cycle workflow
 
@@ -93,7 +109,7 @@ A cycle is typically **6 months** (matches the "1–2 reviews per year" rhythm).
 
 **Hard constraints** (filter — anyone not matching is excluded):
 
-- `reviewer.level > reviewee.level` (strict — same level allowed only for Level 5 reviewees, since they cap out).
+- `reviewer.rank > reviewee.rank` on the 9-cell maturity rank from §4 (strict; reviewers at top of rank — `on-L5` — pair with each other if both are reviewees, flagged).
 - Different `project` (this is *cross*-project review).
 - Reviewer has ≤ 2 active assignments in the current cycle (load cap).
 - Pair hasn't reviewed each other in the previous 2 cycles.
