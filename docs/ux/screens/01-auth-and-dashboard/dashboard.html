@@ -7,19 +7,19 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     :root {
       --magenta: #E70641;
-      --surface: #FAFAFA;
+      --surface: #F6F2EA;
       --card: #FFFFFF;
-      --ink: #1A1A1A;
-      --muted: #6B7280;
+      --ink: #131211;
+      --muted: #6B6258;
       --muted-2: #9CA3AF;
-      --border: #E5E7EB;
+      --border: #E4DED2;
       /* Status palette — §7 */
-      --s-assigned: #6B7280;
+      --s-assigned: #6B6258;
       --s-scheduled: #2563EB;
       --s-completed: #16A34A;
       --s-feedback: #7C3AED;
@@ -32,7 +32,7 @@
       --l5: #BE185D;
     }
     html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
-    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
     .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
     .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
     .btn-primary { background: var(--magenta); transition: background 120ms ease, box-shadow 120ms ease, transform 120ms ease; }
@@ -53,7 +53,7 @@
     /* Sidebar item */
     .nav-item { display:flex; align-items:center; gap:10px; padding: 8px 10px; border-radius: 8px; color: #374151; font-size: 13.5px; }
     .nav-item:hover { background: #F3F4F6; color: var(--ink); }
-    .nav-item.active { background: #111111; color: #fff; }
+    .nav-item.active { background: #131211; color: #fff; }
     .nav-item.active .lucide { color: #fff; }
     .section-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-2); font-weight: 600; }
     /* The hero NextSessionCard gets a single tasteful texture — Nordic, not glassmorphic */
@@ -63,7 +63,7 @@
         linear-gradient(180deg, #FFFFFF 0%, #FBFBFB 100%);
     }
     /* sparkline / tiny bars for sessions count */
-    .spark > i { display:inline-block; width: 4px; border-radius: 2px; background: #E5E7EB; }
+    .spark > i { display:inline-block; width: 4px; border-radius: 2px; background: #E4DED2; }
     /* Mobile nav drawer */
     @media (max-width: 767px) {
       .sidebar { display: none; }

@@ -7,24 +7,24 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     :root {
       --magenta: #E70641;
       --magenta-deep: #C70069;
-      --surface: #FAFAFA;
+      --surface: #F6F2EA;
       --card: #FFFFFF;
-      --ink: #1A1A1A;
-      --muted: #6B7280;
-      --border: #E5E7EB;
+      --ink: #131211;
+      --muted: #6B6258;
+      --border: #E4DED2;
       --ok: #16A34A;
       --warn: #D97706;
       --err: #DC2626;
       --info: #2563EB;
     }
     html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
-    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
     .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
     .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
     .backdrop-grid {
@@ -39,9 +39,9 @@
     .btn-ghost { transition: background 120ms ease; }
     .btn-ghost:hover { background: #F3F4F6; }
     .btn-outline { transition: background 120ms ease, border-color 120ms ease; }
-    .btn-outline:hover { background: #F9FAFB; border-color: #D1D5DB; }
+    .btn-outline:hover { background: #F9FAFB; border-color: #E4DED2; }
     .tabular { font-variant-numeric: tabular-nums; }
-    .ring-soft { box-shadow: 0 0 0 1px rgba(17,17,17,0.05), 0 1px 2px rgba(17,17,17,0.04); }
+    .ring-soft { box-shadow: 0 0 0 1px rgba(19,18,17,0.05), 0 1px 2px rgba(19,18,17,0.04); }
     .nav-item.active { background: #F4F4F5; color: var(--ink); }
     .nav-item.active .dot { background: var(--magenta); }
     .status-ok    { background: #ECFDF5; color: #065F46; }
@@ -52,7 +52,7 @@
     /* console panel */
     .console {
       background: #0F1115;
-      color: #E5E7EB;
+      color: #E4DED2;
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       font-size: 12.5px;
       line-height: 1.7;
@@ -61,7 +61,7 @@
     .console .err { color: #FCA5A5; }
     .console .warn { color: #FCD34D; }
     .console .ok { color: #86EFAC; }
-    .console .muted { color: #6B7280; }
+    .console .muted { color: #6B6258; }
     .console .key { color: #93C5FD; }
     .console .str { color: #FDE68A; }
     /* gentle alarm stripe */
@@ -202,7 +202,7 @@
 
         <div class="rounded-xl bg-white ring-soft overflow-hidden">
           <!-- header -->
-          <div class="grid grid-cols-[80px_140px_1fr_120px] px-5 h-10 items-center text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium border-b border-[var(--border)] bg-[#FAFAFA]">
+          <div class="grid grid-cols-[80px_140px_1fr_120px] px-5 h-10 items-center text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium border-b border-[var(--border)] bg-[#F6F2EA]">
             <div>Row</div>
             <div>Field</div>
             <div>Message</div>
@@ -329,7 +329,7 @@
             </li>
           </ul>
 
-          <div class="px-5 h-11 flex items-center justify-between text-[12px] text-[var(--muted)] border-t border-[var(--border)] bg-[#FAFAFA]">
+          <div class="px-5 h-11 flex items-center justify-between text-[12px] text-[var(--muted)] border-t border-[var(--border)] bg-[#F6F2EA]">
             <span>Abort threshold reached after row 166. Remaining errors detected during validation pass only.</span>
             <span class="font-mono">12 of 12 shown</span>
           </div>

@@ -7,17 +7,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     :root {
       --magenta: #E70641;
       --magenta-deep: #C70069;
-      --surface: #FAFAFA;
+      --surface: #F6F2EA;
       --card: #FFFFFF;
-      --ink: #1A1A1A;
-      --muted: #6B7280;
-      --border: #E5E7EB;
+      --ink: #131211;
+      --muted: #6B6258;
+      --border: #E4DED2;
       --ok: #16A34A;
       --warn: #D97706;
       --err: #DC2626;
@@ -29,7 +29,7 @@
       --L5: #BE185D;
     }
     html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
-    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
     .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
     .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
     .backdrop-grid {
@@ -44,10 +44,10 @@
     .btn-ghost { transition: background 120ms ease; }
     .btn-ghost:hover { background: #F3F4F6; }
     .btn-outline { transition: background 120ms ease, border-color 120ms ease; }
-    .btn-outline:hover { background: #F9FAFB; border-color: #D1D5DB; }
+    .btn-outline:hover { background: #F9FAFB; border-color: #E4DED2; }
     .nav-item.active { background: #F4F4F5; color: var(--ink); }
     .nav-item.active .dot { background: var(--magenta); }
-    .ring-soft { box-shadow: 0 0 0 1px rgba(17,17,17,0.05), 0 1px 2px rgba(17,17,17,0.04); }
+    .ring-soft { box-shadow: 0 0 0 1px rgba(19,18,17,0.05), 0 1px 2px rgba(19,18,17,0.04); }
     .tabular { font-variant-numeric: tabular-nums; }
     .status-ok    { background: #ECFDF5; color: #065F46; }
     .status-warn  { background: #FFFBEB; color: #92400E; }
@@ -131,7 +131,7 @@
       </div>
     </nav>
 
-    <div class="m-3 p-3 rounded-lg border border-[var(--border)] bg-[#FAFAFA]">
+    <div class="m-3 p-3 rounded-lg border border-[var(--border)] bg-[#F6F2EA]">
       <div class="flex items-center gap-2 text-[12px] text-[var(--muted)]">
         <i data-lucide="circle-dot" class="w-3.5 h-3.5 text-[var(--magenta)]"></i>
         Cycle H1 · 2026
@@ -209,7 +209,7 @@
               </div>
               <span class="level lvl-3 shrink-0">L3 · CLI</span>
             </li>
-            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#FAFAFA]">
+            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#F6F2EA]">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="h-7 w-7 rounded-full bg-[#FEF3C7] grid place-items-center text-[11px] font-medium text-[#92400E] shrink-0">AK</div>
                 <div class="min-w-0">
@@ -219,7 +219,7 @@
               </div>
               <span class="level lvl-2 shrink-0">L2 · IDE</span>
             </li>
-            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#FAFAFA]">
+            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#F6F2EA]">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="h-7 w-7 rounded-full bg-[#F3F4F6] grid place-items-center text-[11px] font-medium text-[var(--muted)] shrink-0">AB</div>
                 <div class="min-w-0">
@@ -229,7 +229,7 @@
               </div>
               <span class="level lvl-4 shrink-0">L4 · Parallel</span>
             </li>
-            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#FAFAFA]">
+            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#F6F2EA]">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="h-7 w-7 rounded-full bg-[#FCE7F3] grid place-items-center text-[11px] font-medium text-[var(--magenta-deep)] shrink-0">AL</div>
                 <div class="min-w-0">
@@ -406,21 +406,21 @@
             <div>
               <label class="text-[12.5px] font-medium">Expiry</label>
               <div class="mt-2 space-y-2">
-                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#FAFAFA]">
+                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#F6F2EA]">
                   <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" checked />
                   <div>
                     <span class="text-[13px] font-medium">Auto-expire on next survey</span>
                     <p class="text-[12px] text-[var(--muted)] mt-0.5">A new <span class="font-mono">survey</span> row in <span class="font-mono">ai_levels</span> will supersede this override automatically.</p>
                   </div>
                 </label>
-                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#FAFAFA]">
+                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#F6F2EA]">
                   <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" />
                   <div>
                     <span class="text-[13px] font-medium">Pin until manually changed</span>
                     <p class="text-[12px] text-[var(--muted)] mt-0.5">Survey responses will be ignored for this engineer. Use sparingly.</p>
                   </div>
                 </label>
-                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#FAFAFA]">
+                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#F6F2EA]">
                   <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" />
                   <div class="flex-1">
                     <span class="text-[13px] font-medium">Custom date</span>
@@ -431,7 +431,7 @@
             </div>
 
             <!-- Audit signature preview -->
-            <div class="rounded-lg border border-[var(--border)] bg-[#FAFAFA] p-4 flex items-start gap-4">
+            <div class="rounded-lg border border-[var(--border)] bg-[#F6F2EA] p-4 flex items-start gap-4">
               <div class="h-12 w-12 rounded-md sigil grid place-items-center bg-white border border-[var(--border)] shrink-0">
                 <i data-lucide="file-signature" class="w-5 h-5 text-[var(--ink)]"></i>
               </div>
@@ -445,7 +445,7 @@
 
           </div>
 
-          <footer class="px-6 py-4 border-t border-[var(--border)] bg-[#FAFAFA] flex items-center justify-between gap-3">
+          <footer class="px-6 py-4 border-t border-[var(--border)] bg-[#F6F2EA] flex items-center justify-between gap-3">
             <p class="text-[11.5px] text-[var(--muted)]">An email is sent to <span class="font-mono text-[var(--ink)]">aleksandras.vaitkus@visma.lt</span> and the coach.</p>
             <div class="flex items-center gap-2">
               <button type="button" class="btn-ghost focus-ring h-9 px-3 rounded-md text-[13px] text-[var(--muted)]">Cancel</button>
@@ -468,7 +468,7 @@
           </a>
         </div>
         <div class="rounded-xl bg-white ring-soft overflow-hidden">
-          <div class="grid grid-cols-[1.4fr_0.9fr_0.7fr_1.4fr_140px] px-5 h-10 items-center text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium border-b border-[var(--border)] bg-[#FAFAFA]">
+          <div class="grid grid-cols-[1.4fr_0.9fr_0.7fr_1.4fr_140px] px-5 h-10 items-center text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium border-b border-[var(--border)] bg-[#F6F2EA]">
             <div>Employee</div>
             <div>Change</div>
             <div>Source</div>

@@ -1,192 +1,119 @@
-# Design system — consolidated
+# Design system — consolidated (Stage-3 final pass)
 
-**Status:** Canonical, post-Stage-2 swarm consolidation
-**Scope:** Tokens, type, color, spacing, radius, elevation, iconography, backdrop
-**How to read this:** Where the eleven swarm bundles disagreed, this file picks one winner and explains why. Future implementation in code must use these tokens verbatim. The spec in `01-overview.md §7` is the parent; this file resolves the ambiguities §7 left open.
-
----
-
-## 1. Type stack
-
-The swarm split roughly in half. Six bundles (01, 06, 07, 08, 09, 10) used **Inter + Inter Tight + JetBrains Mono** — the literal reading of §7 ("Inter (or Visma's brand sans if specified)"). Five bundles (02, 03, 04, 05, 11) reached for **Fraunces** (variable serif) as the display face, paired with Geist or IBM Plex Sans for body — an editorial direction nobody asked for but several agents reached for independently.
-
-**Winner: Inter + Inter Tight + JetBrains Mono.**
-
-```
---font-display : 'Inter Tight', 'Inter', system-ui, sans-serif
---font-body    : 'Inter', system-ui, sans-serif
---font-mono    : 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace
-```
-
-- Display (`Inter Tight`) — page titles, hero numerals (level glyphs, KPI tiles), card section headlines. `letter-spacing: -0.02em`.
-- Body (`Inter`) — everything else. Weights used: 400 / 500 / 600 / 700.
-- Mono (`JetBrains Mono`) — IDs, timestamps, cycle countdown, level codes (`L3`), row numbers, kbd hints. Weights 400 / 500. Mono is reserved for **values that prove something happened**.
-
-**Why Inter, not Fraunces.** §7 explicitly lists "decorative" as anti-Visma, and §6.3 reserves a single accent color. Fraunces is a beautiful face but it pushes the product toward "magazine," not "workspace." The Inter Tight + Inter pair is the most disciplined Nordic reading of §7. Bundles 02/03/04 are still useful — their numerals, ladders, and labels translate cleanly to Inter Tight; only the serif H1s need to change.
-
-**Type scale (px):** 11 · 12 · 13 · 14 · 16 · 18 · 20 · 24 · 30 · 34 · 48. Line height 1.5 body, 1.15–1.25 headings. Uppercase eyebrow labels render at 11–12px with `letter-spacing: 0.16em`.
+**Status:** Canonical, post-Stage-3 consolidation
+**Date:** 2026-05-12
+**Scope:** Font stack and surface token set. Aligns all in-app mockups to one visual language without rewriting content or restructuring layouts.
+**How to read this:** This file supersedes the earlier Stage-2 consolidated `design-system.md`. The Stage-2 file picked an Inter / cool-white direction; the design lead's Stage-3 decision is to lean into the warm-paper + Fraunces editorial direction that several agents reached for independently. Emails and feedback forms are out of scope for this pass.
 
 ---
 
-## 2. Color tokens
+## 1. Canonical token table
 
-Surface drifted hardest. The swarm produced two clusters:
+### Fonts
 
-- **Cool-white cluster (Inter bundles):** surface `#FAFAFA`, card `#FFFFFF`, border `#E5E7EB`. Matches §7 verbatim.
-- **Warm-paper cluster (serif bundles):** surface `#FBFAF7` (05) / `#FAFAF7` (04) / `#F6F2EA` (03) / `#F4F1EC` (11 email canvas). Hairlines warmed to `#E8E2D7` / `#E6E0D8`.
+| Token | Stack | Usage |
+|---|---|---|
+| Display / serif | `'Fraunces', serif` | Page titles, section headlines, hero numerals, anywhere `.font-display` is applied. Optical sizing auto, letter-spacing `-0.02em` for large display, `-0.01em` for body display. |
+| UI sans | `'Inter', system-ui, sans-serif` | Body, labels, form controls, nav, tables. Weights 400 / 500 / 600 / 700. |
+| Mono | `'JetBrains Mono', monospace` | IDs, timestamps, cycle countdown, level codes (L1–L5), kbd hints, row numbers. Weights 400 / 500 / 600. |
 
-**Winner: cool-white surface, with one warm exception.** The product is a workspace, not a publication. `#FAFAFA` is what §7 prescribes; the warm tones drift toward editorial. The single exception is **the email canvas** (bundle 11) — emails sit in third-party clients and benefit from a warmer outside-the-card color to feel un-SaaS. That stays warm. In-app, all surfaces are cool.
+Single Google Fonts import on every in-app page:
 
-### Canonical token list
+```html
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+```
+
+### Surfaces, text, hairlines
 
 | Token | Hex | Usage |
 |---|---|---|
-| `--surface` | `#FAFAFA` | App background. In-product only. |
-| `--surface-warm` | `#F4F1EC` | **Email canvas only** — outside the 600px container. |
-| `--card` | `#FFFFFF` | Card / panel / modal background. |
-| `--ink` | `#1A1A1A` | Primary text, primary icons, dark fills (charts, "active" nav). |
-| `--ink-2` | `#374151` | Secondary text used inside dense rows. |
-| `--muted` | `#6B7280` | Body labels, helper text, eyebrow labels. |
-| `--muted-2` | `#9CA3AF` | Faintest text (timestamps inside chips, divider mono labels). |
-| `--border` | `#E5E7EB` | Standard 1px hairline. |
-| `--border-strong` | `#D1D5DB` | Hover-state borders on buttons, focus borders, filter active. |
-| `--hairline` | `rgba(17,17,17,0.06)` | Card inner ring (`box-shadow: inset 0 0 0 1px`). Use instead of a border when you don't want a paint. |
-| `--focus-ring` | `#E70641` (2px outline, 2px offset) | Keyboard focus only. Never aria-decorative. |
-| `--brand-primary` | `#E70641` | Visma magenta. Reserved per §6.3 — see "Magenta discipline" below. |
-| `--brand-primary-hover` | `#C70069` | Hover state for primary buttons. |
-| `--brand-primary-deep` | `#BE185D` | Used **only** as the L5 level color and as the magenta "target" line on insights charts. Coincides with `--level-5`. |
-| `--status-assigned` | `#6B7280` | Assignment in `assigned` state. |
-| `--status-scheduled` | `#2563EB` | `scheduled`. Tinted background: `rgba(37,99,235,0.08)`. |
-| `--status-completed` | `#16A34A` | `completed`. Tinted background: `rgba(22,163,74,0.08)`. |
-| `--status-feedback` | `#7C3AED` | `feedback_submitted`. Tinted background: `rgba(124,58,237,0.08)`. |
-| `--status-autopair` | `#D97706` | `auto_paired` flag (independent of status enum). Tinted background: `rgba(217,119,6,0.10)`. |
-| `--level-1` | `#64748B` | Slate — no AI / completion only. |
-| `--level-2` | `#0EA5E9` | Sky — IDE agent. |
-| `--level-3` | `#10B981` | Emerald — CLI agent. |
-| `--level-4` | `#F59E0B` | Amber — multiple CLI in parallel. |
-| `--level-5` | `#BE185D` | Deep magenta — orchestrator / fleet. |
-| `--ok` | `#16A34A` | Generic success (import succeeded). |
-| `--warn` | `#D97706` | Generic warning (import warnings, near-cap). |
-| `--err` | `#DC2626` | Generic error (import failed). |
-| `--info` | `#2563EB` | Generic info. |
+| `--paper` | `#F6F2EA` | Main app background. Body / html surface. |
+| `--paper-warm` | `#FBFAF7` | Cards, inset surfaces, modals, sticky headers, expand-row gradient end. |
+| `--ink` | `#131211` | Primary text, primary icons, active nav, dark fills (charts, "you are here"). |
+| `--muted` | `#6B6258` | Secondary text, helper text, eyebrow labels. Replaces `#6B7280` / `#6B6760`. |
+| `--hairline` | `#E4DED2` | Standard 1px border on cards, dividers, table rows, filter chips, pills, badges. Replaces `#E5E7EB` / `#D1D5DB` / `#E8E5DE` / `#E6E0D8` / `#E8E2D7`. |
+| `--magenta` | `#E70641` | Visma brand — primary CTA background and primary accent strokes only. Never as surface or border on neutral pills. |
 
-### Magenta discipline
+### Untouched palettes
 
-`#E70641` appears **at most twice per screen**:
+Level glyph palette (kept from §7 of `01-overview.md`):
 
-1. The page's single primary CTA.
-2. One brand-signature anchor per page: the magenta `V` monogram in the sidebar header, the focus ring (keyboard-only), or the "target" / "current" marker on a chart (insights screens). Bundles 04 and 09 also use it as the "current node" of timelines — acceptable as a "you are here" affordance, not decoration.
+| Token | Hex |
+|---|---|
+| `--l1` | `#64748B` (slate) |
+| `--l2` | `#0EA5E9` (sky) |
+| `--l3` | `#10B981` (emerald) |
+| `--l4` | `#F59E0B` (amber) |
+| `--l5` | `#BE185D` (deep magenta) |
 
-Never use magenta for status, level, hover backgrounds, card chrome, or decorative glow. Bundle 01's hero-card radial wash (`rgba(225,0,120,0.05)` corner gradient) is **rejected** as decoration; the NextSessionCard uses a flat white card.
+Status palette (per `01-overview.md §7` — kept, except the `assigned` neutral which now coincides with `--muted` `#6B6258`):
+
+| State | Hex |
+|---|---|
+| `assigned` | `#6B6258` (now == muted) |
+| `scheduled` | `#2563EB` |
+| `completed` | `#16A34A` |
+| `feedback_submitted` | `#7C3AED` |
+| `auto_paired` | `#D97706` |
+
+### Component conventions
+
+- **Pills / badges / chips** keep their per-component logic (status pills, level badges, hard/soft chips). The consolidation pass only normalized two visual properties:
+  - `border-radius: 999px` for all pills.
+  - `border-color: #E4DED2` for any chip / pill rendered on neutral chrome.
+- **Magenta discipline.** `#E70641` is reserved for primary CTAs and one brand-signature anchor per page (sidebar V monogram, focus ring, "current" timeline node). Never status, never level, never decorative.
 
 ---
 
-## 3. Spacing scale
+## 2. Decisions made (one paragraph per category)
 
-Tailwind defaults across the board, with one consistent omission: nobody used `4` (1px) and `40` (10rem). Canonical scale:
+**Fonts.** The Stage-2 consolidation picked Inter Tight + Inter + JetBrains Mono, dismissing the serif drift as decorative. Stage-3 reverses that call: the editorial weight of Fraunces is the differentiator that takes this product out of the generic-internal-tool aesthetic and into something that reads as a Visma artifact, while Inter handles all UI density. Every mockup is now on one stack — Fraunces (display), Inter (UI), JetBrains Mono (mono). Inter Tight, Geist, Geist Mono, IBM Plex Sans, IBM Plex Mono, Manrope, and SF Pro have all been swept out. Google Fonts links collapsed to a single canonical import everywhere.
 
-```
-4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64
-```
+**Surfaces.** The two clusters that emerged in Stage-2 (cool-white `#FAFAFA` / `#FFFFFF` / `#E5E7EB` versus warm paper `#FBFAF7` / `#FAFAF7` / `#F4F1EC` with warmed hairlines) are consolidated onto the warm paper direction. Main background is `#F6F2EA`, cards and inset surfaces are `#FBFAF7`, the canonical hairline is `#E4DED2`. The warm direction better complements Fraunces, reads less SaaS-generic, and lines up with the email canvas tone — making in-app and email feel like one product. Ink lifted to a warmer near-black `#131211`, muted warmed to `#6B6258`.
 
-- Card padding: `24` (`p-6`) on dashboards, `20` (`p-5`) on dense tables.
-- Section gap inside a page: `28–36` (`mt-7` / `mt-9`).
-- Row height in tables: `56–60px` (bundle 05's choice; bundle 07 used 52 — round up to 56).
-- Grid gutter: `20` (`gap-5`).
-- Page max-width: `1240px` (bundle 01) — adopt as the canonical content cap.
+**Borders and chrome.** Every neutral border drift — `#E5E7EB`, `#D1D5DB`, `#E8E5DE`, `#E8E2D7`, `#E6E0D8` — collapses to the canonical hairline `#E4DED2`. Where mockups defined a `--border-strong` token at `#D1D5DB`, the value is now `#E4DED2`; the variable name is preserved so component CSS still resolves. Roster's deeper warm secondary tones (`#F7F4ED`, `#F1EEE7`, `#4A463F`, `#3A3630`) are left in place — they harmonize with the new ink / muted and act as a coherent warm hover scale.
+
+**Pills, chips, badges.** No structural changes: status pill logic, level badge palette, hard/soft chip behavior all preserved as defined per screen. Only the two visual primitives the design lead called out were normalized: pill radius (`999px`, already true everywhere) and chip border color (`#E4DED2`). Magenta is never used as a neutral pill border.
+
+**Type scale and layout.** Untouched. Each agent's choices for type size, line-height, spacing, and grid stand. The consolidation is purely token alignment, not redesign.
 
 ---
 
-## 4. Radius scale
+## 3. Files touched (21 HTMLs)
 
-| Token | Value | Usage |
-|---|---|---|
-| `--radius-sm` | `4px` | Kbd chips, level codes on dense tables, sparkline bars. |
-| `--radius-md` | `8px` | Buttons, inputs, filter chips, nav items. **Default.** |
-| `--radius-lg` | `10–12px` | Cards, panels, modals. Bundles drifted between 10 and 12 — settle on **10px** for cards and **12px** for elevated/insight cards. |
-| `--radius-pill` | `9999px` | Pills, badges, avatars, progress fills, focus dots. |
+All under `/Users/tomek/dev/cross-project-reviews/docs/ux/screens/`. Out of scope: `11-emails/` (table-layout / web-safe-font constraints) and `03-feedback-forms/` (already aesthetically aligned to the new direction).
 
-`rounded-xl` (1rem) appears in two bundles for hero numeral tiles (the L3 fill on the dashboard, the level-glyph backplate). Acceptable, but call it `--radius-tile: 14px` and use only for the level glyph backplate.
-
----
-
-## 5. Elevation
-
-Visma is flat. The swarm correctly trended that way; the two outliers (bundle 01's hero radial wash, bundle 04's `0 8px 24px -10px` on primary buttons) are decoration. Canonical:
-
-- **No drop shadows on resting surfaces.** Cards are `1px solid var(--border)` or `inset 0 0 0 1px var(--hairline)`.
-- **Primary button hover only:** `0 8px 24px -8px rgba(225,0,120,0.45)`. This is the only shadow in the system.
-- **Modal/dialog:** `0 24px 64px -16px rgba(17,17,17,0.18)` over a `rgba(17,17,17,0.4)` scrim. No blur.
-- **Sticky bars (top nav, sticky filter bar, modal headers):** no shadow; rely on a 1px bottom border.
-- **No glassmorphism, no backdrop-filter, no inner glows.** §7 says it explicitly.
-
----
-
-## 6. Iconography
-
-Eleven bundles, eleven uses of `lucide@latest` via the umd bundle — universal agreement. **Winner: Lucide.** No heroicons, no phosphor, no custom SVG icon library.
-
-- Size convention: `w-3.5 h-3.5` (14px) in dense table cells, `w-4 h-4` (16px) in body and pills, `w-5 h-5` (20px) in card headers, `w-6 h-6` (24px) for empty-state illustrations.
-- Stroke is the lucide default (`stroke-width: 2`). Never thin them.
-- The lucide icons used as inline pill glyphs are sized `12px` via the `.pill > svg { width:12px; height:12px }` rule (bundle 01).
-- Emails use **no SVG icons** (bundle 11 was correct) — substitute IBM Plex Mono unicode glyphs or skip.
+| File | Summary |
+|---|---|
+| `01-auth-and-dashboard/dashboard.html` | Swapped Inter Tight display → Fraunces; surfaces `#FAFAFA`/`#FFFFFF`/`#E5E7EB`/`#1A1A1A`/`#6B7280` → canonical warm tokens. |
+| `01-auth-and-dashboard/login.html` | Same swap. Hero panel and form column now sit on paper / paper-warm. |
+| `02-engineer-sessions/sessions-list.html` | Inter + Fraunces preserved; Tailwind config palette retuned (surface, ink, muted, line). Inline `#FAFAFA` body bg → `#F6F2EA`. |
+| `02-engineer-sessions/session-detail-reviewee.html` | Same — Inter sans-serif body now sits on `#F6F2EA`, hairlines `#E4DED2`. |
+| `02-engineer-sessions/session-detail-reviewer.html` | Same. |
+| `04-profile/profile.html` | Body sans Geist → Inter; Geist Mono → JetBrains Mono. `--surface` `#FAFAF7` → `#F6F2EA`; `--ink` `#111111` → `#131211`; `--line` `#E5E7EB` → `#E4DED2`. |
+| `04-profile/self-assessment.html` | Same Geist → Inter / Geist Mono → JetBrains Mono sweep plus canonical tokens. |
+| `05-coach-roster/roster-normal.html` | IBM Plex Sans → Inter (Tailwind config + inline). Body bg `#FBFAF7` → `#F6F2EA` (paper); inset surfaces kept on `#FBFAF7` (paper-warm). Hairlines `#E8E5DE` → `#E4DED2`. |
+| `05-coach-roster/roster-autopair-warning.html` | Same. |
+| `06-coachee-detail/coachee-detail.html` | Inter Tight display → Fraunces. Surface tokens migrated. |
+| `06-coachee-detail/assignment-recorder.html` | Same. |
+| `07-coach-assignments/assignments-board.html` | Inter Tight → Fraunces. Surfaces, hairlines, ink, muted migrated. |
+| `07-coach-assignments/assignments-empty.html` | Same. |
+| `08-insights/insights-completion.html` | Inter Tight → Fraunces; surface set migrated. SVG label colors `#9CA3AF` left as muted-2; ink labels switched to `#131211`. |
+| `08-insights/insights-levels.html` | Same. |
+| `09-admin-cycles/cycle-list.html` | Inter Tight → Fraunces; surface/border/ink/muted tokens migrated. |
+| `09-admin-cycles/cycle-editor-new.html` | Same. |
+| `09-admin-cycles/cycle-editor-edit-active.html` | Same. |
+| `10-admin-imports/imports.html` | Same. |
+| `10-admin-imports/imports-error.html` | Same. |
+| `10-admin-imports/level-override.html` | Same. |
 
 ---
 
-## 7. Backdrop pattern
+## 4. What this pass did NOT touch
 
-Five bundles applied some backdrop texture: bundle 01 (faint 56px grid + corner magenta wash), bundle 06 (same 56px grid carried over), bundle 03 (warm paper dot grain), bundle 04 (off-white surface no pattern), bundle 11 (warm canvas, no pattern).
-
-**Winner: faint 56px grid, no magenta wash.**
-
-```css
-.backdrop {
-  background-image:
-    linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(0,0,0,0.025) 100%),
-    linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(0,0,0,0.025) 100%);
-  background-size: 56px 56px, 56px 56px;
-}
-```
-
-Applied to the login page and to authenticated full-bleed surfaces (`/login`, `/admin/imports/error`, empty states). The dashboard, lists, insights, forms — all of these sit on a flat `--surface` with no backdrop. The corner magenta wash from bundle 01 is **rejected** (decoration). The warm dot grain from bundle 03 is **rejected** (editorial drift).
-
----
-
-## 8. Motion & interaction
-
-The swarm converged here: `transition: background 120ms ease, box-shadow 120ms ease, transform 120ms ease` on the primary button, `translateY(1px)` on `:active`. Adopt as canonical. No page-load animations, no shimmer skeletons. Loading is a single spinner or a `Skeleton` block — same neutral surface as `--border`.
-
----
-
-## 9. Tokens-as-CSS-vars boilerplate
-
-Every screen file should open with this `:root` block, in this order. The swarm already used very similar lists — this is the consolidated minimum:
-
-```css
-:root {
-  --font-display: 'Inter Tight', 'Inter', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
-
-  --surface: #FAFAFA;
-  --card: #FFFFFF;
-  --ink: #1A1A1A;
-  --ink-2: #374151;
-  --muted: #6B7280;
-  --muted-2: #9CA3AF;
-  --border: #E5E7EB;
-  --border-strong: #D1D5DB;
-  --hairline: rgba(17,17,17,0.06);
-
-  --magenta: #E70641;
-  --magenta-hover: #C70069;
-
-  --l1: #64748B;  --l2: #0EA5E9;  --l3: #10B981;  --l4: #F59E0B;  --l5: #BE185D;
-
-  --s-assigned: #6B7280;
-  --s-scheduled: #2563EB;
-  --s-completed: #16A34A;
-  --s-feedback:  #7C3AED;
-  --s-autopair:  #D97706;
-}
-```
+- `11-emails/*` — table layouts, web-safe fonts, email-client constraints. Separate spec.
+- `03-feedback-forms/*` — already on Fraunces + Inter + JetBrains Mono with warm paper; no drift.
+- Level palette colors (`--l1`..`--l5`).
+- Status palette colors except `assigned`, which moves to muted `#6B6258` by virtue of replacing the old `#6B7280` token.
+- Type scales, line-heights, spacing, radius, layout, content, copy, DOM structure, component logic.
+- Magenta hover state `#C70069` / `#C20068` and its rgba glow on primary buttons.

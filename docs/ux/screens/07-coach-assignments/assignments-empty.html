@@ -7,24 +7,24 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     :root {
       --magenta: #E70641;
       --magenta-deep: #C70069;
-      --surface: #FAFAFA;
+      --surface: #F6F2EA;
       --card: #FFFFFF;
-      --ink: #1A1A1A;
-      --muted: #6B7280;
+      --ink: #131211;
+      --muted: #6B6258;
       --muted-2: #9CA3AF;
-      --border: #E5E7EB;
-      --border-strong: #D1D5DB;
+      --border: #E4DED2;
+      --border-strong: #E4DED2;
       --l1: #64748B; --l2: #0EA5E9; --l3: #10B981; --l4: #F59E0B; --l5: #BE185D;
-      --s-assigned: #6B7280; --s-scheduled: #2563EB; --s-completed: #16A34A; --s-feedback: #7C3AED; --s-autopair: #D97706;
+      --s-assigned: #6B6258; --s-scheduled: #2563EB; --s-completed: #16A34A; --s-feedback: #7C3AED; --s-autopair: #D97706;
     }
     html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
-    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
     .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
     .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; border-radius: 6px; }
     .btn-primary {
@@ -41,7 +41,7 @@
     .mselect { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--border); background: white; font-size: 13px; color: #374151; }
 
     .tile { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
-    .tile-num { font-family: 'Inter Tight', sans-serif; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; color: #9CA3AF; }
+    .tile-num { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; color: #9CA3AF; }
     .tile-sub { font-size: 12px; color: var(--muted); }
 
     .nav-active { background: #F3F4F6; color: var(--ink); }
@@ -70,14 +70,14 @@
     .empty-illu::before {
       content: ""; position: absolute; inset: 0;
       background-image:
-        linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(17,17,17,0.05) 100%),
-        linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(17,17,17,0.05) 100%);
+        linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(19,18,17,0.05) 100%),
+        linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(19,18,17,0.05) 100%);
       background-size: 24px 24px;
       mask-image: radial-gradient(ellipse at center, black 40%, transparent 75%);
     }
     .empty-skel { position: absolute; left: 18px; right: 18px; border-radius: 6px; }
     .skel-bar { height: 8px; background: #ECEEF1; }
-    .skel-pill { height: 10px; border-radius: 999px; background: #E5E7EB; }
+    .skel-pill { height: 10px; border-radius: 999px; background: #E4DED2; }
 
     .checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
     .check-dot { width: 18px; height: 18px; border-radius: 999px; display: grid; place-items: center; background: #F3F4F6; color: #9CA3AF; font-size: 10px; flex: none; margin-top: 2px; }
@@ -114,7 +114,7 @@
     </nav>
 
     <div class="mt-auto p-4 border-t border-[var(--border)]">
-      <div class="rounded-lg border border-[var(--border)] p-3 bg-[#FAFAFA]">
+      <div class="rounded-lg border border-[var(--border)] p-3 bg-[#F6F2EA]">
         <div class="flex items-center gap-2 text-[11.5px] text-[var(--muted)]">
           <i data-lucide="info" class="w-3.5 h-3.5"></i> Cycle ends in <span class="text-[var(--ink)] font-medium">38 days</span>
         </div>
@@ -140,7 +140,7 @@
       <div class="ml-auto flex items-center gap-2">
         <div class="relative">
           <i data-lucide="search" class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--muted-2)]"></i>
-          <input type="text" placeholder="Search assignments…" disabled class="h-9 w-72 pl-8 pr-3 text-[13.5px] border border-[var(--border)] rounded-lg bg-[#FAFAFA] placeholder:text-[var(--muted-2)]" />
+          <input type="text" placeholder="Search assignments…" disabled class="h-9 w-72 pl-8 pr-3 text-[13.5px] border border-[var(--border)] rounded-lg bg-[#F6F2EA] placeholder:text-[var(--muted-2)]" />
         </div>
         <div class="ml-1 flex items-center gap-2 pl-2 border-l border-[var(--border)]">
           <div class="ava">EM</div>

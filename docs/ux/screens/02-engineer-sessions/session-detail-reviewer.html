@@ -8,7 +8,7 @@
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <script>
   tailwind.config = {
     theme: {
@@ -19,10 +19,10 @@
           mono: ['JetBrains Mono', 'ui-monospace'],
         },
         colors: {
-          ink: '#1A1A1A', muted: '#6B7280', line: '#E5E7EB', surface: '#FAFAFA',
+          ink: '#131211', muted: '#6B6258', line: '#E4DED2', surface: '#F6F2EA',
           magenta: '#E70641',
           lvl1: '#64748B', lvl2: '#0EA5E9', lvl3: '#10B981', lvl4: '#F59E0B', lvl5: '#BE185D',
-          st_assigned: '#6B7280', st_scheduled: '#2563EB', st_completed: '#16A34A',
+          st_assigned: '#6B6258', st_scheduled: '#2563EB', st_completed: '#16A34A',
           st_feedback: '#7C3AED', st_auto: '#D97706',
         },
       },
@@ -30,13 +30,13 @@
   };
 </script>
 <style>
-  html, body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #1A1A1A; }
+  html, body { font-family: 'Inter', sans-serif; background: #F6F2EA; color: #131211; }
   .font-display { font-family: 'Fraunces', serif; font-optical-sizing: auto; }
-  .hairline { box-shadow: inset 0 0 0 1px #E5E7EB; }
-  .dotline { background-image: radial-gradient(#D1D5DB 1px, transparent 1px); background-size: 6px 6px; }
+  .hairline { box-shadow: inset 0 0 0 1px #E4DED2; }
+  .dotline { background-image: radial-gradient(#E4DED2 1px, transparent 1px); background-size: 6px 6px; }
   .focus-magenta:focus { outline: 2px solid #E70641; outline-offset: 2px; }
   textarea.prep { line-height: 1.6; }
-  .markdown-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6B7280; }
+  .markdown-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6B6258; }
 </style>
 </head>
 <body class="min-h-screen">

@@ -7,7 +7,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <script>
   tailwind.config = {
     theme: {
@@ -15,17 +15,17 @@
         colors: {
           paper:    '#FBFAF7',
           card:     '#FFFFFF',
-          ink:      '#16140F',
-          muted:    '#6B6760',
+          ink:      '#131211',
+          muted:    '#6B6258',
           subtle:   '#A09B92',
-          line:     '#E8E5DE',
+          line:     '#E4DED2',
           lineSoft: '#F1EEE7',
           magenta:  '#E70641',
           magenta2: '#C20068',
         },
         fontFamily: {
           display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
-          sans:    ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui'],
+          sans:    ['"Inter"', 'ui-sans-serif', 'system-ui'],
           mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
         },
       }
@@ -33,10 +33,10 @@
   }
 </script>
 <style>
-  html, body { background: #FBFAF7; color: #16140F; font-family: 'IBM Plex Sans', system-ui; }
+  html, body { background: #F6F2EA; color: #131211; font-family: 'Inter', system-ui, sans-serif; }
   .font-display { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; }
   .smallcaps { text-transform: uppercase; letter-spacing: 0.14em; font-size: 10.5px; font-weight: 500; }
-  .hairline { border-color: #E8E5DE; }
+  .hairline { border-color: #E4DED2; }
   .hairline-soft { border-color: #F1EEE7; }
   body::before {
     content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -61,27 +61,27 @@
     border-radius: 6px; font-size: 13.5px; color: #3A3630;
   }
   .nav-item:hover { background: #F1EEE7; }
-  .nav-item.active { background: #16140F; color: #FBFAF7; }
+  .nav-item.active { background: #131211; color: #FBFAF7; }
   .nav-section { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #A09B92; padding: 0 10px; }
   .topbar-cyclepill {
     display:inline-flex; align-items:center; gap:8px;
-    padding: 4px 10px 4px 8px; border-radius: 999px; background: #16140F; color: #FBFAF7;
+    padding: 4px 10px 4px 8px; border-radius: 999px; background: #131211; color: #FBFAF7;
     font-size: 11.5px;
   }
   .filter-btn {
     display:inline-flex; align-items:center; gap: 6px;
-    padding: 6px 10px; border: 1px solid #E8E5DE; border-radius: 6px;
+    padding: 6px 10px; border: 1px solid #E4DED2; border-radius: 6px;
     background: #FFFFFF; font-size: 12.5px; color: #3A3630;
   }
-  .filter-btn:hover { border-color: #16140F; }
-  .filter-btn.active { background: #16140F; color: #FBFAF7; border-color: #16140F; }
+  .filter-btn:hover { border-color: #131211; }
+  .filter-btn.active { background: #131211; color: #FBFAF7; border-color: #131211; }
   .filter-btn.danger {
     background: #FEF2F2; color: #B91C1C; border-color: #FECACA;
   }
   .table-head th {
     font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
     color: #A09B92; font-weight: 500; padding: 10px 16px;
-    border-bottom: 1px solid #E8E5DE; background: #FBFAF7;
+    border-bottom: 1px solid #E4DED2; background: #FBFAF7;
   }
   .table-row td { padding: 14px 16px; border-bottom: 1px solid #F1EEE7; }
   .btn-primary {
@@ -97,16 +97,16 @@
   .btn-on-dark:hover { background: rgba(251,250,247,0.07); }
   .btn-ghost {
     padding: 6px 11px; border-radius: 6px; font-size: 12.5px;
-    color: #3A3630; border: 1px solid #E8E5DE; background: #fff;
+    color: #3A3630; border: 1px solid #E4DED2; background: #fff;
   }
-  .btn-ghost:hover { border-color: #16140F; }
+  .btn-ghost:hover { border-color: #131211; }
   .btn-quiet { font-size: 12.5px; color: #3A3630; padding: 6px 9px; border-radius: 6px; }
   .btn-quiet:hover { background: #F1EEE7; }
-  .ann { font-family: 'Fraunces', serif; font-style: italic; color: #6B6760; }
+  .ann { font-family: 'Fraunces', serif; font-style: italic; color: #6B6258; }
   .kbd {
     font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
-    padding: 1px 5px; border: 1px solid #E8E5DE; border-bottom-width: 2px;
-    border-radius: 4px; color: #6B6760; background: #FBFAF7;
+    padding: 1px 5px; border: 1px solid #E4DED2; border-bottom-width: 2px;
+    border-radius: 4px; color: #6B6258; background: #FBFAF7;
   }
   .avatar {
     width: 30px; height: 30px; border-radius: 999px;
@@ -123,7 +123,7 @@
   /* nudge banner */
   .nudge {
     position: relative; isolation: isolate; overflow: hidden;
-    border-radius: 10px; color: #FBFAF7; background: #16140F;
+    border-radius: 10px; color: #FBFAF7; background: #131211;
     border: 1px solid #2A2722;
   }
   .nudge::before {
@@ -152,7 +152,7 @@
     font-size: 56px; line-height: 0.95; font-weight: 500; letter-spacing: -0.02em;
   }
   .countdown sub {
-    font-family: 'IBM Plex Sans'; font-size: 11px; letter-spacing: 0.14em;
+    font-family: 'Inter'; font-size: 11px; letter-spacing: 0.14em;
     text-transform: uppercase; color: rgba(251,250,247,0.65); vertical-align: middle;
     margin-left: 8px;
   }
@@ -221,7 +221,7 @@
     </nav>
     <div class="px-4 py-4 border-t hairline-soft">
       <div class="flex items-center gap-3">
-        <div class="avatar" style="background:#16140F">TŠ</div>
+        <div class="avatar" style="background:#131211">TŠ</div>
         <div class="leading-tight">
           <div class="text-[12.5px] font-medium">Tomas Šturas</div>
           <div class="text-[11px] text-muted">Coach · Visma.net BG</div>
@@ -512,8 +512,8 @@
             <td class="text-[13px] tabular text-muted">06 Feb 2026</td>
             <td>
               <div>
-                <span class="status-pill" style="background:#F3F4F6;color:#374151;border-color:#E5E7EB">
-                  <span class="dot" style="background:#6B7280"></span> Assigned
+                <span class="status-pill" style="background:#F3F4F6;color:#374151;border-color:#E4DED2">
+                  <span class="dot" style="background:#6B6258"></span> Assigned
                 </span>
                 <div class="text-[11px] text-muted mt-1">→ Aušra Petraitytė (L5)</div>
               </div>

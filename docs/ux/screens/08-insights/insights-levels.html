@@ -7,17 +7,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     :root {
       --magenta: #E70641;
-      --surface: #FAFAFA;
+      --surface: #F6F2EA;
       --card: #FFFFFF;
-      --ink: #1A1A1A;
-      --muted: #6B7280;
+      --ink: #131211;
+      --muted: #6B6258;
       --muted-2: #9CA3AF;
-      --border: #E5E7EB;
+      --border: #E4DED2;
       --border-2: #F1F2F4;
       --l1: #64748B;
       --l2: #0EA5E9;
@@ -26,12 +26,12 @@
       --l5: #BE185D;
     }
     html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
-    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
     .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
     .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
     .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
-    .card { background: var(--card); border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
-    .hairline { box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
+    .card { background: var(--card); border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(19,18,17,0.06); }
+    .hairline { box-shadow: inset 0 0 0 1px rgba(19,18,17,0.06); }
     .btn-primary {
       background: var(--magenta); color:#fff;
       transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
@@ -314,10 +314,10 @@
                 </g>
 
                 <!-- Baseline -->
-                <line x1="40" y1="250" x2="710" y2="250" stroke="#D1D5DB" stroke-width="1"/>
+                <line x1="40" y1="250" x2="710" y2="250" stroke="#E4DED2" stroke-width="1"/>
 
                 <!-- Labels and counts -->
-                <g font-family="Inter" font-size="12" fill="#1A1A1A" class="num">
+                <g font-family="Inter" font-size="12" fill="#131211" class="num">
                   <!-- counts on top -->
                   <text x="104" y="158" text-anchor="middle" font-weight="600">84</text>
                   <text x="244.4" y="44" text-anchor="middle" font-weight="600">198</text>
@@ -327,25 +327,25 @@
                 </g>
                 <!-- Level chips along baseline -->
                 <g font-family="Inter" font-size="11">
-                  <text x="104" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L1</text>
-                  <text x="104" y="292" text-anchor="middle" fill="#6B7280">None</text>
-                  <text x="104" y="308" text-anchor="middle" fill="#6B7280">14.1%</text>
+                  <text x="104" y="276" text-anchor="middle" fill="#131211" font-weight="600">L1</text>
+                  <text x="104" y="292" text-anchor="middle" fill="#6B6258">None</text>
+                  <text x="104" y="308" text-anchor="middle" fill="#6B6258">14.1%</text>
 
-                  <text x="244.4" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L2</text>
-                  <text x="244.4" y="292" text-anchor="middle" fill="#6B7280">IDE agent</text>
-                  <text x="244.4" y="308" text-anchor="middle" fill="#6B7280">33.2%</text>
+                  <text x="244.4" y="276" text-anchor="middle" fill="#131211" font-weight="600">L2</text>
+                  <text x="244.4" y="292" text-anchor="middle" fill="#6B6258">IDE agent</text>
+                  <text x="244.4" y="308" text-anchor="middle" fill="#6B6258">33.2%</text>
 
-                  <text x="384.8" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L3</text>
-                  <text x="384.8" y="292" text-anchor="middle" fill="#6B7280">CLI agent</text>
-                  <text x="384.8" y="308" text-anchor="middle" fill="#6B7280">35.9%</text>
+                  <text x="384.8" y="276" text-anchor="middle" fill="#131211" font-weight="600">L3</text>
+                  <text x="384.8" y="292" text-anchor="middle" fill="#6B6258">CLI agent</text>
+                  <text x="384.8" y="308" text-anchor="middle" fill="#6B6258">35.9%</text>
 
-                  <text x="525.2" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L4</text>
-                  <text x="525.2" y="292" text-anchor="middle" fill="#6B7280">Parallel</text>
-                  <text x="525.2" y="308" text-anchor="middle" fill="#6B7280">13.1%</text>
+                  <text x="525.2" y="276" text-anchor="middle" fill="#131211" font-weight="600">L4</text>
+                  <text x="525.2" y="292" text-anchor="middle" fill="#6B6258">Parallel</text>
+                  <text x="525.2" y="308" text-anchor="middle" fill="#6B6258">13.1%</text>
 
-                  <text x="665.6" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L5</text>
-                  <text x="665.6" y="292" text-anchor="middle" fill="#6B7280">Fleet</text>
-                  <text x="665.6" y="308" text-anchor="middle" fill="#6B7280">3.7%</text>
+                  <text x="665.6" y="276" text-anchor="middle" fill="#131211" font-weight="600">L5</text>
+                  <text x="665.6" y="292" text-anchor="middle" fill="#6B6258">Fleet</text>
+                  <text x="665.6" y="308" text-anchor="middle" fill="#6B6258">3.7%</text>
                 </g>
               </svg>
             </div>

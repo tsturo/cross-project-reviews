@@ -7,24 +7,24 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     :root {
       --magenta: #E70641;
       --magenta-hover: #C70069;
-      --surface: #FAFAFA;
+      --surface: #F6F2EA;
       --card: #FFFFFF;
-      --ink: #1A1A1A;
-      --muted: #6B7280;
+      --ink: #131211;
+      --muted: #6B6258;
       --muted-2: #9CA3AF;
-      --border: #E5E7EB;
+      --border: #E4DED2;
     }
     html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
-    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
     .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
     .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
-    .hairline { box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
+    .hairline { box-shadow: inset 0 0 0 1px rgba(19,18,17,0.06); }
     .btn-primary {
       background: var(--magenta);
       color: #fff;
@@ -43,22 +43,22 @@
     .nav-section { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); padding: 16px 10px 6px; }
     .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 500; }
     .cycle-pill { background: #FFF1F8; color: #9D0356; border: 1px solid #FAD3E5; }
-    .section-card { background: #fff; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); padding: 22px 24px; }
+    .section-card { background: #fff; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(19,18,17,0.06); padding: 22px 24px; }
     .section-num { width: 22px; height: 22px; border-radius: 999px; background: #F3F4F6; color: #374151; font-size: 11.5px; font-weight: 600; display: inline-grid; place-items: center; font-family: 'JetBrains Mono', monospace; }
     /* slider */
-    input[type="range"].slider { -webkit-appearance: none; height: 4px; background: linear-gradient(90deg, #111827 var(--p,50%), #E5E7EB var(--p,50%)); border-radius: 999px; width: 100%; }
+    input[type="range"].slider { -webkit-appearance: none; height: 4px; background: linear-gradient(90deg, #111827 var(--p,50%), #E4DED2 var(--p,50%)); border-radius: 999px; width: 100%; }
     input[type="range"].slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 999px; background: #fff; border: 2px solid #111827; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
     /* toggle */
     .toggle { width: 36px; height: 20px; border-radius: 999px; background: #111827; position: relative; cursor: pointer; }
     .toggle::after { content: ""; position: absolute; top: 2px; left: 18px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 120ms ease; }
-    .toggle.off { background: #D1D5DB; }
+    .toggle.off { background: #E4DED2; }
     .toggle.off::after { left: 2px; }
     .filter-token { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: #F3F4F6; color: #1F2937; }
-    .filter-token b { font-weight: 600; color: #111827; background: #fff; border: 1px solid #E5E7EB; padding: 1px 6px; border-radius: 999px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+    .filter-token b { font-weight: 600; color: #111827; background: #fff; border: 1px solid #E4DED2; padding: 1px 6px; border-radius: 999px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
     .filter-token .x { width: 14px; height: 14px; border-radius: 999px; background: #fff; display: grid; place-items: center; cursor: pointer; }
     .sentence-builder { line-height: 32px; font-size: 13.5px; color: #1F2937; }
     .sentence-builder b { font-weight: 600; }
-    .chip-add { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 500; color: var(--muted); border: 1px dashed #D1D5DB; background: #fff; cursor: pointer; }
+    .chip-add { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 500; color: var(--muted); border: 1px dashed #E4DED2; background: #fff; cursor: pointer; }
     .chip-add:hover { color: var(--ink); border-color: #9CA3AF; }
     .kbd { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; color: var(--muted); background: #fff; }
     /* Histogram preview */
@@ -84,18 +84,18 @@
       </div>
       <nav class="px-3 pb-3 flex-1 overflow-auto">
         <div class="nav-section">Workspace</div>
-        <a href="#" class="nav-item"><i data-lucide="layout-dashboard" class="w-4 h-4 text-[#6B7280]"></i> Dashboard</a>
-        <a href="#" class="nav-item"><i data-lucide="calendar-check-2" class="w-4 h-4 text-[#6B7280]"></i> My sessions</a>
+        <a href="#" class="nav-item"><i data-lucide="layout-dashboard" class="w-4 h-4 text-[#6B6258]"></i> Dashboard</a>
+        <a href="#" class="nav-item"><i data-lucide="calendar-check-2" class="w-4 h-4 text-[#6B6258]"></i> My sessions</a>
 
         <div class="nav-section">Admin</div>
         <a href="#" class="nav-item active"><i data-lucide="repeat" class="w-4 h-4"></i> Cycles</a>
-        <a href="#" class="nav-item"><i data-lucide="database" class="w-4 h-4 text-[#6B7280]"></i> Imports</a>
-        <a href="#" class="nav-item"><i data-lucide="shield" class="w-4 h-4 text-[#6B7280]"></i> Overrides</a>
-        <a href="#" class="nav-item"><i data-lucide="clipboard-list" class="w-4 h-4 text-[#6B7280]"></i> Forms</a>
+        <a href="#" class="nav-item"><i data-lucide="database" class="w-4 h-4 text-[#6B6258]"></i> Imports</a>
+        <a href="#" class="nav-item"><i data-lucide="shield" class="w-4 h-4 text-[#6B6258]"></i> Overrides</a>
+        <a href="#" class="nav-item"><i data-lucide="clipboard-list" class="w-4 h-4 text-[#6B6258]"></i> Forms</a>
 
         <div class="nav-section">Insights</div>
-        <a href="#" class="nav-item"><i data-lucide="bar-chart-3" class="w-4 h-4 text-[#6B7280]"></i> Completion</a>
-        <a href="#" class="nav-item"><i data-lucide="trending-up" class="w-4 h-4 text-[#6B7280]"></i> Levels</a>
+        <a href="#" class="nav-item"><i data-lucide="bar-chart-3" class="w-4 h-4 text-[#6B6258]"></i> Completion</a>
+        <a href="#" class="nav-item"><i data-lucide="trending-up" class="w-4 h-4 text-[#6B6258]"></i> Levels</a>
       </nav>
       <div class="px-3 py-3 border-t border-[var(--border)]">
         <div class="flex items-center gap-2.5 px-1">
@@ -104,7 +104,7 @@
             <div class="text-[12.5px] font-semibold">Tomek Szturo</div>
             <div class="text-[11px] text-[var(--muted)]">Admin · Visma BG</div>
           </div>
-          <button class="ml-auto p-1.5 rounded hover:bg-[#F3F4F6] focus-ring"><i data-lucide="log-out" class="w-3.5 h-3.5 text-[#6B7280]"></i></button>
+          <button class="ml-auto p-1.5 rounded hover:bg-[#F3F4F6] focus-ring"><i data-lucide="log-out" class="w-3.5 h-3.5 text-[#6B6258]"></i></button>
         </div>
       </div>
     </aside>
