@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Session with Eglė Jankauskaitė — you are the reviewer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          mono: ['JetBrains Mono', 'ui-monospace'],
+        },
+        colors: {
+          ink: '#1A1A1A', muted: '#6B7280', line: '#E5E7EB', surface: '#FAFAFA',
+          magenta: '#E10078',
+          lvl1: '#64748B', lvl2: '#0EA5E9', lvl3: '#10B981', lvl4: '#F59E0B', lvl5: '#BE185D',
+          st_assigned: '#6B7280', st_scheduled: '#2563EB', st_completed: '#16A34A',
+          st_feedback: '#7C3AED', st_auto: '#D97706',
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html, body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #1A1A1A; }
+  .font-display { font-family: 'Fraunces', serif; font-optical-sizing: auto; }
+  .hairline { box-shadow: inset 0 0 0 1px #E5E7EB; }
+  .dotline { background-image: radial-gradient(#D1D5DB 1px, transparent 1px); background-size: 6px 6px; }
+  .focus-magenta:focus { outline: 2px solid #E10078; outline-offset: 2px; }
+  textarea.prep { line-height: 1.6; }
+  .markdown-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6B7280; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- AppShell -->
+<div class="flex min-h-screen">
+
+  <!-- SideNav -->
+  <aside class="hidden md:flex w-60 shrink-0 flex-col border-r border-line bg-white">
+    <div class="px-6 py-5 border-b border-line">
+      <div class="flex items-center gap-2">
+        <div class="h-7 w-7 rounded-md bg-ink text-white grid place-items-center">
+          <span class="font-display text-[15px] leading-none">v</span>
+        </div>
+        <div class="leading-tight">
+          <div class="text-[13px] font-semibold tracking-tight">Visma</div>
+          <div class="text-[11px] text-muted -mt-0.5">Cross-Project Reviews</div>
+        </div>
+      </div>
+    </div>
+    <nav class="px-3 py-4 text-sm space-y-0.5">
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-ink hover:bg-surface">
+        <i data-lucide="layout-dashboard" class="h-4 w-4 text-muted"></i> Dashboard
+      </a>
+      <a href="sessions-list.html" class="flex items-center gap-3 px-3 py-2 rounded-md bg-surface text-ink font-medium">
+        <i data-lucide="messages-square" class="h-4 w-4"></i> My sessions
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-ink hover:bg-surface">
+        <i data-lucide="user-round" class="h-4 w-4 text-muted"></i> Profile
+      </a>
+      <div class="pt-4 pb-1 px-3 text-[11px] uppercase tracking-[0.12em] text-muted">Coach</div>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-ink hover:bg-surface">
+        <i data-lucide="users-round" class="h-4 w-4 text-muted"></i> Coachees
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-ink hover:bg-surface">
+        <i data-lucide="list-checks" class="h-4 w-4 text-muted"></i> Assignments
+      </a>
+    </nav>
+    <div class="mt-auto border-t border-line p-4 flex items-center gap-3">
+      <div class="h-8 w-8 rounded-full bg-ink text-white grid place-items-center text-[12px] font-semibold">TS</div>
+      <div class="leading-tight min-w-0">
+        <div class="text-[13px] font-medium truncate">Tomas Šturas</div>
+        <div class="text-[11px] text-muted truncate">tomas.sturas@visma.com</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="flex-1 min-w-0">
+
+    <!-- TopBar -->
+    <header class="sticky top-0 z-10 bg-white/85 backdrop-blur border-b border-line">
+      <div class="flex items-center gap-4 px-6 lg:px-10 h-14">
+        <a href="sessions-list.html" class="inline-flex items-center gap-1.5 text-[12.5px] text-muted hover:text-ink">
+          <i data-lucide="arrow-left" class="h-3.5 w-3.5"></i> My sessions
+        </a>
+        <span class="text-line">/</span>
+        <span class="text-[12.5px] font-mono text-ink">asg_8f31</span>
+
+        <!-- CyclePill -->
+        <div class="ml-auto flex items-center gap-2 rounded-full border border-line bg-white pl-2.5 pr-3 py-1">
+          <span class="h-1.5 w-1.5 rounded-full bg-st_scheduled"></span>
+          <span class="text-[12px] font-medium">Cycle 2026·H1</span>
+          <span class="text-[12px] text-muted font-mono">· 42d left</span>
+        </div>
+        <button class="text-muted hover:text-ink"><i data-lucide="bell" class="h-4 w-4"></i></button>
+      </div>
+    </header>
+
+    <div class="px-6 lg:px-10 pt-10 pb-20 max-w-[1180px]">
+
+      <!-- PageHeader -->
+      <div class="mb-1 text-[11px] uppercase tracking-[0.16em] text-muted font-mono">
+        Session · you are the <span class="text-ink">reviewer</span>
+      </div>
+
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-3">
+        <div class="min-w-0">
+          <h1 class="font-display text-[42px] leading-[1.05] tracking-tight">
+            with <span class="italic">Eglė Jankauskaitė</span>
+          </h1>
+          <p class="mt-2 text-[14px] text-muted max-w-2xl">
+            Your job: show, don't tell. Eglė is at Level 2 — IDE-agent-with-permission. Pick one habit
+            from your loop that's worth stealing, and run a real task in front of her.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- StatusPill scheduled -->
+          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium" style="background:#2563EB14;color:#1D4ED8">
+            <i data-lucide="calendar-check" class="h-3.5 w-3.5"></i> Scheduled
+          </span>
+        </div>
+      </div>
+
+      <!-- Counterpart strip -->
+      <div class="mt-6 rounded-lg bg-white hairline overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr] divide-y md:divide-y-0 md:divide-x divide-line">
+          <div class="p-5 flex items-center gap-4">
+            <div class="h-12 w-12 rounded-full bg-surface hairline grid place-items-center font-display text-[18px]">EJ</div>
+            <div class="min-w-0">
+              <div class="text-[15px] font-semibold leading-tight">Eglė Jankauskaitė</div>
+              <div class="text-[12.5px] text-muted">Senior Engineer · Severa · .NET</div>
+              <div class="mt-1.5 text-[11.5px] text-muted">
+                <span class="font-mono">egle.jankauskaite@visma.com</span>
+              </div>
+            </div>
+          </div>
+          <div class="p-5">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono mb-2">Level diff</div>
+            <div class="flex items-center gap-2.5">
+              <span class="inline-flex flex-col items-start gap-0.5 rounded-md px-2.5 py-1.5" style="background:#0EA5E914">
+                <span class="text-[10px] font-mono uppercase tracking-wider" style="color:#0369A1">Reviewee</span>
+                <span class="text-[13px] font-semibold" style="color:#0369A1">L2</span>
+              </span>
+              <i data-lucide="arrow-right" class="h-3.5 w-3.5 text-muted"></i>
+              <span class="inline-flex flex-col items-start gap-0.5 rounded-md px-2.5 py-1.5" style="background:#F59E0B14">
+                <span class="text-[10px] font-mono uppercase tracking-wider" style="color:#92400E">You</span>
+                <span class="text-[13px] font-semibold" style="color:#92400E">L4</span>
+              </span>
+              <span class="text-[12px] text-muted ml-1">gap +2</span>
+            </div>
+          </div>
+          <div class="p-5">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono mb-2">Cycle</div>
+            <div class="text-[14px] font-medium">2026·H1</div>
+            <div class="text-[12.5px] text-muted">Jan 1 — Jun 30 · 42d left</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-column body -->
+      <div class="mt-8 grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6">
+
+        <!-- LEFT -->
+        <div class="space-y-6">
+
+          <!-- Reviewee's prep, read-only excerpt -->
+          <section class="rounded-lg bg-white hairline">
+            <header class="px-5 pt-5 flex items-start justify-between gap-4">
+              <div>
+                <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono">00 · What Eglė is bringing</div>
+                <h2 class="font-display text-[22px] tracking-tight mt-1">Her prep, in her words</h2>
+                <p class="text-[13px] text-muted mt-1">Shared from Eglė · last edited 18h ago</p>
+              </div>
+              <span class="text-[11.5px] text-muted inline-flex items-center gap-1"><i data-lucide="eye" class="h-3.5 w-3.5"></i> read-only</span>
+            </header>
+            <div class="px-5 pb-5 pt-4">
+              <div class="rounded-md bg-surface hairline p-4 text-[13.5px] leading-relaxed text-ink/90">
+                <p class="mb-2"><strong>Real task:</strong> I want to add unit tests to the
+                <span class="font-mono">InvoiceImporter</span> service. It has zero tests today and I'm
+                scared to refactor it.</p>
+                <p class="mb-2"><strong>How I'd normally do it:</strong> ask Copilot inline, accept what
+                looks reasonable, run it, fix the obvious red lights.</p>
+                <p><strong>What I want from you:</strong> show me how you'd <em>set up</em> for this kind
+                of task — like, what you tell the agent before the first line of test code gets written.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Your prep notes (editable) -->
+          <section class="rounded-lg bg-white hairline">
+            <header class="flex items-center justify-between px-5 pt-5">
+              <div>
+                <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono">01 · Your prep</div>
+                <h2 class="font-display text-[22px] tracking-tight mt-1">What you'll demonstrate</h2>
+              </div>
+              <div class="flex items-center gap-2 text-[11.5px] text-muted">
+                <i data-lucide="cloud-check" class="h-3.5 w-3.5"></i> Autosaved · just now
+              </div>
+            </header>
+            <p class="px-5 mt-1 text-[13px] text-muted">Only you can see this. Markdown supported.</p>
+
+            <div class="px-5 mt-4 flex items-center gap-1 text-muted">
+              <button class="px-2 py-1 rounded hover:bg-surface"><i data-lucide="bold" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface"><i data-lucide="italic" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface"><i data-lucide="heading-2" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface"><i data-lucide="list" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface"><i data-lucide="code" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface"><i data-lucide="link" class="h-3.5 w-3.5"></i></button>
+              <span class="ml-auto markdown-tag">markdown</span>
+            </div>
+
+            <div class="px-5 pb-5 pt-2">
+              <textarea class="prep w-full min-h-[280px] resize-y rounded-md bg-surface hairline px-4 py-3 text-[14px] focus:bg-white focus:outline-none focus-magenta"
+                spellcheck="false"
+              >## Goal for Eglė (L2 → L3 nudge)
+Get her to **stop accepting completions blindly** and start running a *short* verification
+loop before each accept.
+
+## What I'll show (live)
+1. Open a real task on my machine: refactor the reconciliation worker.
+2. Walk through my CLAUDE.md — why it exists, what's in it.
+3. Drive a CLI agent end-to-end on a small slice, narrating decisions.
+4. Show one moment where I rolled back and re-prompted instead of "fixing forward".
+
+## Habits I want her to steal
+- Always read the diff before accept.
+- "Plan, then implement" — no implementation without a written plan.
+- Run tests *before* the agent claims success.
+
+## Anti-patterns to call out gently
+- Agent-as-autocomplete (no goal, no plan).
+- Trusting green text in the terminal as proof of correctness.
+</textarea>
+              <div class="mt-3 flex items-center justify-between text-[11.5px] text-muted">
+                <span>1,034 chars</span>
+                <button class="inline-flex items-center gap-1 hover:text-ink">
+                  <i data-lucide="eye" class="h-3.5 w-3.5"></i> Preview
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Feedback CTA — reviewer-side. Live once status flips to completed. -->
+          <section class="rounded-lg bg-white hairline">
+            <div class="p-5 flex flex-col md:flex-row gap-4 md:items-center">
+              <div class="h-10 w-10 rounded-md grid place-items-center" style="background:#7C3AED14">
+                <i data-lucide="clipboard-edit" class="h-5 w-5" style="color:#5B21B6"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono">03 · Feedback for Eglė</div>
+                <div class="font-display text-[20px] tracking-tight mt-0.5">8 short questions about how she worked.</div>
+                <p class="text-[13px] text-muted mt-1">
+                  Observed level, tooling, prompting strength + growth, verification habits, one habit to adopt,
+                  one thing she's already doing well. Visible to Eglė and her coach — never to BG dashboards in raw form.
+                </p>
+              </div>
+              <div class="flex flex-col items-stretch md:items-end gap-2">
+                <button disabled class="inline-flex items-center justify-center gap-2 rounded-md border border-line text-muted text-[13px] font-medium px-4 py-2.5 cursor-not-allowed">
+                  <i data-lucide="lock" class="h-4 w-4"></i> Opens after May 20
+                </button>
+                <span class="text-[11.5px] text-muted">Due within 7 days · drafts autosave</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- RIGHT -->
+        <aside class="space-y-6">
+
+          <!-- Scheduling -->
+          <section class="rounded-lg bg-white hairline">
+            <header class="px-5 pt-5">
+              <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono">02 · Schedule</div>
+              <h2 class="font-display text-[22px] tracking-tight mt-1">Date &amp; time</h2>
+              <p class="text-[13px] text-muted mt-1">Confirmed by both sides.</p>
+            </header>
+
+            <div class="px-5 pt-4 pb-5">
+              <div class="rounded-md bg-surface hairline p-4">
+                <div class="flex items-start gap-4">
+                  <div class="text-center w-12 shrink-0">
+                    <div class="text-[10px] uppercase tracking-wider text-muted font-mono">May</div>
+                    <div class="font-display text-[28px] leading-none mt-0.5">20</div>
+                    <div class="text-[11px] text-muted mt-0.5">Wed</div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[14px] font-semibold">14:00 — 15:30</div>
+                    <div class="text-[12px] text-muted">Europe/Vilnius · 90 min</div>
+                    <div class="mt-2 flex flex-wrap gap-2 text-[11.5px] text-muted">
+                      <span class="inline-flex items-center gap-1.5 rounded-full bg-white hairline px-2 py-0.5">
+                        <i data-lucide="video" class="h-3 w-3"></i> Google Meet
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 rounded-full bg-white hairline px-2 py-0.5">
+                        <i data-lucide="calendar" class="h-3 w-3"></i> On both calendars
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-5">
+                <label class="text-[12px] font-medium">Need to reschedule?</label>
+                <div class="mt-2 flex items-center gap-2">
+                  <div class="flex items-center gap-2 rounded-md hairline bg-white px-3 py-2 text-[13px] flex-1">
+                    <i data-lucide="calendar" class="h-4 w-4 text-muted"></i>
+                    <input type="date" value="2026-05-20" class="bg-transparent flex-1 outline-none font-mono text-[13px]" />
+                  </div>
+                  <div class="flex items-center gap-2 rounded-md hairline bg-white px-3 py-2 text-[13px]">
+                    <i data-lucide="clock" class="h-4 w-4 text-muted"></i>
+                    <input type="time" value="14:00" class="bg-transparent w-[80px] outline-none font-mono text-[13px]" />
+                  </div>
+                </div>
+                <div class="mt-2.5 flex items-center justify-between">
+                  <span class="text-[11.5px] text-muted">Eglė will be asked to confirm.</span>
+                  <button class="text-[12.5px] font-medium underline underline-offset-2 hover:text-magenta">Propose change</button>
+                </div>
+              </div>
+
+              <!--
+                PHASE-2 SECONDARY STATE — calendar slot picker (freebusy)
+                ----------------------------------------------------------
+                In Phase 2 this section becomes the SessionScheduler component with a
+                Google Calendar freebusy grid. The reviewee proposes up to 3 slots
+                where both calendars are free; reviewer (you) picks one to confirm.
+                On confirm, the event is created on both calendars.
+
+                Visual sketch (3-column day grid):
+
+                  Mon May 26   [10:00 ●]  [13:30 ●]  [16:00 ○]
+                  Tue May 27   [09:00 ○]  [11:00 ●]  [15:00 ●]
+                  Thu May 29   [10:30 ●]  [14:00 ●]  [16:30 ○]
+
+                  ● both free   ○ you have a conflict
+                  [ Confirm selected slot ]   <- single primary action
+              -->
+            </div>
+          </section>
+
+          <!-- Reviewer guidance card -->
+          <section class="rounded-lg bg-white hairline p-5">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono mb-3">As the reviewer</div>
+            <ol class="text-[13px] space-y-2.5">
+              <li class="flex gap-3"><span class="font-mono text-muted shrink-0 w-5">01</span><span>Bring a real task, not a demo.</span></li>
+              <li class="flex gap-3"><span class="font-mono text-muted shrink-0 w-5">02</span><span>Narrate decisions out loud — the value is in the why.</span></li>
+              <li class="flex gap-3"><span class="font-mono text-muted shrink-0 w-5">03</span><span>Aim to leave Eglė with <em>one</em> habit to try this week.</span></li>
+            </ol>
+            <div class="mt-4 pt-4 border-t border-line text-[12px] text-muted flex items-center gap-2">
+              <i data-lucide="shield" class="h-3.5 w-3.5"></i>
+              You'll fill the reviewer form within 7 days of the session.
+            </div>
+          </section>
+
+          <!-- Meta -->
+          <section class="rounded-lg bg-white hairline p-5">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono mb-3">Context</div>
+            <dl class="text-[13px] space-y-2.5">
+              <div class="flex justify-between gap-4"><dt class="text-muted">Assignment ID</dt><dd class="font-mono">asg_8f31</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-muted">Pair source</dt><dd>coach-assigned</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-muted">Her coach</dt><dd>Rasa Mockutė</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-muted">Her team</dt><dd>Severa · Vilnius</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-muted">Different stack</dt><dd>.NET ↔ Python</dd></div>
+            </dl>
+          </section>
+
+        </aside>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script> lucide.createIcons(); </script>
+</body>
+</html>

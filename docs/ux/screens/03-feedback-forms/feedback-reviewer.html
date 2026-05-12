@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feedback — Reviewer → Reviewee · Cross-Project Reviews</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #14110f;
+      --ink-2: #3a342f;
+      --muted: #7a7269;
+      --rule: #e6e0d8;
+      --rule-2: #efeae2;
+      --paper: #f6f2ea;
+      --paper-2: #fbf8f2;
+      --card: #ffffff;
+      --magenta: #E10078;
+      --L1: #64748B;
+      --L2: #0EA5E9;
+      --L3: #10B981;
+      --L4: #F59E0B;
+      --L5: #BE185D;
+      --status-assigned: #6B7280;
+      --status-scheduled: #2563EB;
+      --status-completed: #16A34A;
+      --status-fb: #7C3AED;
+      --status-auto: #D97706;
+    }
+    html, body { background: var(--paper); color: var(--ink); }
+    body { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-feature-settings: "ss01","cv11"; }
+    .font-display { font-family: 'Fraunces', ui-serif, Georgia, serif; font-optical-sizing: auto; letter-spacing: -0.01em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .paper {
+      background-color: var(--paper);
+      background-image:
+        radial-gradient(rgba(20,17,15,0.035) 1px, transparent 1px),
+        radial-gradient(rgba(20,17,15,0.02) 1px, transparent 1px);
+      background-size: 3px 3px, 7px 7px;
+      background-position: 0 0, 1px 1px;
+    }
+    .hairline { border-color: var(--rule); }
+    .hairline-strong { border-color: var(--ink); }
+    .rule-tick { background-image: linear-gradient(to right, var(--ink) 1px, transparent 1px); background-size: 8px 1px; background-repeat: repeat-x; }
+    .num-marker {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .field-label { font-family: 'Fraunces', serif; font-weight: 500; letter-spacing: -0.005em; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px; border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em;
+      border: 1px solid var(--rule);
+      background: var(--card);
+      color: var(--ink-2);
+    }
+    .pill .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ink); }
+    .level-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 2px 8px; border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em;
+      color: white;
+    }
+    .level-L4 { background: var(--L4); }
+    .level-L2 { background: var(--L2); }
+    .magenta { color: var(--magenta); }
+    .bg-magenta { background-color: var(--magenta); }
+
+    /* Likert track — physical scale */
+    .likert {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      padding: 18px 14px 22px;
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+    }
+    .likert::before {
+      content: "";
+      position: absolute;
+      left: 36px; right: 36px; top: 38px;
+      height: 2px;
+      background: var(--ink);
+      opacity: 0.85;
+    }
+    .likert-stop {
+      position: relative;
+      display: flex; flex-direction: column; align-items: center;
+      cursor: pointer;
+      padding-top: 22px;
+    }
+    .likert-stop .detent {
+      position: absolute; top: 32px;
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 2px solid var(--ink);
+      box-shadow: inset 0 0 0 2px var(--card);
+      transition: transform 120ms ease;
+    }
+    .likert-stop[data-selected="true"] .detent {
+      background: var(--ink);
+      box-shadow: inset 0 0 0 3px var(--card);
+      transform: scale(1.18);
+    }
+    .likert-stop .num {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .likert-stop[data-selected="true"] .num { color: var(--ink); }
+    .likert-stop .lab {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 18px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .likert-stop[data-selected="true"] .lab { color: var(--ink); }
+
+    /* Radio (different from Likert — squarish, labeled cards) */
+    .radio-card {
+      position: relative;
+      border: 1px solid var(--rule);
+      background: var(--card);
+      border-radius: 6px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: border-color 120ms;
+    }
+    .radio-card:hover { border-color: var(--ink-2); }
+    .radio-card[data-selected="true"] {
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 1px var(--ink);
+    }
+    .radio-card .mark {
+      width: 12px; height: 12px; border-radius: 2px;
+      border: 1.5px solid var(--ink-2);
+      background: var(--card);
+      display: inline-block;
+    }
+    .radio-card[data-selected="true"] .mark {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+    .radio-card[data-selected="true"] .mark::after {
+      content: ""; display: block; width: 4px; height: 4px;
+      background: var(--paper); margin: 2.5px;
+    }
+
+    /* Multi-select chip */
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--rule);
+      background: var(--card);
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 120ms;
+    }
+    .chip:hover { border-color: var(--ink-2); }
+    .chip[data-selected="true"] {
+      background: var(--ink);
+      color: var(--paper-2);
+      border-color: var(--ink);
+    }
+    .chip[data-selected="true"] svg { color: var(--paper-2); }
+    .chip .icon { width: 14px; height: 14px; }
+
+    /* Inputs */
+    .text-input, .textarea {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: 'Geist', sans-serif;
+      color: var(--ink);
+      transition: border-color 120ms, box-shadow 120ms;
+    }
+    .textarea { min-height: 96px; resize: vertical; line-height: 1.55; }
+    .text-input:focus, .textarea:focus {
+      outline: none;
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 1px var(--ink);
+    }
+    .helper {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+    }
+    .counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* Sticky header progress dots */
+    .progress-cell {
+      width: 14px; height: 14px; border-radius: 2px;
+      border: 1px solid var(--ink);
+      background: var(--paper-2);
+    }
+    .progress-cell.done { background: var(--ink); }
+    .progress-cell.current { background: var(--paper-2); box-shadow: inset 0 0 0 2px var(--paper-2), 0 0 0 1.5px var(--ink); }
+
+    /* Section header */
+    .section-h {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      align-items: baseline;
+      padding-top: 36px;
+      padding-bottom: 14px;
+      border-top: 1px solid var(--rule);
+    }
+    .section-h:first-of-type { border-top: 0; padding-top: 8px; }
+
+    /* Sidebar nav */
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 12px; border-radius: 6px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+    }
+    .nav-item:hover { background: var(--paper-2); }
+    .nav-item.active { background: var(--ink); color: var(--paper-2); }
+    .nav-item .ico { width: 16px; height: 16px; }
+    .nav-section { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); padding: 14px 12px 6px; }
+
+    /* Magenta CTA: ONLY for primary submit */
+    .btn-primary {
+      background: var(--magenta);
+      color: white;
+      padding: 12px 22px;
+      border-radius: 6px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      display: inline-flex; align-items: center; gap: 10px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 8px 24px -10px rgba(225,0,120,0.55);
+    }
+    .btn-primary:hover { filter: brightness(0.96); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-2);
+      padding: 10px 16px;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      font-size: 13.5px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+    .save-dot {
+      width: 6px; height: 6px; border-radius: 999px;
+      background: #16A34A;
+      box-shadow: 0 0 0 0 rgba(22,163,74,0.5);
+      animation: pulse 2.2s ease-out infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(22,163,74,0.45); }
+      70% { box-shadow: 0 0 0 8px rgba(22,163,74,0); }
+      100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
+    }
+
+    /* Counterpart card decorative diff arrow */
+    .level-arrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Asymmetric editorial side rail */
+    .side-rail {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body class="paper">
+
+<!-- AppShell -->
+<div class="min-h-screen flex">
+
+  <!-- SideNav -->
+  <aside class="w-[232px] shrink-0 border-r hairline bg-[var(--paper-2)] flex flex-col">
+    <div class="px-5 pt-6 pb-5 border-b hairline">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-md bg-[var(--ink)] text-[var(--paper-2)] grid place-items-center font-display text-[15px] leading-none pt-0.5">x</div>
+        <div>
+          <div class="font-display text-[15px] leading-none">Cross-Project</div>
+          <div class="text-[10px] font-mono tracking-widest text-[var(--muted)] mt-1">REVIEWS · VISMA</div>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center justify-between text-[11px] font-mono">
+        <span class="text-[var(--muted)]">CYCLE 26-H1</span>
+        <span class="text-[var(--ink)]">37d left</span>
+      </div>
+    </div>
+
+    <nav class="px-3 py-2 flex-1">
+      <div class="nav-section">You</div>
+      <a class="nav-item"><i data-lucide="layout-dashboard" class="ico"></i>Dashboard</a>
+      <a class="nav-item"><i data-lucide="calendar-clock" class="ico"></i>My sessions</a>
+      <a class="nav-item active"><i data-lucide="message-square-text" class="ico"></i>Feedback<span class="ml-auto text-[10px] font-mono opacity-80">2</span></a>
+      <a class="nav-item"><i data-lucide="user-round" class="ico"></i>Profile</a>
+
+      <div class="nav-section">Coach</div>
+      <a class="nav-item"><i data-lucide="users-round" class="ico"></i>Coachees</a>
+      <a class="nav-item"><i data-lucide="clipboard-list" class="ico"></i>Assignments</a>
+
+      <div class="nav-section">Org</div>
+      <a class="nav-item"><i data-lucide="bar-chart-3" class="ico"></i>Insights</a>
+    </nav>
+
+    <div class="px-4 py-4 border-t hairline">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-[var(--ink)] text-[var(--paper-2)] grid place-items-center font-display text-[13px]">TS</div>
+        <div class="text-[12px] leading-tight">
+          <div class="text-[var(--ink)]">Tomek Szturo</div>
+          <div class="text-[var(--muted)] font-mono text-[10px] tracking-wider">L4 · ENGINEER · COACH</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main column -->
+  <main class="flex-1 min-w-0 flex flex-col">
+
+    <!-- TopBar -->
+    <div class="h-12 border-b hairline bg-[var(--paper-2)] flex items-center px-6 gap-4">
+      <div class="flex items-center gap-2 text-[12px] text-[var(--muted)] font-mono">
+        <a class="hover:text-[var(--ink)]">My sessions</a>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <a class="hover:text-[var(--ink)]">Session #284</a>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <span class="text-[var(--ink)]">Feedback · Reviewer</span>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <span class="pill"><span class="dot" style="background:#7C3AED"></span>session completed</span>
+        <button class="btn-ghost py-1 px-3 text-[12px]"><i data-lucide="keyboard" class="w-3.5 h-3.5"></i>Shortcuts</button>
+      </div>
+    </div>
+
+    <!-- Sticky session header -->
+    <div class="sticky top-0 z-20 bg-[var(--paper-2)]/95 backdrop-blur border-b hairline">
+      <div class="max-w-[1080px] mx-auto px-10 py-5">
+        <div class="grid grid-cols-12 gap-6 items-end">
+          <!-- counterpart -->
+          <div class="col-span-7">
+            <div class="num-marker mb-1">REVIEWER → REVIEWEE · SESSION 284</div>
+            <div class="flex items-baseline gap-4 flex-wrap">
+              <h1 class="font-display text-[28px] leading-[1.05] tracking-tight">
+                Feedback for <span class="italic">Karolis Petrauskas</span>
+              </h1>
+              <span class="level-arrow">
+                <span class="level-chip level-L4">L4</span>
+                <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                <span class="level-chip level-L2">L2</span>
+                <span class="ml-1 text-[var(--muted)]">level diff −2</span>
+              </span>
+            </div>
+            <div class="mt-2 flex items-center gap-4 text-[12px] font-mono text-[var(--muted)]">
+              <span class="inline-flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i>Session held · Mon 04 May · 14:00–15:30</span>
+              <span class="inline-flex items-center gap-1.5"><i data-lucide="briefcase" class="w-3.5 h-3.5"></i>Severa · Vilnius</span>
+              <span class="inline-flex items-center gap-1.5 text-[#B45309]"><i data-lucide="clock-alert" class="w-3.5 h-3.5"></i>due in 4 days</span>
+            </div>
+          </div>
+
+          <!-- progress + autosave -->
+          <div class="col-span-5">
+            <div class="flex items-center justify-end gap-5">
+              <div class="text-right">
+                <div class="text-[11px] font-mono text-[var(--muted)]">PROGRESS</div>
+                <div class="font-display text-[22px] leading-none mt-0.5">5<span class="text-[var(--muted)]">/8</span></div>
+              </div>
+              <div class="flex items-center gap-1.5 pl-5 border-l hairline">
+                <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
+                <div class="progress-cell current"></div>
+                <div class="progress-cell"></div>
+                <div class="progress-cell"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-end gap-2 mt-3 text-[11px] font-mono text-[var(--muted)]">
+              <span class="save-dot"></span>
+              <span>Draft saved · 12s ago</span>
+              <span class="text-[var(--rule)]">·</span>
+              <span>autosaves every keystroke</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form body -->
+    <div class="flex-1 relative">
+      <!-- editorial side rail -->
+      <div class="absolute left-3 top-12 bottom-12 hidden xl:flex items-start">
+        <span class="side-rail">FEEDBACK · REVIEWER VARIANT · v1.0</span>
+      </div>
+
+      <div class="max-w-[1080px] mx-auto px-10 py-10">
+
+        <!-- Intent line -->
+        <p class="text-[14px] text-[var(--ink-2)] max-w-[640px] leading-relaxed mb-10">
+          What did <em class="font-display italic">Karolis</em> actually do, and what should they take from your workflow? This is developmental feedback — it goes to them and to their coach, not to anyone else.
+        </p>
+
+        <!-- 1. Observed AI maturity (LIKERT) -->
+        <section class="section-h">
+          <div>
+            <div class="num-marker">01 · LEVEL</div>
+            <div class="mt-1 text-[10px] font-mono text-[var(--muted)]">1 question</div>
+          </div>
+          <div>
+            <h2 class="field-label text-[19px]">Observed AI maturity</h2>
+            <p class="helper mt-1">Where did they actually operate during the session? Declared level was <span class="text-[var(--ink)]">L2</span>.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11">
+            <div class="likert" role="radiogroup" aria-label="Observed AI maturity">
+              <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">no AI<br/>completion only</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">IDE agent<br/>per-action</span></button>
+              <button class="likert-stop" data-selected="true"><span class="num">3</span><span class="detent"></span><span class="lab">CLI agent<br/>permissioned</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">parallel CLI<br/>agents</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">orchestrator<br/>fleet</span></button>
+            </div>
+            <div class="mt-2 flex items-center gap-2 helper">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+              You marked <span class="text-[var(--ink)]">L3</span> — one above their declared level. That gap shows up on the coach view.
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Tool stack (CHIPS multi) -->
+        <section class="section-h">
+          <div><div class="num-marker">02 · TOOLING</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">multi-select</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">Tool stack observed</h2>
+            <p class="helper mt-1">Pick anything you actually saw them use — not what they said they use.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11 flex flex-wrap gap-2">
+            <button class="chip" data-selected="true"><i data-lucide="terminal" class="icon"></i>Claude Code</button>
+            <button class="chip" data-selected="true"><i data-lucide="square-mouse-pointer" class="icon"></i>Cursor</button>
+            <button class="chip" data-selected="false"><i data-lucide="github" class="icon"></i>GitHub Copilot</button>
+            <button class="chip" data-selected="true"><i data-lucide="message-circle" class="icon"></i>ChatGPT</button>
+            <button class="chip" data-selected="false"><i data-lucide="sparkles" class="icon"></i>Gemini</button>
+            <button class="chip" data-selected="false"><i data-lucide="puzzle" class="icon"></i>Aider</button>
+            <button class="chip" data-selected="false"><i data-lucide="bot" class="icon"></i>Codex CLI</button>
+            <button class="chip" data-selected="false"><i data-lucide="plus" class="icon"></i>Add custom…</button>
+          </div>
+        </div>
+
+        <!-- 3. Prompting & context-setting (PromptingHabitField) -->
+        <section class="section-h">
+          <div><div class="num-marker">03 · PROMPTING</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">paired field</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">Prompting & context-setting</h2>
+            <p class="helper mt-1">One thing they're already good at, one thing to grow into. Concrete &gt; abstract.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-5">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="num-marker">STRENGTH</span>
+              <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#16A34A]"></i>
+            </div>
+            <textarea class="textarea">Writes out the *intent* first — pasted the failing test, the runbook step, and the relevant module path before asking the agent to do anything. No vague "fix this".</textarea>
+            <div class="flex justify-end mt-1"><span class="counter">186 / 400</span></div>
+          </div>
+          <div class="col-span-6">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="num-marker">GROWTH</span>
+              <i data-lucide="seedling" class="w-3.5 h-3.5 text-[#B45309]"></i>
+            </div>
+            <textarea class="textarea">Doesn't push back when the agent's first plan is wrong — accepts it and patches over. Try: when the plan smells off, ask "what would change your mind?" before letting it touch files.</textarea>
+            <div class="flex justify-end mt-1"><span class="counter">220 / 400</span></div>
+          </div>
+        </div>
+
+        <!-- 4. Verification habits (RADIO cards) -->
+        <section class="section-h">
+          <div><div class="num-marker">04 · VERIFICATION</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">choose one</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">Verification habits</h2>
+            <p class="helper mt-1">How did they treat the agent's output?</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11 grid grid-cols-3 gap-3">
+            <button class="radio-card" data-selected="false">
+              <div class="flex items-center gap-3">
+                <span class="mark"></span>
+                <span class="field-label text-[15px]">Blind trust</span>
+              </div>
+              <p class="helper mt-2">Accepts diffs, runs once, ships.</p>
+            </button>
+            <button class="radio-card" data-selected="true">
+              <div class="flex items-center gap-3">
+                <span class="mark"></span>
+                <span class="field-label text-[15px]">Spot-check</span>
+              </div>
+              <p class="helper mt-2">Reads diffs, tests happy paths, ad-hoc.</p>
+            </button>
+            <button class="radio-card" data-selected="false">
+              <div class="flex items-center gap-3">
+                <span class="mark"></span>
+                <span class="field-label text-[15px]">Systematic</span>
+              </div>
+              <p class="helper mt-2">Test-first; runs commands before claiming done.</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Agent orchestration (RADIO 4) -->
+        <section class="section-h">
+          <div><div class="num-marker">05 · ORCHESTRATION</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">choose one</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">Agent orchestration</h2>
+            <p class="helper mt-1">How they coordinate multiple agents / sessions / branches.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11 grid grid-cols-4 gap-3">
+            <button class="radio-card" data-selected="true">
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">N/A</span></div>
+              <p class="helper mt-2">Single agent, single thread.</p>
+            </button>
+            <button class="radio-card" data-selected="false">
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Emerging</span></div>
+              <p class="helper mt-2">Occasional parallel session.</p>
+            </button>
+            <button class="radio-card" data-selected="false">
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Solid</span></div>
+              <p class="helper mt-2">Worktrees, scoped tasks per agent.</p>
+            </button>
+            <button class="radio-card" data-selected="false">
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Advanced</span></div>
+              <p class="helper mt-2">Fleet w/ supervisor patterns.</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- 6. Architecture & clean-code (Likert + text) -->
+        <section class="section-h">
+          <div><div class="num-marker">06 · CRAFT</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">scored low-weight</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">Architecture & clean-code</h2>
+            <p class="helper mt-1">The classic dimensions — single Likert + one sentence. Weighted below the AI dimensions on the report.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-5">
+            <div class="likert" role="radiogroup" aria-label="Architecture quality">
+              <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">tangled</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">workable</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">solid</span></button>
+              <button class="likert-stop" data-selected="true"><span class="num">4</span><span class="detent"></span><span class="lab">crisp</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">exemplary</span></button>
+            </div>
+          </div>
+          <div class="col-span-6">
+            <span class="num-marker">NOTE</span>
+            <textarea class="textarea mt-2">Small, well-named modules; tests live next to code. One leaky abstraction in the billing adapter — flagged it; he'll fix it next sprint.</textarea>
+          </div>
+        </div>
+
+        <!-- 7. Habit to adopt -->
+        <section class="section-h">
+          <div><div class="num-marker">07 · ADOPT</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">free text</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">One concrete habit they should adopt from your workflow</h2>
+            <p class="helper mt-1">Be specific enough that they could try it tomorrow.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11">
+            <textarea class="textarea" style="min-height: 110px;">Start every non-trivial task by writing the failing assertion first — even before opening the agent. Then paste that into the prompt as the success criterion. It collapses the "did it actually work?" question down to a single command.</textarea>
+            <div class="flex justify-between items-center mt-1">
+              <span class="helper">Markdown is fine. Reviewee sees this verbatim.</span>
+              <span class="counter">281 / 600</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Stealing -->
+        <section class="section-h">
+          <div><div class="num-marker">08 · STEAL</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">free text</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">One thing they're doing that <em class="italic font-display">you're</em> stealing</h2>
+            <p class="helper mt-1">The bit that surprised you. This is mandatory — feedback is two-way.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11">
+            <textarea class="textarea" style="min-height: 110px;" placeholder="What one habit, prompt, or pattern of theirs are you taking back to your own workflow?"></textarea>
+            <div class="flex justify-between items-center mt-1">
+              <span class="helper text-[#B45309] inline-flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>Required before submit.</span>
+              <span class="counter">0 / 600</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit bar -->
+        <div class="mt-14 border-t hairline-strong pt-6 flex items-center gap-4">
+          <div class="text-[12px] font-mono text-[var(--muted)]">
+            <div>FORM v1.0 · REVIEWER VARIANT</div>
+            <div class="mt-0.5">Visible to: reviewee, their coach. Anonymized in BG roll-ups.</div>
+          </div>
+          <div class="ml-auto flex items-center gap-3">
+            <button class="btn-ghost"><i data-lucide="save" class="w-4 h-4"></i>Save & close</button>
+            <button class="btn-ghost"><i data-lucide="eye" class="w-4 h-4"></i>Preview as Karolis</button>
+            <button class="btn-primary"><span class="font-display text-[15px]">Submit feedback</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+
+        <div class="h-16"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  // Likert interaction
+  document.querySelectorAll('.likert').forEach(group => {
+    group.querySelectorAll('.likert-stop').forEach(stop => {
+      stop.addEventListener('click', () => {
+        group.querySelectorAll('.likert-stop').forEach(s => s.dataset.selected = 'false');
+        stop.dataset.selected = 'true';
+      });
+    });
+  });
+
+  // Radio cards (single-select within their parent grid)
+  document.querySelectorAll('.radio-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.parentElement.querySelectorAll('.radio-card').forEach(c => c.dataset.selected = 'false');
+      card.dataset.selected = 'true';
+    });
+  });
+
+  // Chips (multi-select toggle)
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.dataset.selected = chip.dataset.selected === 'true' ? 'false' : 'true';
+    });
+  });
+</script>
+</body>
+</html>

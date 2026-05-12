@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Imports · Admin · Cross-Project Reviews</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --magenta: #E10078;
+      --magenta-deep: #C70069;
+      --surface: #FAFAFA;
+      --card: #FFFFFF;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --border-strong: #D1D5DB;
+      --ok: #16A34A;
+      --warn: #D97706;
+      --err: #DC2626;
+      --info: #2563EB;
+    }
+    html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+    .hairline { box-shadow: 0 1px 0 rgba(17,17,17,0.04), 0 0 0 1px rgba(17,17,17,0.05); }
+    .backdrop-grid {
+      background-image:
+        linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(0,0,0,0.022) 100%),
+        linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(0,0,0,0.022) 100%);
+      background-size: 56px 56px, 56px 56px;
+    }
+    .btn-primary { background: var(--magenta); transition: background 120ms ease, box-shadow 120ms ease, transform 120ms ease; }
+    .btn-primary:hover { background: var(--magenta-deep); box-shadow: 0 8px 24px -8px rgba(225,0,120,0.45); }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-ghost { transition: background 120ms ease, color 120ms ease; }
+    .btn-ghost:hover { background: #F3F4F6; }
+    .chip { font-feature-settings: "tnum" 1, "ss01" 1; }
+    .nav-item.active { background: #F4F4F5; color: var(--ink); }
+    .nav-item.active .dot { background: var(--magenta); }
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] .chev { transform: rotate(90deg); }
+    .chev { transition: transform 160ms ease; }
+    /* dry-run toggle */
+    .toggle { width: 32px; height: 18px; background: #E5E7EB; border-radius: 999px; position: relative; transition: background 160ms ease; }
+    .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #fff; border-radius: 999px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); transition: transform 160ms ease; }
+    .toggle.on { background: #111827; }
+    .toggle.on::after { transform: translateX(14px); }
+    .dashed-rule { background-image: linear-gradient(to right, var(--border) 50%, transparent 0%); background-size: 6px 1px; background-repeat: repeat-x; background-position: 0 50%; height: 1px; }
+    .tabular { font-variant-numeric: tabular-nums; }
+    .ring-soft { box-shadow: 0 0 0 1px rgba(17,17,17,0.05), 0 1px 2px rgba(17,17,17,0.04); }
+    .status-ok    { background: #ECFDF5; color: #065F46; }
+    .status-warn  { background: #FFFBEB; color: #92400E; }
+    .status-err   { background: #FEF2F2; color: #991B1B; }
+    .status-info  { background: #EFF6FF; color: #1E40AF; }
+    .status-mute  { background: #F3F4F6; color: #374151; }
+  </style>
+</head>
+<body class="min-h-screen backdrop-grid">
+
+<!-- AppShell -->
+<div class="min-h-screen grid grid-cols-[260px_1fr]">
+
+  <!-- SideNav -->
+  <aside class="border-r border-[var(--border)] bg-white flex flex-col">
+    <div class="px-5 h-16 flex items-center gap-2.5 border-b border-[var(--border)]">
+      <div class="h-8 w-8 rounded-md grid place-items-center" style="background: var(--magenta);">
+        <span class="font-display text-white text-base font-bold leading-none">V</span>
+      </div>
+      <div class="leading-tight">
+        <div class="font-display text-[14px] font-semibold">Cross-Project Reviews</div>
+        <div class="text-[11px] text-[var(--muted)]">Internal · Visma</div>
+      </div>
+    </div>
+
+    <nav class="px-3 py-4 space-y-6 text-[13px] flex-1">
+      <div>
+        <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Workspace</p>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="home" class="w-4 h-4"></i> Dashboard</a>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="messages-square" class="w-4 h-4"></i> My sessions</a>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="user-round" class="w-4 h-4"></i> Profile</a>
+      </div>
+      <div>
+        <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Coach</p>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="users" class="w-4 h-4"></i> Coachees</a>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="calendar-clock" class="w-4 h-4"></i> Assignments</a>
+      </div>
+      <div>
+        <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Insights</p>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> Completion</a>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="layers" class="w-4 h-4"></i> Levels</a>
+      </div>
+      <div>
+        <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Admin</p>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Cycles</a>
+        <a href="#" class="nav-item active flex items-center gap-2.5 px-3 h-8 rounded-md"><span class="dot w-1.5 h-1.5 rounded-full bg-[var(--magenta)]"></span><i data-lucide="database" class="w-4 h-4"></i> Imports</a>
+        <a href="level-override.html" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="shield-alert" class="w-4 h-4"></i> Level overrides</a>
+      </div>
+    </nav>
+
+    <div class="m-3 p-3 rounded-lg border border-[var(--border)] bg-[#FAFAFA]">
+      <div class="flex items-center gap-2 text-[12px] text-[var(--muted)]">
+        <i data-lucide="circle-dot" class="w-3.5 h-3.5 text-[var(--magenta)]"></i>
+        Cycle H1 · 2026
+      </div>
+      <div class="mt-1 text-[12px] text-[var(--ink)] tabular">39 days remaining</div>
+    </div>
+  </aside>
+
+  <!-- Main column -->
+  <div class="flex flex-col min-w-0">
+
+    <!-- TopBar -->
+    <header class="h-16 border-b border-[var(--border)] bg-white flex items-center justify-between px-8">
+      <div class="flex items-center gap-4 text-[13px]">
+        <span class="text-[var(--muted)]">Admin</span>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+        <span class="font-medium">Imports</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="btn-ghost focus-ring h-8 px-3 rounded-md text-[13px] text-[var(--muted)] inline-flex items-center gap-2">
+          <i data-lucide="search" class="w-3.5 h-3.5"></i> Search
+          <span class="ml-2 font-mono text-[11px] text-[var(--muted)] border border-[var(--border)] rounded px-1">⌘K</span>
+        </button>
+        <div class="h-8 w-8 rounded-full bg-[#FCE7F3] grid place-items-center text-[12px] font-medium text-[var(--magenta-deep)]">TS</div>
+      </div>
+    </header>
+
+    <!-- PageHeader -->
+    <section class="px-8 pt-8 pb-6 border-b border-[var(--border)] bg-white">
+      <div class="flex items-start justify-between gap-8">
+        <div>
+          <p class="text-[11px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium mb-3">Admin · Data pipeline</p>
+          <h1 class="font-display text-[32px] leading-[1.1] font-semibold">Imports</h1>
+          <p class="mt-3 text-[14px] text-[var(--muted)] max-w-[680px] leading-relaxed">
+            Pull employee, coach, and AI-level data from the two Google Sheets. Every import runs idempotently. <span class="text-[var(--ink)] font-medium">Always dry-run first</span> when a sheet has changed structurally — you'll see a diff before anything is written.
+          </p>
+        </div>
+        <div class="hidden lg:flex items-center gap-2 shrink-0">
+          <span class="chip status-mute h-7 px-2.5 rounded-full text-[11.5px] font-medium inline-flex items-center gap-1.5">
+            <i data-lucide="database" class="w-3 h-3"></i> 658 employees
+          </span>
+          <span class="chip status-ok h-7 px-2.5 rounded-full text-[11.5px] font-medium inline-flex items-center gap-1.5">
+            <i data-lucide="check" class="w-3 h-3"></i> Last sync clean
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <main class="p-8 space-y-10 max-w-[1240px]">
+
+      <!-- Two import cards -->
+      <section>
+        <div class="flex items-baseline justify-between mb-4">
+          <h2 class="font-display text-[18px] font-semibold">Sheets</h2>
+          <a href="#history" class="text-[12.5px] text-[var(--muted)] hover:text-[var(--ink)] inline-flex items-center gap-1.5">
+            Jump to history <i data-lucide="arrow-down" class="w-3 h-3"></i>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+
+          <!-- Card 1: Employees + Coaches -->
+          <article class="rounded-xl bg-white ring-soft overflow-hidden">
+            <header class="px-6 pt-5 pb-4 flex items-start justify-between gap-4 border-b border-[var(--border)]">
+              <div class="flex items-start gap-3 min-w-0">
+                <div class="h-9 w-9 rounded-md bg-[#F0F9FF] grid place-items-center shrink-0">
+                  <i data-lucide="users" class="w-4.5 h-4.5 text-[var(--info)]"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h3 class="font-display text-[16px] font-semibold">Employees + Coaches</h3>
+                    <span class="font-mono text-[11px] text-[var(--muted)] bg-[#F3F4F6] rounded px-1.5 py-0.5">sheet #1</span>
+                  </div>
+                  <p class="text-[12.5px] text-[var(--muted)] mt-0.5 truncate">visma-people-master.gsheet · tab “All Engineers”</p>
+                </div>
+              </div>
+              <span class="chip status-ok h-6 px-2 rounded-full text-[11px] font-medium inline-flex items-center gap-1 shrink-0">
+                <i data-lucide="check" class="w-3 h-3"></i> Healthy
+              </span>
+            </header>
+
+            <div class="px-6 py-5 grid grid-cols-3 gap-5">
+              <div>
+                <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Last run</p>
+                <p class="text-[14px] font-medium">Today, 06:00</p>
+                <p class="text-[12px] text-[var(--muted)] font-mono mt-0.5">2026-05-12T06:00:11Z</p>
+              </div>
+              <div>
+                <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Rows ingested</p>
+                <p class="text-[14px] font-medium tabular">658 <span class="text-[12px] text-[var(--muted)] font-normal">/ 662 read</span></p>
+                <p class="text-[12px] text-[var(--ok)] mt-0.5">+3 new · 2 updated</p>
+              </div>
+              <div>
+                <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Errors</p>
+                <p class="text-[14px] font-medium text-[var(--warn)] tabular">4</p>
+                <p class="text-[12px] text-[var(--muted)] mt-0.5">missing coach emails</p>
+              </div>
+            </div>
+
+            <div class="px-6 pb-3">
+              <details class="rounded-lg border border-[var(--border)] bg-[#FAFAFA]">
+                <summary class="px-4 py-2.5 flex items-center justify-between text-[12.5px]">
+                  <span class="inline-flex items-center gap-2">
+                    <i data-lucide="chevron-right" class="chev w-3.5 h-3.5 text-[var(--muted)]"></i>
+                    <span class="font-medium">Warnings from last run</span>
+                    <span class="font-mono text-[11px] text-[var(--muted)]">4 items</span>
+                  </span>
+                  <span class="text-[var(--muted)]">non-blocking</span>
+                </summary>
+                <ul class="border-t border-[var(--border)] divide-y divide-[var(--border)] font-mono text-[12px]">
+                  <li class="px-4 py-2 flex items-center justify-between"><span class="text-[var(--warn)]">row 214</span><span class="text-[var(--muted)] truncate ml-3">coach_email empty — Nordic / Lithuania</span></li>
+                  <li class="px-4 py-2 flex items-center justify-between"><span class="text-[var(--warn)]">row 318</span><span class="text-[var(--muted)] truncate ml-3">coach_email empty — Visma e-conomic</span></li>
+                  <li class="px-4 py-2 flex items-center justify-between"><span class="text-[var(--warn)]">row 401</span><span class="text-[var(--muted)] truncate ml-3">coach_email empty — Visma Software AS</span></li>
+                  <li class="px-4 py-2 flex items-center justify-between"><span class="text-[var(--warn)]">row 559</span><span class="text-[var(--muted)] truncate ml-3">coach_email empty — Visma Spcs</span></li>
+                </ul>
+              </details>
+            </div>
+
+            <footer class="px-6 py-4 border-t border-[var(--border)] bg-[#FAFAFA] flex items-center justify-between gap-4 flex-wrap">
+              <label class="flex items-center gap-3 cursor-pointer select-none">
+                <span class="toggle on" aria-checked="true" role="switch"></span>
+                <span class="text-[13px]">
+                  <span class="font-medium">Dry run</span>
+                  <span class="text-[var(--muted)]"> — preview the diff, write nothing</span>
+                </span>
+              </label>
+              <div class="flex items-center gap-2">
+                <button class="btn-ghost focus-ring h-9 px-3 rounded-md text-[13px] text-[var(--muted)] inline-flex items-center gap-1.5">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Open sheet
+                </button>
+                <button class="btn-primary focus-ring h-9 px-4 rounded-md text-white text-[13px] font-medium inline-flex items-center gap-2">
+                  <i data-lucide="play" class="w-3.5 h-3.5"></i> Run import
+                </button>
+              </div>
+            </footer>
+          </article>
+
+          <!-- Card 2: AI Levels -->
+          <article class="rounded-xl bg-white ring-soft overflow-hidden">
+            <header class="px-6 pt-5 pb-4 flex items-start justify-between gap-4 border-b border-[var(--border)]">
+              <div class="flex items-start gap-3 min-w-0">
+                <div class="h-9 w-9 rounded-md bg-[#FEF3C7] grid place-items-center shrink-0">
+                  <i data-lucide="layers" class="w-4.5 h-4.5 text-[#92400E]"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h3 class="font-display text-[16px] font-semibold">AI Levels</h3>
+                    <span class="font-mono text-[11px] text-[var(--muted)] bg-[#F3F4F6] rounded px-1.5 py-0.5">sheet #2</span>
+                  </div>
+                  <p class="text-[12.5px] text-[var(--muted)] mt-0.5 truncate">visma-ai-adoption-survey.gsheet · tab “Responses”</p>
+                </div>
+              </div>
+              <span class="chip status-warn h-6 px-2 rounded-full text-[11px] font-medium inline-flex items-center gap-1 shrink-0">
+                <i data-lucide="alert-triangle" class="w-3 h-3"></i> 20 unmatched
+              </span>
+            </header>
+
+            <div class="px-6 py-5 grid grid-cols-3 gap-5">
+              <div>
+                <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Last run</p>
+                <p class="text-[14px] font-medium">Yesterday, 06:00</p>
+                <p class="text-[12px] text-[var(--muted)] font-mono mt-0.5">2026-05-11T06:00:08Z</p>
+              </div>
+              <div>
+                <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Rows ingested</p>
+                <p class="text-[14px] font-medium tabular">124 <span class="text-[12px] text-[var(--muted)] font-normal">/ 144 read</span></p>
+                <p class="text-[12px] text-[var(--muted)] mt-0.5">latest-per-email upsert</p>
+              </div>
+              <div>
+                <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Errors</p>
+                <p class="text-[14px] font-medium text-[var(--warn)] tabular">20</p>
+                <p class="text-[12px] text-[var(--muted)] mt-0.5">emails not in employees</p>
+              </div>
+            </div>
+
+            <div class="px-6 pb-3">
+              <details class="rounded-lg border border-[var(--border)] bg-[#FAFAFA]">
+                <summary class="px-4 py-2.5 flex items-center justify-between text-[12.5px]">
+                  <span class="inline-flex items-center gap-2">
+                    <i data-lucide="chevron-right" class="chev w-3.5 h-3.5 text-[var(--muted)]"></i>
+                    <span class="font-medium">Unmatched emails</span>
+                    <span class="font-mono text-[11px] text-[var(--muted)]">20 items</span>
+                  </span>
+                  <span class="text-[var(--muted)]">skipped</span>
+                </summary>
+                <ul class="border-t border-[var(--border)] divide-y divide-[var(--border)] font-mono text-[12px]">
+                  <li class="px-4 py-2 flex items-center justify-between"><span class="text-[var(--warn)]">row 12</span><span class="text-[var(--muted)] truncate ml-3">jonas.k@visma-old.com</span></li>
+                  <li class="px-4 py-2 flex items-center justify-between"><span class="text-[var(--warn)]">row 31</span><span class="text-[var(--muted)] truncate ml-3">m.rasmussen@visma.no</span></li>
+                  <li class="px-4 py-2 flex items-center justify-between"><span class="text-[var(--warn)]">row 47</span><span class="text-[var(--muted)] truncate ml-3">arvids@visma.lv</span></li>
+                  <li class="px-4 py-2 flex items-center justify-between"><span class="text-[var(--muted)] italic" colspan="2">+ 17 more — expand to see full list</span></li>
+                </ul>
+              </details>
+            </div>
+
+            <footer class="px-6 py-4 border-t border-[var(--border)] bg-[#FAFAFA] flex items-center justify-between gap-4 flex-wrap">
+              <label class="flex items-center gap-3 cursor-pointer select-none">
+                <span class="toggle on" role="switch"></span>
+                <span class="text-[13px]">
+                  <span class="font-medium">Dry run</span>
+                  <span class="text-[var(--muted)]"> — preview the diff, write nothing</span>
+                </span>
+              </label>
+              <div class="flex items-center gap-2">
+                <button class="btn-ghost focus-ring h-9 px-3 rounded-md text-[13px] text-[var(--muted)] inline-flex items-center gap-1.5">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Open sheet
+                </button>
+                <button class="btn-primary focus-ring h-9 px-4 rounded-md text-white text-[13px] font-medium inline-flex items-center gap-2">
+                  <i data-lucide="play" class="w-3.5 h-3.5"></i> Run import
+                </button>
+              </div>
+            </footer>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- History -->
+      <section id="history">
+        <div class="flex items-baseline justify-between mb-4">
+          <div>
+            <h2 class="font-display text-[18px] font-semibold">Import history</h2>
+            <p class="text-[12.5px] text-[var(--muted)] mt-0.5">Last 10 runs across both sheets. Expand a row for the full error report.</p>
+          </div>
+          <div class="flex items-center gap-2 text-[12.5px] text-[var(--muted)]">
+            <button class="btn-ghost focus-ring h-8 px-2.5 rounded-md inline-flex items-center gap-1.5">
+              <i data-lucide="filter" class="w-3.5 h-3.5"></i> All sheets
+            </button>
+            <button class="btn-ghost focus-ring h-8 px-2.5 rounded-md inline-flex items-center gap-1.5">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="rounded-xl bg-white ring-soft overflow-hidden">
+          <div class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-10 items-center text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium border-b border-[var(--border)] bg-[#FAFAFA]">
+            <div>When</div>
+            <div>Sheet · trigger</div>
+            <div class="text-right">Read</div>
+            <div class="text-right">Written</div>
+            <div class="text-right">Errors</div>
+            <div></div>
+          </div>
+
+          <!-- row 1 -->
+          <details class="group border-b border-[var(--border)]">
+            <summary class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-14 items-center text-[13px] hover:bg-[#FAFAFA]">
+              <div class="font-mono text-[12px] text-[var(--muted)]">05-12 · 06:00</div>
+              <div class="flex items-center gap-2">
+                <span class="font-medium">Employees + Coaches</span>
+                <span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">cron</span>
+                <span class="chip status-ok text-[11px] px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                  <i data-lucide="check" class="w-3 h-3"></i> success
+                </span>
+              </div>
+              <div class="text-right tabular">662</div>
+              <div class="text-right tabular">658</div>
+              <div class="text-right tabular text-[var(--warn)]">4</div>
+              <div class="text-right text-[var(--muted)]"><i data-lucide="chevron-right" class="chev w-4 h-4 inline"></i></div>
+            </summary>
+            <div class="px-5 py-4 bg-[#FAFAFA] border-t border-[var(--border)] text-[12.5px] text-[var(--muted)]">
+              4 warnings — all missing coach_email. No rows blocked. <a href="#" class="text-[var(--ink)] underline-offset-2 hover:underline">Open report</a>
+            </div>
+          </details>
+
+          <!-- row 2 -->
+          <details class="group border-b border-[var(--border)]">
+            <summary class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-14 items-center text-[13px] hover:bg-[#FAFAFA]">
+              <div class="font-mono text-[12px] text-[var(--muted)]">05-11 · 06:00</div>
+              <div class="flex items-center gap-2">
+                <span class="font-medium">AI Levels</span>
+                <span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">cron</span>
+                <span class="chip status-warn text-[11px] px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                  <i data-lucide="alert-triangle" class="w-3 h-3"></i> partial
+                </span>
+              </div>
+              <div class="text-right tabular">144</div>
+              <div class="text-right tabular">124</div>
+              <div class="text-right tabular text-[var(--warn)]">20</div>
+              <div class="text-right text-[var(--muted)]"><i data-lucide="chevron-right" class="chev w-4 h-4 inline"></i></div>
+            </summary>
+            <div class="px-5 py-4 bg-[#FAFAFA] border-t border-[var(--border)] text-[12.5px] text-[var(--muted)]">
+              20 rows skipped — email not present in employees table. Probably former staff or typos in survey. <a href="#" class="text-[var(--ink)] underline-offset-2 hover:underline">Open report</a>
+            </div>
+          </details>
+
+          <!-- row 3 -->
+          <details class="group border-b border-[var(--border)]">
+            <summary class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-14 items-center text-[13px] hover:bg-[#FAFAFA]">
+              <div class="font-mono text-[12px] text-[var(--muted)]">05-10 · 14:22</div>
+              <div class="flex items-center gap-2">
+                <span class="font-medium">Employees + Coaches</span>
+                <span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">manual · TS</span>
+                <span class="chip status-info text-[11px] px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                  <i data-lucide="flask-conical" class="w-3 h-3"></i> dry-run
+                </span>
+              </div>
+              <div class="text-right tabular">662</div>
+              <div class="text-right tabular">0</div>
+              <div class="text-right tabular">0</div>
+              <div class="text-right text-[var(--muted)]"><i data-lucide="chevron-right" class="chev w-4 h-4 inline"></i></div>
+            </summary>
+            <div class="px-5 py-4 bg-[#FAFAFA] border-t border-[var(--border)] text-[12.5px] text-[var(--muted)]">
+              Diff: +3 new employees, 2 updated, 0 deleted. Nothing committed. <a href="#" class="text-[var(--ink)] underline-offset-2 hover:underline">Open diff</a>
+            </div>
+          </details>
+
+          <!-- row 4 -->
+          <details class="group border-b border-[var(--border)]">
+            <summary class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-14 items-center text-[13px] hover:bg-[#FAFAFA]">
+              <div class="font-mono text-[12px] text-[var(--muted)]">05-10 · 06:00</div>
+              <div class="flex items-center gap-2">
+                <span class="font-medium">Employees + Coaches</span>
+                <span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">cron</span>
+                <span class="chip status-ok text-[11px] px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                  <i data-lucide="check" class="w-3 h-3"></i> success
+                </span>
+              </div>
+              <div class="text-right tabular">659</div>
+              <div class="text-right tabular">655</div>
+              <div class="text-right tabular text-[var(--warn)]">4</div>
+              <div class="text-right text-[var(--muted)]"><i data-lucide="chevron-right" class="chev w-4 h-4 inline"></i></div>
+            </summary>
+            <div class="px-5 py-4 bg-[#FAFAFA] border-t border-[var(--border)] text-[12.5px] text-[var(--muted)]">
+              Same 4 coach-email gaps as today. Consider escalating to HR — they have been open for &gt; 30 days.
+            </div>
+          </details>
+
+          <!-- row 5: failed -->
+          <details class="group border-b border-[var(--border)]">
+            <summary class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-14 items-center text-[13px] hover:bg-[#FAFAFA]">
+              <div class="font-mono text-[12px] text-[var(--muted)]">05-09 · 09:14</div>
+              <div class="flex items-center gap-2">
+                <span class="font-medium">AI Levels</span>
+                <span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">manual · TS</span>
+                <span class="chip status-err text-[11px] px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                  <i data-lucide="x" class="w-3 h-3"></i> failed
+                </span>
+              </div>
+              <div class="text-right tabular">144</div>
+              <div class="text-right tabular">0</div>
+              <div class="text-right tabular text-[var(--err)]">12</div>
+              <div class="text-right text-[var(--muted)]"><i data-lucide="chevron-right" class="chev w-4 h-4 inline"></i></div>
+            </summary>
+            <div class="px-5 py-4 bg-[#FAFAFA] border-t border-[var(--border)] text-[12.5px] text-[var(--muted)]">
+              Schema mismatch — sheet added a “Confidence” column without notice. Rolled back automatically. <a href="imports-error.html" class="text-[var(--ink)] underline-offset-2 hover:underline">Open error report →</a>
+            </div>
+          </details>
+
+          <!-- compressed rows -->
+          <div class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-12 items-center text-[13px] border-b border-[var(--border)] hover:bg-[#FAFAFA]">
+            <div class="font-mono text-[12px] text-[var(--muted)]">05-09 · 06:00</div>
+            <div class="flex items-center gap-2"><span>Employees + Coaches</span><span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">cron</span><span class="chip status-ok text-[11px] px-1.5 py-0.5 rounded">success</span></div>
+            <div class="text-right tabular">659</div><div class="text-right tabular">655</div><div class="text-right tabular text-[var(--warn)]">4</div><div></div>
+          </div>
+          <div class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-12 items-center text-[13px] border-b border-[var(--border)] hover:bg-[#FAFAFA]">
+            <div class="font-mono text-[12px] text-[var(--muted)]">05-08 · 06:00</div>
+            <div class="flex items-center gap-2"><span>AI Levels</span><span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">cron</span><span class="chip status-warn text-[11px] px-1.5 py-0.5 rounded">partial</span></div>
+            <div class="text-right tabular">142</div><div class="text-right tabular">120</div><div class="text-right tabular text-[var(--warn)]">22</div><div></div>
+          </div>
+          <div class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-12 items-center text-[13px] border-b border-[var(--border)] hover:bg-[#FAFAFA]">
+            <div class="font-mono text-[12px] text-[var(--muted)]">05-08 · 06:00</div>
+            <div class="flex items-center gap-2"><span>Employees + Coaches</span><span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">cron</span><span class="chip status-ok text-[11px] px-1.5 py-0.5 rounded">success</span></div>
+            <div class="text-right tabular">658</div><div class="text-right tabular">654</div><div class="text-right tabular text-[var(--warn)]">4</div><div></div>
+          </div>
+          <div class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-12 items-center text-[13px] border-b border-[var(--border)] hover:bg-[#FAFAFA]">
+            <div class="font-mono text-[12px] text-[var(--muted)]">05-07 · 11:48</div>
+            <div class="flex items-center gap-2"><span>Employees + Coaches</span><span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">manual · AB</span><span class="chip status-info text-[11px] px-1.5 py-0.5 rounded">dry-run</span></div>
+            <div class="text-right tabular">658</div><div class="text-right tabular">0</div><div class="text-right tabular">0</div><div></div>
+          </div>
+          <div class="grid grid-cols-[160px_1fr_120px_120px_120px_40px] px-5 h-12 items-center text-[13px] hover:bg-[#FAFAFA]">
+            <div class="font-mono text-[12px] text-[var(--muted)]">05-07 · 06:00</div>
+            <div class="flex items-center gap-2"><span>AI Levels</span><span class="chip status-mute text-[11px] px-1.5 py-0.5 rounded">cron</span><span class="chip status-ok text-[11px] px-1.5 py-0.5 rounded">success</span></div>
+            <div class="text-right tabular">140</div><div class="text-right tabular">120</div><div class="text-right tabular text-[var(--warn)]">20</div><div></div>
+          </div>
+        </div>
+
+        <p class="mt-3 text-[12px] text-[var(--muted)]">Cron job <span class="font-mono">daily 06:00 UTC</span> · <a href="#" class="hover:text-[var(--ink)] underline-offset-2 hover:underline">View cron config</a> · <a href="#" class="hover:text-[var(--ink)] underline-offset-2 hover:underline">Sentry traces</a></p>
+      </section>
+
+    </main>
+
+    <footer class="mt-auto px-8 py-6 border-t border-[var(--border)] text-[12px] text-[var(--muted)] flex items-center justify-between">
+      <span>Imports run server-side via a Google service account · read-only scope.</span>
+      <span class="font-mono">build 0.4.1 · admin.imports</span>
+    </footer>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

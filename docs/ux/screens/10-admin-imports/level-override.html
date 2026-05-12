@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Level overrides · Admin · Cross-Project Reviews</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --magenta: #E10078;
+      --magenta-deep: #C70069;
+      --surface: #FAFAFA;
+      --card: #FFFFFF;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --ok: #16A34A;
+      --warn: #D97706;
+      --err: #DC2626;
+      --info: #2563EB;
+      --L1: #64748B;
+      --L2: #0EA5E9;
+      --L3: #10B981;
+      --L4: #F59E0B;
+      --L5: #BE185D;
+    }
+    html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+    .backdrop-grid {
+      background-image:
+        linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(0,0,0,0.022) 100%),
+        linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(0,0,0,0.022) 100%);
+      background-size: 56px 56px, 56px 56px;
+    }
+    .btn-primary { background: var(--magenta); transition: background 120ms ease, box-shadow 120ms ease, transform 120ms ease; }
+    .btn-primary:hover { background: var(--magenta-deep); box-shadow: 0 8px 24px -8px rgba(225,0,120,0.45); }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-ghost { transition: background 120ms ease; }
+    .btn-ghost:hover { background: #F3F4F6; }
+    .btn-outline { transition: background 120ms ease, border-color 120ms ease; }
+    .btn-outline:hover { background: #F9FAFB; border-color: #D1D5DB; }
+    .nav-item.active { background: #F4F4F5; color: var(--ink); }
+    .nav-item.active .dot { background: var(--magenta); }
+    .ring-soft { box-shadow: 0 0 0 1px rgba(17,17,17,0.05), 0 1px 2px rgba(17,17,17,0.04); }
+    .tabular { font-variant-numeric: tabular-nums; }
+    .status-ok    { background: #ECFDF5; color: #065F46; }
+    .status-warn  { background: #FFFBEB; color: #92400E; }
+    .status-err   { background: #FEF2F2; color: #991B1B; }
+    .status-info  { background: #EFF6FF; color: #1E40AF; }
+    .status-mute  { background: #F3F4F6; color: #374151; }
+    .status-violet{ background: #F5F3FF; color: #5B21B6; }
+
+    /* LevelBadge */
+    .level { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+    .level::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+    .lvl-1 { color: var(--L1); background: rgba(100,116,139,0.10); }
+    .lvl-2 { color: var(--L2); background: rgba(14,165,233,0.10); }
+    .lvl-3 { color: var(--L3); background: rgba(16,185,129,0.10); }
+    .lvl-4 { color: var(--L4); background: rgba(245,158,11,0.12); }
+    .lvl-5 { color: var(--L5); background: rgba(190,24,93,0.10); }
+
+    /* Level chip selector */
+    .lvl-chip { transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, color 120ms ease, border-color 120ms ease; }
+    .lvl-chip[aria-pressed="true"] { box-shadow: 0 0 0 2px rgba(225,0,120,0.18); }
+    .lvl-chip:hover { transform: translateY(-1px); }
+
+    /* timeline */
+    .tl-dot { position: relative; }
+    .tl-dot::before { content: ""; position: absolute; left: 9px; top: 22px; bottom: -22px; width: 1px; background: var(--border); }
+    .tl-dot:last-child::before { display: none; }
+
+    /* signed audit stamp pattern */
+    .sigil {
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.18) 1px, transparent 1px);
+      background-size: 5px 5px;
+    }
+
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] .chev { transform: rotate(90deg); }
+    .chev { transition: transform 160ms ease; }
+
+    .autocomplete li[data-active="true"] { background: #FDF2F8; }
+  </style>
+</head>
+<body class="min-h-screen backdrop-grid">
+
+<div class="min-h-screen grid grid-cols-[260px_1fr]">
+
+  <!-- SideNav -->
+  <aside class="border-r border-[var(--border)] bg-white flex flex-col">
+    <div class="px-5 h-16 flex items-center gap-2.5 border-b border-[var(--border)]">
+      <div class="h-8 w-8 rounded-md grid place-items-center" style="background: var(--magenta);">
+        <span class="font-display text-white text-base font-bold leading-none">V</span>
+      </div>
+      <div class="leading-tight">
+        <div class="font-display text-[14px] font-semibold">Cross-Project Reviews</div>
+        <div class="text-[11px] text-[var(--muted)]">Internal · Visma</div>
+      </div>
+    </div>
+
+    <nav class="px-3 py-4 space-y-6 text-[13px] flex-1">
+      <div>
+        <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Workspace</p>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="home" class="w-4 h-4"></i> Dashboard</a>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="messages-square" class="w-4 h-4"></i> My sessions</a>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="user-round" class="w-4 h-4"></i> Profile</a>
+      </div>
+      <div>
+        <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Coach</p>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="users" class="w-4 h-4"></i> Coachees</a>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="calendar-clock" class="w-4 h-4"></i> Assignments</a>
+      </div>
+      <div>
+        <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Insights</p>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> Completion</a>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="layers" class="w-4 h-4"></i> Levels</a>
+      </div>
+      <div>
+        <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Admin</p>
+        <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Cycles</a>
+        <a href="imports.html" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="database" class="w-4 h-4"></i> Imports</a>
+        <a href="#" class="nav-item active flex items-center gap-2.5 px-3 h-8 rounded-md"><span class="dot w-1.5 h-1.5 rounded-full bg-[var(--magenta)]"></span><i data-lucide="shield-alert" class="w-4 h-4"></i> Level overrides</a>
+      </div>
+    </nav>
+
+    <div class="m-3 p-3 rounded-lg border border-[var(--border)] bg-[#FAFAFA]">
+      <div class="flex items-center gap-2 text-[12px] text-[var(--muted)]">
+        <i data-lucide="circle-dot" class="w-3.5 h-3.5 text-[var(--magenta)]"></i>
+        Cycle H1 · 2026
+      </div>
+      <div class="mt-1 text-[12px] text-[var(--ink)] tabular">39 days remaining</div>
+    </div>
+  </aside>
+
+  <!-- Main column -->
+  <div class="flex flex-col min-w-0">
+
+    <header class="h-16 border-b border-[var(--border)] bg-white flex items-center justify-between px-8">
+      <div class="flex items-center gap-2 text-[13px]">
+        <span class="text-[var(--muted)]">Admin</span>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+        <span class="font-medium">Level overrides</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="btn-ghost focus-ring h-8 px-3 rounded-md text-[13px] text-[var(--muted)] inline-flex items-center gap-2">
+          <i data-lucide="search" class="w-3.5 h-3.5"></i> Search
+          <span class="ml-2 font-mono text-[11px] text-[var(--muted)] border border-[var(--border)] rounded px-1">⌘K</span>
+        </button>
+        <div class="h-8 w-8 rounded-full bg-[#FCE7F3] grid place-items-center text-[12px] font-medium text-[var(--magenta-deep)]">TS</div>
+      </div>
+    </header>
+
+    <!-- PageHeader -->
+    <section class="px-8 pt-8 pb-7 border-b border-[var(--border)] bg-white">
+      <div class="flex items-start justify-between gap-8">
+        <div>
+          <p class="text-[11px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium mb-3">Admin · Audited action</p>
+          <h1 class="font-display text-[32px] leading-[1.1] font-semibold">Level overrides</h1>
+          <p class="mt-3 text-[14px] text-[var(--muted)] max-w-[720px] leading-relaxed">
+            Set an AI level for an engineer outside of the survey. Every override is <span class="text-[var(--ink)] font-medium">timestamped, signed by you, and append-only</span> — the next survey response automatically supersedes it unless you pin it.
+          </p>
+        </div>
+        <div class="hidden lg:flex items-center gap-2 shrink-0">
+          <span class="status-violet h-7 px-2.5 rounded-full text-[11.5px] font-medium inline-flex items-center gap-1.5">
+            <i data-lucide="file-signature" class="w-3 h-3"></i> Audit-logged
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <main class="p-8 max-w-[1280px] space-y-8">
+
+      <!-- Search -->
+      <section>
+        <label class="block">
+          <span class="text-[12.5px] font-medium text-[var(--ink)]">Find employee</span>
+          <span class="text-[12.5px] text-[var(--muted)]"> · type a name or email</span>
+        </label>
+
+        <div class="mt-2 relative max-w-[640px]">
+          <div class="h-12 rounded-lg border border-[var(--border)] bg-white flex items-center gap-3 px-3 ring-soft">
+            <i data-lucide="search" class="w-4 h-4 text-[var(--muted)]"></i>
+            <input
+              type="text"
+              value="aleks"
+              class="flex-1 bg-transparent outline-none text-[14px] placeholder:text-[var(--muted)]"
+              placeholder="e.g. Aleksandras Vaitkus · marta.k@visma.se"
+            />
+            <span class="font-mono text-[11px] text-[var(--muted)] border border-[var(--border)] rounded px-1.5 py-0.5">⌘K</span>
+          </div>
+
+          <!-- Autocomplete -->
+          <ul class="autocomplete absolute z-10 mt-1.5 left-0 right-0 rounded-lg bg-white ring-soft overflow-hidden text-[13px]">
+            <li data-active="true" class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="h-7 w-7 rounded-full bg-[#E0F2FE] grid place-items-center text-[11px] font-medium text-[#075985] shrink-0">AV</div>
+                <div class="min-w-0">
+                  <div class="font-medium truncate">Aleksandras Vaitkus</div>
+                  <div class="text-[12px] text-[var(--muted)] font-mono truncate">aleksandras.vaitkus@visma.lt · Visma Lithuania · monitoring-platform</div>
+                </div>
+              </div>
+              <span class="level lvl-3 shrink-0">L3 · CLI</span>
+            </li>
+            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#FAFAFA]">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="h-7 w-7 rounded-full bg-[#FEF3C7] grid place-items-center text-[11px] font-medium text-[#92400E] shrink-0">AK</div>
+                <div class="min-w-0">
+                  <div class="font-medium truncate">Aleksandra Kovaļenko</div>
+                  <div class="text-[12px] text-[var(--muted)] font-mono truncate">aleksandra.kovalenko@visma.lv · Visma Latvia · billing-core</div>
+                </div>
+              </div>
+              <span class="level lvl-2 shrink-0">L2 · IDE</span>
+            </li>
+            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#FAFAFA]">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="h-7 w-7 rounded-full bg-[#F3F4F6] grid place-items-center text-[11px] font-medium text-[var(--muted)] shrink-0">AB</div>
+                <div class="min-w-0">
+                  <div class="font-medium truncate">Aleksei Bondarenko</div>
+                  <div class="text-[12px] text-[var(--muted)] font-mono truncate">aleksei.b@visma.no · Visma Software AS · invoicing-ui</div>
+                </div>
+              </div>
+              <span class="level lvl-4 shrink-0">L4 · Parallel</span>
+            </li>
+            <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#FAFAFA]">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="h-7 w-7 rounded-full bg-[#FCE7F3] grid place-items-center text-[11px] font-medium text-[var(--magenta-deep)] shrink-0">AL</div>
+                <div class="min-w-0">
+                  <div class="font-medium truncate">Aleksei Lopatin</div>
+                  <div class="text-[12px] text-[var(--muted)] font-mono truncate">aleksei.l@visma.com · Visma Spcs · payroll-pipeline</div>
+                </div>
+              </div>
+              <span class="status-warn text-[11px] px-2 py-0.5 rounded-full font-medium shrink-0 inline-flex items-center gap-1">
+                <i data-lucide="help-circle" class="w-3 h-3"></i> unverified
+              </span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Selected employee + override form -->
+      <section class="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6">
+
+        <!-- LEFT: selected employee -->
+        <article class="rounded-xl bg-white ring-soft overflow-hidden">
+          <header class="px-6 pt-5 pb-5 flex items-start gap-4 border-b border-[var(--border)]">
+            <div class="h-12 w-12 rounded-full bg-[#E0F2FE] grid place-items-center text-[14px] font-medium text-[#075985] shrink-0">AV</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="font-display text-[20px] font-semibold leading-tight">Aleksandras Vaitkus</h2>
+                <span class="level lvl-3">L3 · CLI</span>
+              </div>
+              <p class="text-[12.5px] text-[var(--muted)] font-mono mt-1">aleksandras.vaitkus@visma.lt</p>
+              <div class="mt-2 flex flex-wrap gap-2 text-[12px] text-[var(--muted)]">
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="building-2" class="w-3 h-3"></i> Visma Lithuania</span>
+                <span aria-hidden="true">·</span>
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="folder-git-2" class="w-3 h-3"></i> monitoring-platform</span>
+                <span aria-hidden="true">·</span>
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="user-cog" class="w-3 h-3"></i> coach: Indrė Vaitkuvienė</span>
+              </div>
+            </div>
+            <button class="btn-ghost focus-ring h-8 w-8 rounded-md grid place-items-center text-[var(--muted)]" aria-label="Clear selection">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </header>
+
+          <div class="px-6 py-5 grid grid-cols-3 gap-5 border-b border-[var(--border)]">
+            <div>
+              <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Current level</p>
+              <span class="level lvl-3">L3 · CLI</span>
+              <p class="text-[12px] text-[var(--muted)] mt-1.5">CLI agent, permissioned</p>
+            </div>
+            <div>
+              <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Source</p>
+              <span class="status-info text-[11.5px] px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1">
+                <i data-lucide="clipboard-list" class="w-3 h-3"></i> survey
+              </span>
+              <p class="text-[12px] text-[var(--muted)] font-mono mt-1.5">2026-03-04</p>
+            </div>
+            <div>
+              <p class="text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)] font-medium mb-1.5">Last review</p>
+              <p class="text-[13px] font-medium">Cycle H2 · 2025</p>
+              <p class="text-[12px] text-[var(--muted)] mt-0.5">reviewed by Saulius P. · L4</p>
+            </div>
+          </div>
+
+          <!-- Survey responses -->
+          <details class="border-b border-[var(--border)]">
+            <summary class="px-6 py-3.5 flex items-center justify-between text-[13px]">
+              <span class="inline-flex items-center gap-2">
+                <i data-lucide="chevron-right" class="chev w-3.5 h-3.5 text-[var(--muted)]"></i>
+                <span class="font-medium">Survey responses</span>
+                <span class="font-mono text-[11px] text-[var(--muted)]">5 questions · 2026-03-04</span>
+              </span>
+              <span class="text-[12px] text-[var(--muted)]">self-declared L3</span>
+            </summary>
+            <ol class="px-6 pb-5 space-y-3 text-[13px]">
+              <li class="flex gap-3"><span class="font-mono text-[var(--muted)] shrink-0 w-5">Q1</span><div><p class="font-medium">Tool stack</p><p class="text-[var(--muted)]">Claude Code (CLI), Cursor, occasional Copilot</p></div></li>
+              <li class="flex gap-3"><span class="font-mono text-[var(--muted)] shrink-0 w-5">Q2</span><div><p class="font-medium">Permissions</p><p class="text-[var(--muted)]">Allow-list of project commands; never auto-runs network ops</p></div></li>
+              <li class="flex gap-3"><span class="font-mono text-[var(--muted)] shrink-0 w-5">Q3</span><div><p class="font-medium">Verification habits</p><p class="text-[var(--muted)]">Reads every diff, runs tests, spot-checks generated SQL</p></div></li>
+              <li class="flex gap-3"><span class="font-mono text-[var(--muted)] shrink-0 w-5">Q4</span><div><p class="font-medium">Parallel agents</p><p class="text-[var(--muted)]">Tried twice, dropped — coordination overhead too high</p></div></li>
+              <li class="flex gap-3"><span class="font-mono text-[var(--muted)] shrink-0 w-5">Q5</span><div><p class="font-medium">Confidence</p><p class="text-[var(--muted)]">Medium — feels comfortable, not yet at fleet</p></div></li>
+            </ol>
+          </details>
+
+          <!-- Override history (preview) -->
+          <div class="px-6 py-5">
+            <h3 class="font-display text-[14px] font-semibold mb-3">Override history</h3>
+            <ol class="space-y-5 text-[13px]">
+              <li class="tl-dot pl-7 relative">
+                <span class="absolute left-[6px] top-[5px] w-[10px] h-[10px] rounded-full" style="background: var(--L4); box-shadow: 0 0 0 3px rgba(245,158,11,0.18);"></span>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="level lvl-3">L3</span>
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+                  <span class="level lvl-4">L4</span>
+                  <span class="status-violet text-[11px] px-2 py-0.5 rounded-full font-medium">override</span>
+                  <span class="font-mono text-[12px] text-[var(--muted)]">2025-09-21 · 14:08 UTC</span>
+                </div>
+                <p class="mt-1.5 text-[var(--ink)]">"Saw him running 3 parallel Claude Code sessions on the platform-team incident — clearly L4 in practice."</p>
+                <p class="mt-1 text-[12px] text-[var(--muted)]">by Indrė Vaitkuvienė (coach) · superseded by survey 2026-03-04</p>
+              </li>
+              <li class="tl-dot pl-7 relative">
+                <span class="absolute left-[6px] top-[5px] w-[10px] h-[10px] rounded-full" style="background: var(--L2); box-shadow: 0 0 0 3px rgba(14,165,233,0.18);"></span>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="level lvl-1">L1</span>
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+                  <span class="level lvl-2">L2</span>
+                  <span class="status-violet text-[11px] px-2 py-0.5 rounded-full font-medium">override</span>
+                  <span class="font-mono text-[12px] text-[var(--muted)]">2024-11-02 · 09:31 UTC</span>
+                </div>
+                <p class="mt-1.5 text-[var(--ink)]">"Onboarding bump after the Cursor workshop — comfortable with IDE agent now."</p>
+                <p class="mt-1 text-[12px] text-[var(--muted)]">by Tomek Szturo (admin)</p>
+              </li>
+            </ol>
+          </div>
+        </article>
+
+        <!-- RIGHT: Override form -->
+        <form class="rounded-xl bg-white ring-soft overflow-hidden self-start">
+          <header class="px-6 pt-5 pb-3 border-b border-[var(--border)]">
+            <h2 class="font-display text-[16px] font-semibold">New override</h2>
+            <p class="text-[12.5px] text-[var(--muted)] mt-1">Appends a row to <span class="font-mono text-[var(--ink)]">ai_levels</span>. Cannot be deleted — only superseded.</p>
+          </header>
+
+          <div class="px-6 py-5 space-y-6">
+
+            <!-- New level chips -->
+            <div>
+              <div class="flex items-baseline justify-between">
+                <label class="text-[12.5px] font-medium">New level <span class="text-[var(--err)]">*</span></label>
+                <span class="text-[11.5px] text-[var(--muted)]">currently L3 → selecting L4</span>
+              </div>
+              <div class="mt-2 grid grid-cols-5 gap-2">
+                <button type="button" aria-pressed="false" class="lvl-chip focus-ring h-12 rounded-lg border border-[var(--border)] bg-white text-left px-3">
+                  <span class="block text-[11px] text-[var(--muted)] font-mono">L1</span>
+                  <span class="block text-[12px] font-medium leading-tight">None</span>
+                </button>
+                <button type="button" aria-pressed="false" class="lvl-chip focus-ring h-12 rounded-lg border border-[var(--border)] bg-white text-left px-3">
+                  <span class="block text-[11px] text-[var(--muted)] font-mono">L2</span>
+                  <span class="block text-[12px] font-medium leading-tight">IDE</span>
+                </button>
+                <button type="button" aria-pressed="false" class="lvl-chip focus-ring h-12 rounded-lg border border-[var(--border)] bg-white text-left px-3 relative">
+                  <span class="block text-[11px] text-[var(--muted)] font-mono">L3</span>
+                  <span class="block text-[12px] font-medium leading-tight">CLI</span>
+                  <span class="absolute right-1.5 top-1.5 text-[9.5px] text-[var(--muted)] font-mono">now</span>
+                </button>
+                <button type="button" aria-pressed="true" class="lvl-chip focus-ring h-12 rounded-lg border text-left px-3" style="border-color: var(--L4); background: rgba(245,158,11,0.08); color: #92400E;">
+                  <span class="block text-[11px] font-mono" style="color: #92400E;">L4</span>
+                  <span class="block text-[12px] font-semibold leading-tight">Parallel</span>
+                </button>
+                <button type="button" aria-pressed="false" class="lvl-chip focus-ring h-12 rounded-lg border border-[var(--border)] bg-white text-left px-3">
+                  <span class="block text-[11px] text-[var(--muted)] font-mono">L5</span>
+                  <span class="block text-[12px] font-medium leading-tight">Fleet</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Reason -->
+            <div>
+              <div class="flex items-baseline justify-between">
+                <label class="text-[12.5px] font-medium">Reason <span class="text-[var(--err)]">*</span></label>
+                <span class="text-[11.5px] text-[var(--muted)]">visible to the engineer and their coach</span>
+              </div>
+              <div class="mt-2 rounded-lg border border-[var(--border)] focus-within:border-[var(--ink)] bg-white overflow-hidden">
+                <textarea rows="4" class="w-full px-3 py-2.5 text-[13.5px] outline-none resize-none placeholder:text-[var(--muted)]" placeholder="Why is the on-paper level wrong?">Observed running three parallel Claude Code agents during the May 4 platform incident — orchestrated git worktrees and coordinated fix across two services. Survey was self-modest; behaviour is clearly L4.</textarea>
+                <div class="px-3 py-2 border-t border-[var(--border)] flex items-center justify-between text-[11.5px] text-[var(--muted)]">
+                  <div class="flex items-center gap-3">
+                    <span>Examples:</span>
+                    <button type="button" class="underline-offset-2 hover:underline">"Observed in incident…"</button>
+                    <button type="button" class="underline-offset-2 hover:underline">"Workshop graduate…"</button>
+                    <button type="button" class="underline-offset-2 hover:underline">"Mis-keyed survey answer…"</button>
+                  </div>
+                  <span class="font-mono tabular">218 / 500</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Expiry -->
+            <div>
+              <label class="text-[12.5px] font-medium">Expiry</label>
+              <div class="mt-2 space-y-2">
+                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#FAFAFA]">
+                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" checked />
+                  <div>
+                    <span class="text-[13px] font-medium">Auto-expire on next survey</span>
+                    <p class="text-[12px] text-[var(--muted)] mt-0.5">A new <span class="font-mono">survey</span> row in <span class="font-mono">ai_levels</span> will supersede this override automatically.</p>
+                  </div>
+                </label>
+                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#FAFAFA]">
+                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" />
+                  <div>
+                    <span class="text-[13px] font-medium">Pin until manually changed</span>
+                    <p class="text-[12px] text-[var(--muted)] mt-0.5">Survey responses will be ignored for this engineer. Use sparingly.</p>
+                  </div>
+                </label>
+                <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#FAFAFA]">
+                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" />
+                  <div class="flex-1">
+                    <span class="text-[13px] font-medium">Custom date</span>
+                    <input type="date" class="block mt-1 h-8 px-2 rounded-md border border-[var(--border)] text-[12.5px] font-mono outline-none focus:border-[var(--ink)]" value="2026-09-01" />
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Audit signature preview -->
+            <div class="rounded-lg border border-[var(--border)] bg-[#FAFAFA] p-4 flex items-start gap-4">
+              <div class="h-12 w-12 rounded-md sigil grid place-items-center bg-white border border-[var(--border)] shrink-0">
+                <i data-lucide="file-signature" class="w-5 h-5 text-[var(--ink)]"></i>
+              </div>
+              <div class="text-[12.5px] leading-relaxed text-[var(--muted)]">
+                <p class="text-[var(--ink)] font-medium">This is an audit-logged action.</p>
+                <p class="mt-1">
+                  Submitting writes a row signed by <span class="text-[var(--ink)] font-medium">Tomek Szturo</span> (<span class="font-mono">tomasz.szturo@visma.com</span>) at <span class="font-mono text-[var(--ink)]">2026-05-12 · now</span>. The row is append-only and visible on the engineer's profile timeline and on the coach's dashboard.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <footer class="px-6 py-4 border-t border-[var(--border)] bg-[#FAFAFA] flex items-center justify-between gap-3">
+            <p class="text-[11.5px] text-[var(--muted)]">An email is sent to <span class="font-mono text-[var(--ink)]">aleksandras.vaitkus@visma.lt</span> and the coach.</p>
+            <div class="flex items-center gap-2">
+              <button type="button" class="btn-ghost focus-ring h-9 px-3 rounded-md text-[13px] text-[var(--muted)]">Cancel</button>
+              <button type="submit" class="btn-primary focus-ring h-9 px-4 rounded-md text-white text-[13px] font-medium inline-flex items-center gap-2">
+                Record override
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </footer>
+        </form>
+
+      </section>
+
+      <!-- Recent overrides org-wide (small contextual section) -->
+      <section>
+        <div class="flex items-baseline justify-between mb-3">
+          <h2 class="font-display text-[16px] font-semibold">Recent org-wide overrides</h2>
+          <a href="#" class="text-[12.5px] text-[var(--muted)] hover:text-[var(--ink)] inline-flex items-center gap-1.5">
+            View all <i data-lucide="arrow-right" class="w-3 h-3"></i>
+          </a>
+        </div>
+        <div class="rounded-xl bg-white ring-soft overflow-hidden">
+          <div class="grid grid-cols-[1.4fr_0.9fr_0.7fr_1.4fr_140px] px-5 h-10 items-center text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium border-b border-[var(--border)] bg-[#FAFAFA]">
+            <div>Employee</div>
+            <div>Change</div>
+            <div>Source</div>
+            <div>Reason (excerpt)</div>
+            <div class="text-right">By · when</div>
+          </div>
+          <ul class="divide-y divide-[var(--border)] text-[13px]">
+            <li class="grid grid-cols-[1.4fr_0.9fr_0.7fr_1.4fr_140px] px-5 py-3 items-center">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="h-7 w-7 rounded-full bg-[#FCE7F3] grid place-items-center text-[11px] font-medium text-[var(--magenta-deep)] shrink-0">MR</div>
+                <div class="min-w-0">
+                  <div class="font-medium truncate">Mette Rasmussen</div>
+                  <div class="text-[11.5px] text-[var(--muted)] font-mono truncate">mette.r@visma.no</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5"><span class="level lvl-2">L2</span><i data-lucide="arrow-right" class="w-3 h-3 text-[var(--muted)]"></i><span class="level lvl-3">L3</span></div>
+              <div><span class="status-violet text-[11px] px-2 py-0.5 rounded-full font-medium">override</span></div>
+              <div class="text-[var(--muted)] truncate">"Mis-keyed survey — confirmed in 1:1, she's been on CLI agents since Feb."</div>
+              <div class="text-right text-[12px]"><span class="text-[var(--ink)]">Tomek S.</span><br><span class="font-mono text-[var(--muted)]">2h ago</span></div>
+            </li>
+            <li class="grid grid-cols-[1.4fr_0.9fr_0.7fr_1.4fr_140px] px-5 py-3 items-center">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="h-7 w-7 rounded-full bg-[#FEF3C7] grid place-items-center text-[11px] font-medium text-[#92400E] shrink-0">JP</div>
+                <div class="min-w-0">
+                  <div class="font-medium truncate">Jonas Petraitis</div>
+                  <div class="text-[11.5px] text-[var(--muted)] font-mono truncate">jonas.p@visma.lt</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5"><span class="level lvl-3">L3</span><i data-lucide="arrow-right" class="w-3 h-3 text-[var(--muted)]"></i><span class="level lvl-4">L4</span></div>
+              <div><span class="status-violet text-[11px] px-2 py-0.5 rounded-full font-medium">override</span></div>
+              <div class="text-[var(--muted)] truncate">"Demonstrated parallel-agent workflow in BG demo day."</div>
+              <div class="text-right text-[12px]"><span class="text-[var(--ink)]">Indrė V.</span><br><span class="font-mono text-[var(--muted)]">Yesterday</span></div>
+            </li>
+            <li class="grid grid-cols-[1.4fr_0.9fr_0.7fr_1.4fr_140px] px-5 py-3 items-center">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="h-7 w-7 rounded-full bg-[#E0F2FE] grid place-items-center text-[11px] font-medium text-[#075985] shrink-0">SP</div>
+                <div class="min-w-0">
+                  <div class="font-medium truncate">Saulius Paulauskas</div>
+                  <div class="text-[11.5px] text-[var(--muted)] font-mono truncate">saulius.p@visma.lt</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5"><span class="level lvl-4">L4</span><i data-lucide="arrow-right" class="w-3 h-3 text-[var(--muted)]"></i><span class="level lvl-5">L5</span></div>
+              <div><span class="status-violet text-[11px] px-2 py-0.5 rounded-full font-medium">override · pinned</span></div>
+              <div class="text-[var(--muted)] truncate">"Running fleet on payroll-pipeline migration. Pin until next cycle."</div>
+              <div class="text-right text-[12px]"><span class="text-[var(--ink)]">Tomek S.</span><br><span class="font-mono text-[var(--muted)]">3d ago</span></div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="mt-auto px-8 py-6 border-t border-[var(--border)] text-[12px] text-[var(--muted)] flex items-center justify-between">
+      <span>Override history is append-only · GDPR retention 24 months · <a href="#" class="hover:text-[var(--ink)] underline-offset-2 hover:underline">retention policy</a></span>
+      <span class="font-mono">build 0.4.1 · admin.overrides</span>
+    </footer>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Session with Sigrid Halvorsen — you are the reviewee</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          mono: ['JetBrains Mono', 'ui-monospace'],
+        },
+        colors: {
+          ink: '#1A1A1A', muted: '#6B7280', line: '#E5E7EB', surface: '#FAFAFA',
+          magenta: '#E10078',
+          lvl1: '#64748B', lvl2: '#0EA5E9', lvl3: '#10B981', lvl4: '#F59E0B', lvl5: '#BE185D',
+          st_assigned: '#6B7280', st_scheduled: '#2563EB', st_completed: '#16A34A',
+          st_feedback: '#7C3AED', st_auto: '#D97706',
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html, body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #1A1A1A; }
+  .font-display { font-family: 'Fraunces', serif; font-optical-sizing: auto; }
+  .hairline { box-shadow: inset 0 0 0 1px #E5E7EB; }
+  .dotline { background-image: radial-gradient(#D1D5DB 1px, transparent 1px); background-size: 6px 6px; }
+  .focus-magenta:focus { outline: 2px solid #E10078; outline-offset: 2px; }
+  textarea.prep { line-height: 1.6; }
+  .markdown-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6B7280; }
+  .grid-rule { background-image: linear-gradient(to right, #E5E7EB 1px, transparent 1px); background-size: 8px 100%; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- AppShell -->
+<div class="flex min-h-screen">
+
+  <!-- SideNav (collapsed mini) -->
+  <aside class="hidden md:flex w-60 shrink-0 flex-col border-r border-line bg-white">
+    <div class="px-6 py-5 border-b border-line">
+      <div class="flex items-center gap-2">
+        <div class="h-7 w-7 rounded-md bg-ink text-white grid place-items-center">
+          <span class="font-display text-[15px] leading-none">v</span>
+        </div>
+        <div class="leading-tight">
+          <div class="text-[13px] font-semibold tracking-tight">Visma</div>
+          <div class="text-[11px] text-muted -mt-0.5">Cross-Project Reviews</div>
+        </div>
+      </div>
+    </div>
+    <nav class="px-3 py-4 text-sm space-y-0.5">
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-ink hover:bg-surface">
+        <i data-lucide="layout-dashboard" class="h-4 w-4 text-muted"></i> Dashboard
+      </a>
+      <a href="sessions-list.html" class="flex items-center gap-3 px-3 py-2 rounded-md bg-surface text-ink font-medium">
+        <i data-lucide="messages-square" class="h-4 w-4"></i> My sessions
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-ink hover:bg-surface">
+        <i data-lucide="user-round" class="h-4 w-4 text-muted"></i> Profile
+      </a>
+      <div class="pt-4 pb-1 px-3 text-[11px] uppercase tracking-[0.12em] text-muted">Coach</div>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-ink hover:bg-surface">
+        <i data-lucide="users-round" class="h-4 w-4 text-muted"></i> Coachees
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-ink hover:bg-surface">
+        <i data-lucide="list-checks" class="h-4 w-4 text-muted"></i> Assignments
+      </a>
+    </nav>
+    <div class="mt-auto border-t border-line p-4 flex items-center gap-3">
+      <div class="h-8 w-8 rounded-full bg-ink text-white grid place-items-center text-[12px] font-semibold">TS</div>
+      <div class="leading-tight min-w-0">
+        <div class="text-[13px] font-medium truncate">Tomas Šturas</div>
+        <div class="text-[11px] text-muted truncate">tomas.sturas@visma.com</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="flex-1 min-w-0">
+
+    <!-- TopBar -->
+    <header class="sticky top-0 z-10 bg-white/85 backdrop-blur border-b border-line">
+      <div class="flex items-center gap-4 px-6 lg:px-10 h-14">
+        <a href="sessions-list.html" class="inline-flex items-center gap-1.5 text-[12.5px] text-muted hover:text-ink">
+          <i data-lucide="arrow-left" class="h-3.5 w-3.5"></i> My sessions
+        </a>
+        <span class="text-line">/</span>
+        <span class="text-[12.5px] font-mono text-ink">asg_91aa</span>
+
+        <!-- CyclePill -->
+        <div class="ml-auto flex items-center gap-2 rounded-full border border-line bg-white pl-2.5 pr-3 py-1">
+          <span class="h-1.5 w-1.5 rounded-full bg-st_scheduled"></span>
+          <span class="text-[12px] font-medium">Cycle 2026·H1</span>
+          <span class="text-[12px] text-muted font-mono">· 42d left</span>
+        </div>
+        <button class="text-muted hover:text-ink"><i data-lucide="bell" class="h-4 w-4"></i></button>
+      </div>
+    </header>
+
+    <div class="px-6 lg:px-10 pt-10 pb-20 max-w-[1180px]">
+
+      <!-- PageHeader -->
+      <div class="mb-1 text-[11px] uppercase tracking-[0.16em] text-muted font-mono">
+        Session · you are the <span class="text-ink">reviewee</span>
+      </div>
+
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-3">
+        <div class="min-w-0">
+          <h1 class="font-display text-[42px] leading-[1.05] tracking-tight">
+            with <span class="italic">Sigrid Halvorsen</span>
+          </h1>
+          <p class="mt-2 text-[14px] text-muted max-w-2xl">
+            A 90-minute window to watch how a Level 5 engineer actually runs the loop. Bring a real task,
+            not a demo — Sigrid will steer.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- StatusPill auto_paired -->
+          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium" style="background:#D9770614;color:#92400E">
+            <i data-lucide="wand-2" class="h-3.5 w-3.5"></i> Auto-paired
+          </span>
+          <!-- StatusPill scheduled -->
+          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium" style="background:#2563EB14;color:#1D4ED8">
+            <i data-lucide="calendar-check" class="h-3.5 w-3.5"></i> Scheduled
+          </span>
+        </div>
+      </div>
+
+      <!-- Counterpart strip -->
+      <div class="mt-6 rounded-lg bg-white hairline overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr] divide-y md:divide-y-0 md:divide-x divide-line">
+          <!-- counterpart -->
+          <div class="p-5 flex items-center gap-4">
+            <div class="h-12 w-12 rounded-full bg-surface hairline grid place-items-center font-display text-[18px]">SH</div>
+            <div class="min-w-0">
+              <div class="text-[15px] font-semibold leading-tight">Sigrid Halvorsen</div>
+              <div class="text-[12.5px] text-muted">Staff Engineer · Visma Public Norway · Go</div>
+              <div class="mt-1.5 text-[11.5px] text-muted">
+                <span class="font-mono">sigrid.halvorsen@visma.com</span>
+              </div>
+            </div>
+          </div>
+          <!-- level diff -->
+          <div class="p-5">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono mb-2">Level diff</div>
+            <div class="flex items-center gap-2.5">
+              <!-- LevelBadge you L4 -->
+              <span class="inline-flex flex-col items-start gap-0.5 rounded-md px-2.5 py-1.5" style="background:#F59E0B14">
+                <span class="text-[10px] font-mono uppercase tracking-wider" style="color:#92400E">You</span>
+                <span class="text-[13px] font-semibold" style="color:#92400E">L4</span>
+              </span>
+              <i data-lucide="arrow-right" class="h-3.5 w-3.5 text-muted"></i>
+              <!-- LevelBadge Sigrid L5 -->
+              <span class="inline-flex flex-col items-start gap-0.5 rounded-md px-2.5 py-1.5" style="background:#BE185D10">
+                <span class="text-[10px] font-mono uppercase tracking-wider" style="color:#9F1239">Reviewer</span>
+                <span class="text-[13px] font-semibold" style="color:#9F1239">L5</span>
+              </span>
+              <span class="text-[12px] text-muted ml-1">gap +1 · "close pairing"</span>
+            </div>
+          </div>
+          <!-- cycle -->
+          <div class="p-5">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono mb-2">Cycle</div>
+            <div class="text-[14px] font-medium">2026·H1</div>
+            <div class="text-[12.5px] text-muted">Jan 1 — Jun 30 · 42d left</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-column body -->
+      <div class="mt-8 grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6">
+
+        <!-- LEFT: prep + feedback CTA -->
+        <div class="space-y-6">
+
+          <!-- Prep notes -->
+          <section class="rounded-lg bg-white hairline">
+            <header class="flex items-center justify-between px-5 pt-5">
+              <div>
+                <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono">01 · Prep</div>
+                <h2 class="font-display text-[22px] tracking-tight mt-1">What you want to walk away with</h2>
+              </div>
+              <div class="flex items-center gap-2 text-[11.5px] text-muted">
+                <i data-lucide="cloud-check" class="h-3.5 w-3.5"></i> Autosaved · 2 min ago
+              </div>
+            </header>
+            <p class="px-5 mt-1 text-[13px] text-muted">Private to you and Sigrid. Markdown supported.</p>
+
+            <div class="px-5 mt-4 flex items-center gap-1 text-muted">
+              <button class="px-2 py-1 rounded hover:bg-surface" title="Bold"><i data-lucide="bold" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface" title="Italic"><i data-lucide="italic" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface" title="Heading"><i data-lucide="heading-2" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface" title="List"><i data-lucide="list" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface" title="Code"><i data-lucide="code" class="h-3.5 w-3.5"></i></button>
+              <button class="px-2 py-1 rounded hover:bg-surface" title="Link"><i data-lucide="link" class="h-3.5 w-3.5"></i></button>
+              <span class="ml-auto markdown-tag">markdown</span>
+            </div>
+
+            <div class="px-5 pb-5 pt-2">
+              <textarea class="prep w-full min-h-[260px] resize-y rounded-md bg-surface hairline px-4 py-3 text-[14px] focus:bg-white focus:outline-none focus:ring-0 focus-magenta"
+                spellcheck="false"
+              >## What I bring
+Real task: refactoring the **invoicing reconciliation worker** — currently one big Python script,
+~600 lines, no tests. Want to break it up *while* shipping the new currency-rounding fix.
+
+## What I want to see Sigrid do
+- How she sets up agent context for a brownfield refactor (CLAUDE.md? scratch repo?)
+- Where she trusts the agent vs. where she steps in
+- How she runs >1 agent without losing the plot
+
+## Questions
+1. When you have two agents in flight, how do you keep their contexts from drifting?
+2. What's your verification ritual before a PR is "ready"?
+3. Do you ever roll back the whole branch and re-prompt from scratch?
+</textarea>
+              <div class="mt-3 flex items-center justify-between text-[11.5px] text-muted">
+                <span>1,213 chars · supports <span class="font-mono">**bold**</span>, <span class="font-mono">_italic_</span>, <span class="font-mono">`code`</span></span>
+                <button class="inline-flex items-center gap-1 hover:text-ink">
+                  <i data-lucide="eye" class="h-3.5 w-3.5"></i> Preview
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Feedback CTA (reviewee view; appears once session is completed) -->
+          <section class="rounded-lg bg-white hairline">
+            <div class="p-5 flex flex-col md:flex-row gap-4 md:items-center">
+              <div class="h-10 w-10 rounded-md grid place-items-center" style="background:#7C3AED14">
+                <i data-lucide="clipboard-edit" class="h-5 w-5" style="color:#5B21B6"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono">03 · Feedback</div>
+                <div class="font-display text-[20px] tracking-tight mt-0.5">Tell us what you'll try in the next two weeks.</div>
+                <p class="text-[13px] text-muted mt-1">
+                  Five short questions. Visible to you and your coach (Inga Sabaitytė) — never to BG dashboards in raw form.
+                </p>
+              </div>
+              <div class="flex flex-col items-stretch md:items-end gap-2">
+                <!-- secondary, not magenta — feedback opens after session -->
+                <button disabled class="inline-flex items-center justify-center gap-2 rounded-md border border-line text-muted text-[13px] font-medium px-4 py-2.5 cursor-not-allowed">
+                  <i data-lucide="lock" class="h-4 w-4"></i> Opens after May 26
+                </button>
+                <span class="text-[11.5px] text-muted">Due within 7 days of the session</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- RIGHT: scheduling + meta -->
+        <aside class="space-y-6">
+
+          <!-- Scheduling (MVP: simple date picker) -->
+          <section class="rounded-lg bg-white hairline">
+            <header class="px-5 pt-5">
+              <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono">02 · Schedule</div>
+              <h2 class="font-display text-[22px] tracking-tight mt-1">Date &amp; time</h2>
+              <p class="text-[13px] text-muted mt-1">Sigrid confirmed this slot on May 9.</p>
+            </header>
+
+            <div class="px-5 pt-4 pb-5">
+              <!-- confirmed slot card -->
+              <div class="rounded-md bg-surface hairline p-4">
+                <div class="flex items-start gap-4">
+                  <div class="text-center w-12 shrink-0">
+                    <div class="text-[10px] uppercase tracking-wider text-muted font-mono">May</div>
+                    <div class="font-display text-[28px] leading-none mt-0.5">26</div>
+                    <div class="text-[11px] text-muted mt-0.5">Mon</div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[14px] font-semibold">10:00 — 11:30</div>
+                    <div class="text-[12px] text-muted">Europe/Vilnius · 90 min</div>
+                    <div class="mt-2 flex flex-wrap gap-2 text-[11.5px] text-muted">
+                      <span class="inline-flex items-center gap-1.5 rounded-full bg-white hairline px-2 py-0.5">
+                        <i data-lucide="video" class="h-3 w-3"></i> Google Meet
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 rounded-full bg-white hairline px-2 py-0.5">
+                        <i data-lucide="calendar" class="h-3 w-3"></i> On both calendars
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MVP date picker -->
+              <div class="mt-5">
+                <label class="text-[12px] font-medium">Need to reschedule?</label>
+                <div class="mt-2 flex items-center gap-2">
+                  <div class="flex items-center gap-2 rounded-md hairline bg-white px-3 py-2 text-[13px] flex-1">
+                    <i data-lucide="calendar" class="h-4 w-4 text-muted"></i>
+                    <input type="date" value="2026-05-26" class="bg-transparent flex-1 outline-none font-mono text-[13px]" />
+                  </div>
+                  <div class="flex items-center gap-2 rounded-md hairline bg-white px-3 py-2 text-[13px]">
+                    <i data-lucide="clock" class="h-4 w-4 text-muted"></i>
+                    <input type="time" value="10:00" class="bg-transparent w-[80px] outline-none font-mono text-[13px]" />
+                  </div>
+                </div>
+                <div class="mt-2.5 flex items-center justify-between">
+                  <span class="text-[11.5px] text-muted">Sigrid will be asked to confirm.</span>
+                  <button class="text-[12.5px] font-medium underline underline-offset-2 hover:text-magenta">Propose change</button>
+                </div>
+              </div>
+
+              <!--
+                PHASE-2 SECONDARY STATE — calendar slot picker (freebusy)
+                ----------------------------------------------------------
+                When Google Calendar freebusy is wired up, the MVP date picker above is
+                replaced with a 3-slot proposal UI:
+
+                  ┌─ This week ────────────────────────────────────┐
+                  │  Mon May 26   10:00 ●   13:30 ●   16:00 ○      │
+                  │  Tue May 27   09:00 ○   11:00 ●   15:00 ●      │
+                  │  Thu May 29   10:30 ●   14:00 ●   16:30 ○      │
+                  └─────────────────────────────────────────────────┘
+                  ● both free   ○ reviewer busy
+                  [ Propose these 3 slots → reviewer picks one ]
+
+                Reviewee picks up to 3 slots where both calendars are free; reviewer
+                clicks one to confirm. On confirm, calendar event is created on both
+                calendars (Phase 2, SessionScheduler component).
+              -->
+            </div>
+          </section>
+
+          <!-- Meta / quick context -->
+          <section class="rounded-lg bg-white hairline p-5">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-muted font-mono mb-3">Context</div>
+            <dl class="text-[13px] space-y-2.5">
+              <div class="flex justify-between gap-4"><dt class="text-muted">Assignment ID</dt><dd class="font-mono">asg_91aa</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-muted">Pair source</dt><dd>auto-paired · top-1</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-muted">Your coach</dt><dd>Inga Sabaitytė</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-muted">Their team</dt><dd>VPN · Oslo</dd></div>
+              <div class="flex justify-between gap-4"><dt class="text-muted">Different stack</dt><dd>Go ↔ Python</dd></div>
+            </dl>
+            <div class="mt-4 pt-4 border-t border-line text-[12px] text-muted flex items-center gap-2">
+              <i data-lucide="shield" class="h-3.5 w-3.5"></i>
+              Anonymity: prep notes never appear on BG dashboards.
+            </div>
+          </section>
+
+          <!-- Quiet links -->
+          <div class="text-[12.5px] flex flex-col gap-2">
+            <a href="#" class="text-muted hover:text-ink inline-flex items-center gap-1.5">
+              <i data-lucide="book-open" class="h-3.5 w-3.5"></i> How to prep as a reviewee
+            </a>
+            <a href="#" class="text-muted hover:text-ink inline-flex items-center gap-1.5">
+              <i data-lucide="message-circle-question" class="h-3.5 w-3.5"></i> Need to cancel?
+            </a>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script> lucide.createIcons(); </script>
+</body>
+</html>

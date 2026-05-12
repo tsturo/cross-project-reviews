@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Coachees — Auto-pair tomorrow · Cross-Project Reviews</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper:    '#FBFAF7',
+          card:     '#FFFFFF',
+          ink:      '#16140F',
+          muted:    '#6B6760',
+          subtle:   '#A09B92',
+          line:     '#E8E5DE',
+          lineSoft: '#F1EEE7',
+          magenta:  '#E10078',
+          magenta2: '#C20068',
+        },
+        fontFamily: {
+          display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+          sans:    ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui'],
+          mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  html, body { background: #FBFAF7; color: #16140F; font-family: 'IBM Plex Sans', system-ui; }
+  .font-display { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; }
+  .smallcaps { text-transform: uppercase; letter-spacing: 0.14em; font-size: 10.5px; font-weight: 500; }
+  .hairline { border-color: #E8E5DE; }
+  .hairline-soft { border-color: #F1EEE7; }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(rgba(22,20,15,0.025) 1px, transparent 1px);
+    background-size: 3px 3px; opacity: 0.6;
+  }
+  .row-hover:hover { background: #F7F4ED; }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .dot { width: 6px; height: 6px; border-radius: 999px; display:inline-block; }
+  .level-mark {
+    display:inline-flex; align-items:center; justify-content:center;
+    width: 22px; height: 22px; border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+  }
+  .status-pill {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size: 11.5px; padding: 3px 9px 3px 8px; border-radius: 999px; font-weight: 500;
+    border: 1px solid transparent;
+  }
+  .nav-item {
+    display:flex; align-items:center; gap: 10px; padding: 7px 10px;
+    border-radius: 6px; font-size: 13.5px; color: #3A3630;
+  }
+  .nav-item:hover { background: #F1EEE7; }
+  .nav-item.active { background: #16140F; color: #FBFAF7; }
+  .nav-section { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #A09B92; padding: 0 10px; }
+  .topbar-cyclepill {
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 4px 10px 4px 8px; border-radius: 999px; background: #16140F; color: #FBFAF7;
+    font-size: 11.5px;
+  }
+  .filter-btn {
+    display:inline-flex; align-items:center; gap: 6px;
+    padding: 6px 10px; border: 1px solid #E8E5DE; border-radius: 6px;
+    background: #FFFFFF; font-size: 12.5px; color: #3A3630;
+  }
+  .filter-btn:hover { border-color: #16140F; }
+  .filter-btn.active { background: #16140F; color: #FBFAF7; border-color: #16140F; }
+  .filter-btn.danger {
+    background: #FEF2F2; color: #B91C1C; border-color: #FECACA;
+  }
+  .table-head th {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #A09B92; font-weight: 500; padding: 10px 16px;
+    border-bottom: 1px solid #E8E5DE; background: #FBFAF7;
+  }
+  .table-row td { padding: 14px 16px; border-bottom: 1px solid #F1EEE7; }
+  .btn-primary {
+    background: #E10078; color: #fff; padding: 8px 14px;
+    border-radius: 6px; font-size: 13px; font-weight: 500;
+    box-shadow: 0 1px 0 rgba(22,20,15,0.06), inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  .btn-primary:hover { background: #C20068; }
+  .btn-on-dark {
+    border: 1px solid rgba(251,250,247,0.28); color: #FBFAF7; padding: 8px 14px;
+    border-radius: 6px; font-size: 13px; font-weight: 500; background: transparent;
+  }
+  .btn-on-dark:hover { background: rgba(251,250,247,0.07); }
+  .btn-ghost {
+    padding: 6px 11px; border-radius: 6px; font-size: 12.5px;
+    color: #3A3630; border: 1px solid #E8E5DE; background: #fff;
+  }
+  .btn-ghost:hover { border-color: #16140F; }
+  .btn-quiet { font-size: 12.5px; color: #3A3630; padding: 6px 9px; border-radius: 6px; }
+  .btn-quiet:hover { background: #F1EEE7; }
+  .ann { font-family: 'Fraunces', serif; font-style: italic; color: #6B6760; }
+  .kbd {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    padding: 1px 5px; border: 1px solid #E8E5DE; border-bottom-width: 2px;
+    border-radius: 4px; color: #6B6760; background: #FBFAF7;
+  }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color: #FBFAF7; font-size: 11.5px; font-weight: 500;
+  }
+  .urgent-row {
+    background: linear-gradient(90deg, rgba(254,242,242,0.55) 0%, rgba(254,242,242,0) 60%);
+  }
+  .urgent-row td:first-child {
+    box-shadow: inset 3px 0 0 0 #B91C1C;
+  }
+
+  /* nudge banner */
+  .nudge {
+    position: relative; isolation: isolate; overflow: hidden;
+    border-radius: 10px; color: #FBFAF7; background: #16140F;
+    border: 1px solid #2A2722;
+  }
+  .nudge::before {
+    /* hairline grid pattern overlay */
+    content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.55;
+    background-image:
+      linear-gradient(rgba(251,250,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(251,250,247,0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .nudge::after {
+    content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.6;
+    background:
+      radial-gradient(600px 200px at 88% -10%, rgba(225,0,120,0.30), transparent 60%),
+      radial-gradient(500px 220px at -5% 120%, rgba(225,0,120,0.18), transparent 60%);
+  }
+  .nudge > * { position: relative; z-index: 1; }
+  .nudge-tick {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(225,0,120,0.18); border: 1px solid rgba(225,0,120,0.45);
+    display: flex; align-items: center; justify-content: center;
+    color: #FBFAF7; font-family: 'JetBrains Mono', monospace; font-size: 16px;
+  }
+  .countdown {
+    font-family: 'Fraunces', serif; font-feature-settings: "lnum","tnum";
+    font-size: 56px; line-height: 0.95; font-weight: 500; letter-spacing: -0.02em;
+  }
+  .countdown sub {
+    font-family: 'IBM Plex Sans'; font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: rgba(251,250,247,0.65); vertical-align: middle;
+    margin-left: 8px;
+  }
+  .deadline-tag {
+    display:inline-flex; align-items:center; gap:6px;
+    padding: 3px 9px 3px 8px; border-radius: 999px;
+    background: rgba(225,0,120,0.16); border: 1px solid rgba(225,0,120,0.55);
+    color: #FFCFE5; font-size: 11.5px;
+  }
+  .stripe-warn {
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(225,0,120,0.10) 0,
+      rgba(225,0,120,0.10) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+  }
+  .at-risk-tag {
+    display:inline-flex; align-items:center; gap:6px;
+    padding: 2px 8px; border-radius: 999px;
+    background: #FEF2F2; border: 1px solid #FECACA; color:#B91C1C;
+    font-size: 11px; font-weight: 500;
+  }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="relative z-10 flex min-h-screen">
+
+  <!-- SIDEBAR -->
+  <aside class="w-[232px] shrink-0 border-r hairline bg-paper flex flex-col">
+    <div class="px-5 pt-5 pb-4 border-b hairline-soft">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-md bg-ink text-paper flex items-center justify-center">
+          <span class="font-display text-[15px] leading-none">cr</span>
+        </div>
+        <div class="leading-tight">
+          <div class="text-[13.5px] font-medium">Cross Reviews</div>
+          <div class="text-[10.5px] text-muted -mt-0.5">Visma · internal</div>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-5 text-[13.5px]">
+      <div>
+        <div class="nav-section pb-2">Personal</div>
+        <a class="nav-item" href="#"><span>◇</span> Dashboard</a>
+        <a class="nav-item" href="#"><span>▢</span> My sessions
+          <span class="ml-auto text-[10.5px] text-muted tabular">2</span></a>
+        <a class="nav-item" href="#"><span>○</span> Profile &amp; level</a>
+      </div>
+      <div>
+        <div class="nav-section pb-2">Coach</div>
+        <a class="nav-item active" href="#"><span>▣</span> Coachees
+          <span class="ml-auto text-[10.5px] tabular px-1.5 py-0.5 rounded-full" style="background:#E10078;color:#fff">3</span>
+        </a>
+        <a class="nav-item" href="#"><span>▦</span> Assignments</a>
+      </div>
+      <div>
+        <div class="nav-section pb-2">Reference</div>
+        <a class="nav-item" href="#"><span>✦</span> AI level guide</a>
+        <a class="nav-item" href="#"><span>◌</span> Notifications</a>
+      </div>
+    </nav>
+    <div class="px-4 py-4 border-t hairline-soft">
+      <div class="flex items-center gap-3">
+        <div class="avatar" style="background:#16140F">TŠ</div>
+        <div class="leading-tight">
+          <div class="text-[12.5px] font-medium">Tomas Šturas</div>
+          <div class="text-[11px] text-muted">Coach · Visma.net BG</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 min-w-0 flex flex-col">
+
+    <!-- TOPBAR -->
+    <div class="h-[52px] border-b hairline flex items-center justify-between px-7">
+      <div class="flex items-center gap-4">
+        <div class="text-[12px] text-muted">Coach</div>
+        <div class="text-[12px] text-subtle">/</div>
+        <div class="text-[12.5px] font-medium">Coachees</div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="topbar-cyclepill" style="background:#7C2D12">
+          <span class="dot" style="background:#FCA5A5"></span>
+          Cycle 2026‑H1 · <span class="tabular ml-0.5">7 days left</span>
+        </div>
+        <button class="btn-ghost flex items-center gap-2">
+          <span>Search</span><span class="kbd">⌘K</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ───── NUDGE BANNER ───── -->
+    <section class="px-7 pt-7">
+      <div class="nudge p-6 md:p-7">
+        <div class="grid grid-cols-12 gap-6 items-center">
+
+          <div class="col-span-12 md:col-span-7">
+            <div class="flex items-center gap-3">
+              <div class="nudge-tick">!</div>
+              <span class="smallcaps text-[#FFCFE5]">Auto-pair · imminent</span>
+              <span class="deadline-tag">
+                <span class="dot" style="background:#FCA5A5"></span>
+                Fires in 24h · 13 May, 06:00 UTC
+              </span>
+            </div>
+
+            <h2 class="font-display text-[34px] md:text-[40px] leading-[1.05] tracking-tight mt-4">
+              Three of your coachees will be auto-paired tomorrow morning.
+            </h2>
+
+            <p class="text-[14px] mt-3 max-w-2xl" style="color:rgba(251,250,247,0.78)">
+              The cycle closes <span class="font-medium text-paper">19 May 2026</span>. Coachees still without a recorded pairing
+              will get a top-ranked reviewer assigned automatically at <span class="font-mono">06:00 UTC</span> and an email both ways.
+              You can still pick manually — manual pairings always win.
+            </p>
+
+            <div class="mt-6 flex items-center gap-3">
+              <button class="btn-primary">Assign them now →</button>
+              <button class="btn-on-dark">Preview auto-pair</button>
+              <a href="#" class="text-[12.5px] underline underline-offset-4 decoration-white/30 hover:decoration-white" style="color:rgba(251,250,247,0.75)">
+                Why is auto-pair on?
+              </a>
+            </div>
+          </div>
+
+          <div class="col-span-12 md:col-span-5">
+            <div class="rounded-lg border" style="border-color:rgba(251,250,247,0.14); background:rgba(251,250,247,0.04)">
+              <div class="px-5 py-3 flex items-center justify-between border-b" style="border-color:rgba(251,250,247,0.10)">
+                <div class="smallcaps" style="color:rgba(251,250,247,0.6)">Countdown</div>
+                <div class="smallcaps" style="color:rgba(251,250,247,0.6)">3 unassigned</div>
+              </div>
+              <div class="px-5 py-5">
+                <div class="countdown">23<span style="color:rgba(251,250,247,0.35)">:</span>47<sub>h · m to auto-pair</sub></div>
+                <div class="mt-5 space-y-2.5 text-[12.5px]" style="color:rgba(251,250,247,0.86)">
+                  <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span class="avatar" style="background:#1F2937;width:22px;height:22px;font-size:9.5px">EK</span> Eglė Kazlauskaitė</span>
+                    <span class="font-mono" style="color:rgba(251,250,247,0.6)">L4 · Expense 755</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span class="avatar" style="background:#0EA5E9;width:22px;height:22px;font-size:9.5px">DM</span> Domas Mockus</span>
+                    <span class="font-mono" style="color:rgba(251,250,247,0.6)">L2 · Payroll 4867</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span class="avatar" style="background:#BE185D;width:22px;height:22px;font-size:9.5px">UB</span> Ugnė Balčiūnaitė</span>
+                    <span class="font-mono" style="color:rgba(251,250,247,0.6)">L1? · Visma Sign</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE HEADER (compact) -->
+    <header class="px-7 pt-7 pb-5">
+      <div class="flex items-end justify-between gap-8">
+        <div>
+          <div class="smallcaps text-subtle mb-2">Coach workspace · roster</div>
+          <h1 class="font-display text-[26px] leading-[1.1] tracking-tight">Your coachees, this cycle.</h1>
+          <p class="text-[13px] text-muted mt-2">
+            Sorted by risk — unassigned and at the auto-pair cliff first.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="btn-ghost">Export CSV</button>
+          <button class="btn-ghost">Preview auto-pair</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- FILTER BAR -->
+    <div class="px-7 py-3 flex items-center justify-between gap-4 sticky top-0 bg-paper z-10 border-y hairline-soft">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="smallcaps text-subtle pr-1">Status</span>
+        <button class="filter-btn">All <span class="tabular text-[11px] opacity-70">8</span></button>
+        <button class="filter-btn active danger">
+          <span class="dot" style="background:#B91C1C"></span>
+          Unassigned <span class="tabular text-[11px]">3</span>
+        </button>
+        <button class="filter-btn">Assigned <span class="tabular text-[11px] opacity-60">1</span></button>
+        <button class="filter-btn">Scheduled <span class="tabular text-[11px] opacity-60">2</span></button>
+        <button class="filter-btn">Completed <span class="tabular text-[11px] opacity-60">2</span></button>
+
+        <span class="w-px h-5 bg-line mx-2"></span>
+
+        <span class="smallcaps text-subtle pr-1">Level</span>
+        <button class="filter-btn">Any level</button>
+
+        <span class="w-px h-5 bg-line mx-2"></span>
+
+        <span class="smallcaps text-subtle pr-1">Project</span>
+        <button class="filter-btn">All projects</button>
+
+        <span class="w-px h-5 bg-line mx-2"></span>
+
+        <span class="text-[11.5px] text-muted ann italic">Filtered to Unassigned — auto-pair fires for these in 24h.</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 border hairline rounded-md px-3 py-1.5 bg-card">
+          <span class="text-subtle text-[12px]">⌕</span>
+          <input class="bg-transparent outline-none text-[13px] w-40 placeholder:text-subtle" placeholder="Find coachee…" />
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <section class="px-7 pt-3 pb-6">
+
+      <!-- Stripe header above urgent group -->
+      <div class="stripe-warn rounded-t-md border-x border-t hairline px-4 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="at-risk-tag">
+            <span class="dot" style="background:#B91C1C"></span>
+            At auto-pair risk
+          </span>
+          <span class="text-[12px] text-muted">3 coachees · system will assign top-1 ranked reviewer at 06:00 UTC tomorrow</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="btn-quiet">Select all 3</button>
+          <button class="btn-primary" style="padding:6px 11px;font-size:12.5px">Assign them now</button>
+        </div>
+      </div>
+
+      <table class="w-full border-separate border-spacing-0 border-x hairline">
+        <thead class="table-head">
+          <tr>
+            <th class="text-left w-[28%]">Coachee</th>
+            <th class="text-left w-[22%]">Project</th>
+            <th class="text-left w-[7%]">Level</th>
+            <th class="text-left w-[14%]">Last review</th>
+            <th class="text-left w-[14%]">Status</th>
+            <th class="text-right w-[15%]">Action</th>
+          </tr>
+        </thead>
+        <tbody class="bg-card">
+
+          <!-- urgent row 1 -->
+          <tr class="table-row urgent-row align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <input type="checkbox" class="rounded border-line text-magenta focus:ring-magenta" />
+                <span class="avatar" style="background:#1F2937">EK</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Eglė Kazlauskaitė</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Kaunas · Visma Lithuania</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
+            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td class="text-[13px] tabular text-muted">14 Nov 2025</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#FEF2F2;color:#B91C1C;border-color:#FECACA">
+                  <span class="dot" style="background:#B91C1C"></span> Unassigned
+                </span>
+                <div class="text-[11px] mt-1" style="color:#B91C1C">→ Mantas Jankauskas (L5) if auto-paired</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-primary">Pick reviewer</button>
+            </td>
+          </tr>
+
+          <!-- urgent row 2 -->
+          <tr class="table-row urgent-row align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <input type="checkbox" class="rounded border-line text-magenta focus:ring-magenta" />
+                <span class="avatar" style="background:#0EA5E9">DM</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Domas Mockus</span>
+                  <span class="block text-[11.5px] text-muted">Engineer · Vilnius · Visma Lithuania</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Payroll <span class="text-subtle font-mono text-[11.5px]">4867</span></td>
+            <td><span class="level-mark" style="background:#E0F2FE;color:#075985">L2</span></td>
+            <td class="text-[13px] tabular text-muted">22 Sep 2025</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#FEF2F2;color:#B91C1C;border-color:#FECACA">
+                  <span class="dot" style="background:#B91C1C"></span> Unassigned
+                </span>
+                <div class="text-[11px] mt-1" style="color:#B91C1C">→ Henrik Vatne (L4) if auto-paired</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-primary">Pick reviewer</button>
+            </td>
+          </tr>
+
+          <!-- urgent row 3 -->
+          <tr class="table-row urgent-row align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <input type="checkbox" class="rounded border-line text-magenta focus:ring-magenta" />
+                <span class="avatar" style="background:#BE185D">UB</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Ugnė Balčiūnaitė</span>
+                  <span class="block text-[11.5px] text-muted">Engineer · Kaunas · Visma Lithuania</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma Sign <span class="text-subtle font-mono text-[11.5px]">221</span></td>
+            <td>
+              <span class="level-mark" style="background:#F1F5F9;color:#334155">L1</span>
+              <span class="ml-1.5 text-[10.5px] text-muted italic">unverified</span>
+            </td>
+            <td class="text-[13px] tabular text-muted">— first cycle</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#FEF2F2;color:#B91C1C;border-color:#FECACA">
+                  <span class="dot" style="background:#B91C1C"></span> Unassigned
+                </span>
+                <div class="text-[11px] mt-1" style="color:#B91C1C">→ Aušra Petraitytė (L5) if auto-paired</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-primary">Pick reviewer</button>
+            </td>
+          </tr>
+
+          <!-- separator -->
+          <tr>
+            <td colspan="6" class="px-4 py-2 bg-paper border-b hairline">
+              <div class="flex items-center gap-3">
+                <span class="smallcaps text-subtle">Already paired · 5 coachees</span>
+                <span class="flex-1 h-px bg-line"></span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 4 -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#10B981">LP</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Linas Paulauskas</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Vilnius</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
+            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td class="text-[13px] tabular text-muted">06 Feb 2026</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#F3F4F6;color:#374151;border-color:#E5E7EB">
+                  <span class="dot" style="background:#6B7280"></span> Assigned
+                </span>
+                <div class="text-[11px] text-muted mt-1">→ Aušra Petraitytė (L5)</div>
+              </div>
+            </td>
+            <td class="text-right"><button class="btn-quiet">View</button></td>
+          </tr>
+
+          <!-- 5 -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#F59E0B">VR</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Viltė Rudaitytė</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Kaunas</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Severa <span class="text-subtle font-mono text-[11.5px]">312</span></td>
+            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td class="text-[13px] tabular text-muted">11 Oct 2025</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE">
+                  <span class="dot" style="background:#2563EB"></span> Scheduled
+                </span>
+                <div class="text-[11px] text-muted mt-1 tabular">18 May · 10:30</div>
+              </div>
+            </td>
+            <td class="text-right"><button class="btn-quiet">View</button></td>
+          </tr>
+
+          <!-- 6 -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#7C3AED">SK</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Sigitas Karpis</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Vilnius</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Payroll <span class="text-subtle font-mono text-[11.5px]">4867</span></td>
+            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td class="text-[13px] tabular text-muted">19 Aug 2025</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE">
+                  <span class="dot" style="background:#2563EB"></span> Scheduled
+                </span>
+                <div class="text-[11px] text-muted mt-1 tabular">28 May · 09:00</div>
+              </div>
+            </td>
+            <td class="text-right"><button class="btn-quiet">View</button></td>
+          </tr>
+
+          <!-- 7 -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#16A34A">KM</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Kristina Mažeikienė</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Vilnius</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma Spcs <span class="text-subtle font-mono text-[11.5px]">188</span></td>
+            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td class="text-[13px] tabular text-muted">02 May 2026</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#ECFDF5;color:#166534;border-color:#BBF7D0">
+                  <span class="dot" style="background:#16A34A"></span> Completed
+                </span>
+                <div class="text-[11px] text-muted mt-1">awaiting feedback</div>
+              </div>
+            </td>
+            <td class="text-right"><button class="btn-quiet">View</button></td>
+          </tr>
+
+          <!-- 8 -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#475569">PT</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Povilas Tamošaitis</span>
+                  <span class="block text-[11.5px] text-muted">Engineer · Kaunas</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
+            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td class="text-[13px] tabular text-muted">28 Apr 2026</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#F5F3FF;color:#5B21B6;border-color:#DDD6FE">
+                  <span class="dot" style="background:#7C3AED"></span> Feedback in
+                </span>
+                <div class="text-[11px] text-muted mt-1">+1 level shift recorded</div>
+              </div>
+            </td>
+            <td class="text-right"><button class="btn-quiet">Read</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <div class="border-x border-b hairline rounded-b-md px-4 py-2 bg-paper text-[11.5px] text-muted flex items-center justify-between">
+        <div>Showing <span class="tabular text-ink">8</span> of <span class="tabular text-ink">8</span> coachees · urgent first.</div>
+        <div class="ann italic">Auto-pair runs once. Manual picks recorded before 06:00 UTC tomorrow override the sweep.</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>

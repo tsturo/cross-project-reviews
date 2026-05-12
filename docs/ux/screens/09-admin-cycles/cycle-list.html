@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cycles · Admin · Cross-Project Reviews · Visma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --magenta: #E10078;
+      --magenta-hover: #C70069;
+      --surface: #FAFAFA;
+      --card: #FFFFFF;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --muted-2: #9CA3AF;
+      --border: #E5E7EB;
+      --border-strong: #D1D5DB;
+      --status-active: #16A34A;
+      --status-planned: #2563EB;
+      --status-closed: #6B7280;
+      --status-amber: #D97706;
+    }
+    html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+    .hairline { box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
+    .btn-primary {
+      background: var(--magenta);
+      color: #fff;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+    .btn-primary:hover { background: var(--magenta-hover); box-shadow: 0 8px 24px -10px rgba(225,0,120,0.45); }
+    .btn-primary:active { transform: translateY(1px); }
+    .row:hover { background: #FCFCFC; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 500; line-height: 18px; }
+    .pill-dot { width: 6px; height: 6px; border-radius: 999px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; color: #374151; font-size: 13.5px; font-weight: 500; }
+    .nav-item:hover { background: #F3F4F6; color: var(--ink); }
+    .nav-item.active { background: #111827; color: #fff; }
+    .nav-item.active .lucide { color: #fff; }
+    .nav-section { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); padding: 16px 10px 6px; }
+    .progress-track { background: #F3F4F6; border-radius: 999px; height: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #111827, #374151); }
+    .ring-dot::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
+    .cycle-pill { background: #FFF1F8; color: #9D0356; border: 1px solid #FAD3E5; }
+    .kbd { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; color: var(--muted); background: #fff; }
+    /* faint sidebar texture */
+    .sidebar-bg {
+      background:
+        linear-gradient(180deg, #FFFFFF 0%, #FBFBFC 100%);
+    }
+    /* Tiny sparkline cell */
+    .spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 18px; }
+    .spark > i { display: block; width: 3px; background: #D1D5DB; border-radius: 1px; }
+    .spark > i.hot { background: #111827; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- AppShell -->
+  <div class="min-h-screen grid grid-cols-[244px_1fr]">
+
+    <!-- SideNav -->
+    <aside class="sidebar-bg border-r border-[var(--border)] flex flex-col">
+      <div class="px-4 pt-5 pb-4 flex items-center gap-2.5">
+        <div class="h-8 w-8 rounded-md grid place-items-center" style="background: var(--magenta);">
+          <span class="font-display text-white text-[15px] font-bold leading-none">V</span>
+        </div>
+        <div class="leading-tight">
+          <div class="font-display text-[13.5px] font-semibold">Cross-Project Reviews</div>
+          <div class="text-[11px] text-[var(--muted)]">Admin console</div>
+        </div>
+      </div>
+
+      <nav class="px-3 pb-3 flex-1 overflow-auto">
+        <div class="nav-section">Workspace</div>
+        <a href="#" class="nav-item"><i data-lucide="layout-dashboard" class="w-4 h-4 text-[#6B7280]"></i> Dashboard</a>
+        <a href="#" class="nav-item"><i data-lucide="calendar-check-2" class="w-4 h-4 text-[#6B7280]"></i> My sessions</a>
+
+        <div class="nav-section">Admin</div>
+        <a href="#" class="nav-item active"><i data-lucide="repeat" class="w-4 h-4"></i> Cycles
+          <span class="ml-auto text-[10.5px] font-mono bg-white/15 text-white/85 px-1.5 py-0.5 rounded">12</span>
+        </a>
+        <a href="#" class="nav-item"><i data-lucide="database" class="w-4 h-4 text-[#6B7280]"></i> Imports</a>
+        <a href="#" class="nav-item"><i data-lucide="shield" class="w-4 h-4 text-[#6B7280]"></i> Overrides</a>
+        <a href="#" class="nav-item"><i data-lucide="clipboard-list" class="w-4 h-4 text-[#6B7280]"></i> Forms</a>
+
+        <div class="nav-section">Insights</div>
+        <a href="#" class="nav-item"><i data-lucide="bar-chart-3" class="w-4 h-4 text-[#6B7280]"></i> Completion</a>
+        <a href="#" class="nav-item"><i data-lucide="trending-up" class="w-4 h-4 text-[#6B7280]"></i> Levels</a>
+      </nav>
+
+      <div class="px-3 py-3 border-t border-[var(--border)]">
+        <div class="flex items-center gap-2.5 px-1">
+          <div class="h-8 w-8 rounded-full bg-[#111827] text-white grid place-items-center text-[11.5px] font-semibold">TS</div>
+          <div class="leading-tight">
+            <div class="text-[12.5px] font-semibold">Tomek Szturo</div>
+            <div class="text-[11px] text-[var(--muted)]">Admin · Visma BG</div>
+          </div>
+          <button class="ml-auto p-1.5 rounded hover:bg-[#F3F4F6] focus-ring"><i data-lucide="log-out" class="w-3.5 h-3.5 text-[#6B7280]"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main column -->
+    <main class="flex flex-col min-h-screen">
+      <!-- TopBar -->
+      <header class="h-14 border-b border-[var(--border)] bg-white/80 backdrop-blur flex items-center px-7 gap-4">
+        <div class="text-[12.5px] text-[var(--muted)] flex items-center gap-1.5">
+          <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+          <span>Admin</span>
+          <i data-lucide="chevron-right" class="w-3 h-3 text-[var(--muted-2)]"></i>
+          <span class="text-[var(--ink)] font-medium">Cycles</span>
+        </div>
+
+        <div class="ml-auto flex items-center gap-3">
+          <!-- CyclePill -->
+          <span class="cycle-pill pill"><span class="pill-dot" style="background:#E10078;"></span> H1·2026 active · <span class="font-mono">37 d left</span></span>
+
+          <div class="relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+            <input placeholder="Jump to…" class="pl-7 pr-12 h-8 w-64 rounded-md border border-[var(--border)] bg-white text-[12.5px] focus-ring" />
+            <span class="absolute right-2 top-1/2 -translate-y-1/2 kbd">⌘K</span>
+          </div>
+
+          <button class="p-1.5 rounded hover:bg-[#F3F4F6]"><i data-lucide="bell" class="w-4 h-4 text-[#6B7280]"></i></button>
+        </div>
+      </header>
+
+      <!-- PageHeader -->
+      <section class="px-7 pt-7 pb-5 border-b border-[var(--border)] bg-white">
+        <div class="flex items-end justify-between gap-6">
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium mb-2">Admin · Cycles</p>
+            <h1 class="font-display text-[28px] font-semibold leading-tight">Review cycles</h1>
+            <p class="text-[13.5px] text-[var(--muted)] mt-1.5 max-w-[640px]">Plan, run, and close cross-project review windows. One cycle is typically six months — half the org per cycle, one step up the AI ladder.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="h-9 px-3 rounded-md border border-[var(--border)] bg-white text-[13px] font-medium hover:bg-[#F9FAFB] focus-ring inline-flex items-center gap-1.5">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+            </button>
+            <button class="h-9 px-3 rounded-md border border-[var(--border)] bg-white text-[13px] font-medium hover:bg-[#F9FAFB] focus-ring inline-flex items-center gap-1.5">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Duplicate last
+            </button>
+            <button class="btn-primary h-9 px-3.5 rounded-md text-[13px] font-semibold focus-ring inline-flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i> Create cycle
+            </button>
+          </div>
+        </div>
+
+        <!-- Summary strip -->
+        <div class="mt-6 grid grid-cols-4 gap-3">
+          <div class="rounded-lg border border-[var(--border)] bg-white px-4 py-3">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Active</div>
+            <div class="mt-1 flex items-baseline gap-2">
+              <div class="font-display text-[22px] font-semibold">1</div>
+              <div class="text-[11.5px] text-[var(--muted)]">H1·2026</div>
+            </div>
+            <div class="mt-2 progress-track"><div class="progress-fill" style="width: 47%;"></div></div>
+            <div class="mt-1.5 text-[11px] text-[var(--muted)] font-mono">134 / 287 paired · 47%</div>
+          </div>
+          <div class="rounded-lg border border-[var(--border)] bg-white px-4 py-3">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Planned</div>
+            <div class="mt-1 flex items-baseline gap-2">
+              <div class="font-display text-[22px] font-semibold">2</div>
+              <div class="text-[11.5px] text-[var(--muted)]">H2·2026 · H1·2027</div>
+            </div>
+            <div class="mt-3 text-[11px] text-[var(--muted)]">Next opens <span class="font-medium text-[var(--ink)]">Jul 1</span></div>
+          </div>
+          <div class="rounded-lg border border-[var(--border)] bg-white px-4 py-3">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Closed</div>
+            <div class="mt-1 flex items-baseline gap-2">
+              <div class="font-display text-[22px] font-semibold">9</div>
+              <div class="text-[11.5px] text-[var(--muted)]">since 2023</div>
+            </div>
+            <div class="mt-3 text-[11px] text-[var(--muted)]">Median completion <span class="font-medium text-[var(--ink)]">81%</span></div>
+          </div>
+          <div class="rounded-lg border border-[var(--border)] bg-white px-4 py-3">
+            <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Auto-pair sweeps</div>
+            <div class="mt-1 flex items-baseline gap-2">
+              <div class="font-display text-[22px] font-semibold">06:00</div>
+              <div class="text-[11.5px] text-[var(--muted)]">UTC daily</div>
+            </div>
+            <div class="mt-3 text-[11px] text-[var(--muted)] inline-flex items-center gap-1.5">
+              <span class="pill-dot" style="background:#16A34A;"></span> Last run 04:12 ago · healthy
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter bar -->
+      <div class="px-7 py-3 bg-white border-b border-[var(--border)] flex items-center gap-2 text-[12.5px]">
+        <div class="flex items-center gap-1 border border-[var(--border)] rounded-md p-0.5 bg-[#F9FAFB]">
+          <button class="px-2.5 py-1 rounded text-[12px] font-medium bg-white shadow-sm">All <span class="text-[var(--muted)] font-mono">12</span></button>
+          <button class="px-2.5 py-1 rounded text-[12px] font-medium text-[var(--muted)] hover:text-[var(--ink)]">Active <span class="font-mono">1</span></button>
+          <button class="px-2.5 py-1 rounded text-[12px] font-medium text-[var(--muted)] hover:text-[var(--ink)]">Planned <span class="font-mono">2</span></button>
+          <button class="px-2.5 py-1 rounded text-[12px] font-medium text-[var(--muted)] hover:text-[var(--ink)]">Closed <span class="font-mono">9</span></button>
+        </div>
+        <button class="h-7 px-2.5 rounded-md border border-[var(--border)] bg-white text-[12px] font-medium inline-flex items-center gap-1.5 hover:bg-[#F9FAFB]"><i data-lucide="filter" class="w-3 h-3"></i> BG: All</button>
+        <button class="h-7 px-2.5 rounded-md border border-[var(--border)] bg-white text-[12px] font-medium inline-flex items-center gap-1.5 hover:bg-[#F9FAFB]"><i data-lucide="calendar" class="w-3 h-3"></i> Year: 2026</button>
+        <div class="ml-auto text-[11.5px] text-[var(--muted)] font-mono">12 cycles · sorted by start date desc</div>
+      </div>
+
+      <!-- Table -->
+      <section class="px-7 py-5 flex-1 bg-[var(--surface)]">
+        <div class="rounded-xl bg-white hairline overflow-hidden">
+          <table class="w-full text-[13px]">
+            <thead class="bg-[#FAFAFB] text-[11px] uppercase tracking-[0.08em] text-[var(--muted)]">
+              <tr class="border-b border-[var(--border)]">
+                <th class="text-left font-medium py-2.5 pl-5 pr-3 w-[24%]">Cycle</th>
+                <th class="text-left font-medium py-2.5 px-3">Window</th>
+                <th class="text-left font-medium py-2.5 px-3">Auto-pair</th>
+                <th class="text-right font-medium py-2.5 px-3">Target</th>
+                <th class="text-left font-medium py-2.5 px-3 w-[22%]">Completion</th>
+                <th class="text-left font-medium py-2.5 px-3">Status</th>
+                <th class="text-right font-medium py-2.5 pl-3 pr-5 w-[60px]"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--border)]">
+
+              <!-- Active -->
+              <tr class="row">
+                <td class="pl-5 pr-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-md bg-[#FFF1F8] border border-[#FAD3E5] grid place-items-center">
+                      <i data-lucide="play" class="w-3.5 h-3.5" style="color:#9D0356;"></i>
+                    </div>
+                    <div>
+                      <div class="font-medium text-[13.5px]">H1 · 2026 — Spring ladder</div>
+                      <div class="text-[11.5px] text-[var(--muted)] font-mono">cyc_h1_26 · created Jan 14</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Feb 01 → Jul 31</div>
+                  <div class="text-[11px] text-[var(--muted)]">181 days · 37 left</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Jul 24</div>
+                  <div class="text-[11px] text-[var(--muted)]">T−7d sweep</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle text-right">
+                  <div class="font-mono text-[13px]">287</div>
+                  <div class="text-[11px] text-[var(--muted)]">engineers</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="progress-track flex-1"><div class="progress-fill" style="width:47%;"></div></div>
+                    <span class="font-mono text-[12px] tabular-nums w-12 text-right">47%</span>
+                  </div>
+                  <div class="text-[11px] text-[var(--muted)] mt-1 font-mono">134 paired · 81 completed · 153 open</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <span class="pill" style="background:#ECFDF5;color:#15803D;border:1px solid #BBF7D0;"><span class="pill-dot" style="background:var(--status-active);"></span> Active</span>
+                </td>
+                <td class="pl-3 pr-5 py-3.5 text-right align-middle">
+                  <button class="p-1.5 rounded hover:bg-[#F3F4F6]"><i data-lucide="more-horizontal" class="w-4 h-4 text-[var(--muted)]"></i></button>
+                </td>
+              </tr>
+
+              <!-- Planned -->
+              <tr class="row">
+                <td class="pl-5 pr-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-md bg-[#EFF6FF] border border-[#DBEAFE] grid place-items-center">
+                      <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-[#1D4ED8]"></i>
+                    </div>
+                    <div>
+                      <div class="font-medium text-[13.5px]">H2 · 2026 — Autumn ladder</div>
+                      <div class="text-[11.5px] text-[var(--muted)] font-mono">cyc_h2_26 · draft</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Aug 01 → Jan 31</div>
+                  <div class="text-[11px] text-[var(--muted)]">184 days · opens in 81d</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Jan 24, 2027</div>
+                  <div class="text-[11px] text-[var(--muted)]">T−7d sweep</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle text-right">
+                  <div class="font-mono text-[13px]">~340</div>
+                  <div class="text-[11px] text-[var(--muted)]">est. (filter pending)</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="progress-track flex-1"><div class="progress-fill" style="width:0%;"></div></div>
+                    <span class="font-mono text-[12px] tabular-nums w-12 text-right text-[var(--muted)]">—</span>
+                  </div>
+                  <div class="text-[11px] text-[var(--muted)] mt-1">Not yet open</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <span class="pill" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #DBEAFE;"><span class="pill-dot" style="background:var(--status-planned);"></span> Planned</span>
+                </td>
+                <td class="pl-3 pr-5 py-3.5 text-right align-middle">
+                  <button class="p-1.5 rounded hover:bg-[#F3F4F6]"><i data-lucide="more-horizontal" class="w-4 h-4 text-[var(--muted)]"></i></button>
+                </td>
+              </tr>
+
+              <!-- Planned, partly configured -->
+              <tr class="row">
+                <td class="pl-5 pr-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-md bg-[#EFF6FF] border border-[#DBEAFE] grid place-items-center">
+                      <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-[#1D4ED8]"></i>
+                    </div>
+                    <div>
+                      <div class="font-medium text-[13.5px]">H1 · 2027 — Onboarding cohort</div>
+                      <div class="text-[11.5px] text-[var(--muted)] font-mono">cyc_h1_27 · draft</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Feb 01 → Jul 31</div>
+                  <div class="text-[11px] text-[var(--muted)]">181 days · opens in 265d</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px] text-[var(--muted)]">— not set</div>
+                  <div class="text-[11px]" style="color: var(--status-amber);">needs auto-pair date</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle text-right">
+                  <div class="font-mono text-[13px] text-[var(--muted)]">—</div>
+                  <div class="text-[11px] text-[var(--muted)]">filter empty</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="progress-track flex-1"><div class="progress-fill" style="width:0%;"></div></div>
+                    <span class="font-mono text-[12px] tabular-nums w-12 text-right text-[var(--muted)]">—</span>
+                  </div>
+                  <div class="text-[11px] text-[var(--muted)] mt-1">Not yet open</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <span class="pill" style="background:#FFFBEB;color:#B45309;border:1px solid #FDE68A;"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Draft</span>
+                </td>
+                <td class="pl-3 pr-5 py-3.5 text-right align-middle">
+                  <button class="p-1.5 rounded hover:bg-[#F3F4F6]"><i data-lucide="more-horizontal" class="w-4 h-4 text-[var(--muted)]"></i></button>
+                </td>
+              </tr>
+
+              <!-- Closed -->
+              <tr class="row">
+                <td class="pl-5 pr-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-md bg-[#F3F4F6] border border-[#E5E7EB] grid place-items-center">
+                      <i data-lucide="archive" class="w-3.5 h-3.5 text-[#6B7280]"></i>
+                    </div>
+                    <div>
+                      <div class="font-medium text-[13.5px]">H2 · 2025 — Pilot</div>
+                      <div class="text-[11.5px] text-[var(--muted)] font-mono">cyc_h2_25 · 4 form versions</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Aug 01, 25 → Jan 31, 26</div>
+                  <div class="text-[11px] text-[var(--muted)]">closed Feb 03</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Jan 24, 2026</div>
+                  <div class="text-[11px] text-[var(--muted)]">12 auto-paired</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle text-right">
+                  <div class="font-mono text-[13px]">241</div>
+                  <div class="text-[11px] text-[var(--muted)]">engineers</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="progress-track flex-1"><div class="progress-fill" style="width:86%;"></div></div>
+                    <span class="font-mono text-[12px] tabular-nums w-12 text-right">86%</span>
+                  </div>
+                  <div class="text-[11px] text-[var(--muted)] mt-1 font-mono">208 completed · 33 missed</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <span class="pill" style="background:#F3F4F6;color:#374151;border:1px solid #E5E7EB;"><span class="pill-dot" style="background:var(--status-closed);"></span> Closed</span>
+                </td>
+                <td class="pl-3 pr-5 py-3.5 text-right align-middle">
+                  <button class="p-1.5 rounded hover:bg-[#F3F4F6]"><i data-lucide="more-horizontal" class="w-4 h-4 text-[var(--muted)]"></i></button>
+                </td>
+              </tr>
+
+              <tr class="row">
+                <td class="pl-5 pr-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-md bg-[#F3F4F6] border border-[#E5E7EB] grid place-items-center">
+                      <i data-lucide="archive" class="w-3.5 h-3.5 text-[#6B7280]"></i>
+                    </div>
+                    <div>
+                      <div class="font-medium text-[13.5px]">H1 · 2025 — Reboot</div>
+                      <div class="text-[11.5px] text-[var(--muted)] font-mono">cyc_h1_25 · first AI-focused cycle</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Feb 01 → Jul 31, 25</div>
+                  <div class="text-[11px] text-[var(--muted)]">closed Aug 06</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Jul 24, 2025</div>
+                  <div class="text-[11px] text-[var(--muted)]">9 auto-paired</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle text-right">
+                  <div class="font-mono text-[13px]">198</div>
+                  <div class="text-[11px] text-[var(--muted)]">engineers</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="progress-track flex-1"><div class="progress-fill" style="width:74%;"></div></div>
+                    <span class="font-mono text-[12px] tabular-nums w-12 text-right">74%</span>
+                  </div>
+                  <div class="text-[11px] text-[var(--muted)] mt-1 font-mono">147 completed · 51 missed</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <span class="pill" style="background:#F3F4F6;color:#374151;border:1px solid #E5E7EB;"><span class="pill-dot" style="background:var(--status-closed);"></span> Closed</span>
+                </td>
+                <td class="pl-3 pr-5 py-3.5 text-right align-middle">
+                  <button class="p-1.5 rounded hover:bg-[#F3F4F6]"><i data-lucide="more-horizontal" class="w-4 h-4 text-[var(--muted)]"></i></button>
+                </td>
+              </tr>
+
+              <tr class="row">
+                <td class="pl-5 pr-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-md bg-[#F3F4F6] border border-[#E5E7EB] grid place-items-center">
+                      <i data-lucide="archive" class="w-3.5 h-3.5 text-[#6B7280]"></i>
+                    </div>
+                    <div>
+                      <div class="font-medium text-[13.5px]">H2 · 2024 — Legacy review</div>
+                      <div class="text-[11.5px] text-[var(--muted)] font-mono">cyc_h2_24 · pre-AI rubric</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px]">Sep 01 → Feb 28, 25</div>
+                  <div class="text-[11px] text-[var(--muted)]">closed Mar 11</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="font-mono text-[12px] text-[var(--muted)]">—</div>
+                  <div class="text-[11px] text-[var(--muted)]">manual only</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle text-right">
+                  <div class="font-mono text-[13px]">164</div>
+                  <div class="text-[11px] text-[var(--muted)]">engineers</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <div class="flex items-center gap-3">
+                    <div class="progress-track flex-1"><div class="progress-fill" style="width:62%;"></div></div>
+                    <span class="font-mono text-[12px] tabular-nums w-12 text-right">62%</span>
+                  </div>
+                  <div class="text-[11px] text-[var(--muted)] mt-1 font-mono">102 completed · 62 missed</div>
+                </td>
+                <td class="px-3 py-3.5 align-middle">
+                  <span class="pill" style="background:#F3F4F6;color:#374151;border:1px solid #E5E7EB;"><span class="pill-dot" style="background:var(--status-closed);"></span> Closed</span>
+                </td>
+                <td class="pl-3 pr-5 py-3.5 text-right align-middle">
+                  <button class="p-1.5 rounded hover:bg-[#F3F4F6]"><i data-lucide="more-horizontal" class="w-4 h-4 text-[var(--muted)]"></i></button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <!-- Footer -->
+          <div class="px-5 py-3 border-t border-[var(--border)] bg-[#FAFAFB] flex items-center justify-between text-[11.5px] text-[var(--muted)]">
+            <div class="font-mono">Showing 6 of 12 cycles</div>
+            <div class="flex items-center gap-1">
+              <button class="h-7 w-7 grid place-items-center rounded border border-[var(--border)] bg-white hover:bg-[#F3F4F6]"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
+              <button class="h-7 px-2 rounded border border-[var(--border)] bg-white font-mono text-[12px]">1</button>
+              <button class="h-7 px-2 rounded hover:bg-white font-mono text-[12px]">2</button>
+              <button class="h-7 w-7 grid place-items-center rounded border border-[var(--border)] bg-white hover:bg-[#F3F4F6]"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subtle helper -->
+        <p class="mt-4 text-[11.5px] text-[var(--muted)] flex items-center gap-1.5"><i data-lucide="info" class="w-3 h-3"></i> Closing a cycle freezes its assignments and exports anonymized feedback to Insights. Re-opening requires admin approval.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

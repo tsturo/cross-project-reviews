@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Coachees — Cross-Project Reviews</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper:    '#FBFAF7',
+          card:     '#FFFFFF',
+          ink:      '#16140F',
+          muted:    '#6B6760',
+          subtle:   '#A09B92',
+          line:     '#E8E5DE',
+          lineSoft: '#F1EEE7',
+          magenta:  '#E10078',
+          magenta2: '#C20068',
+          l1: '#64748B',
+          l2: '#0EA5E9',
+          l3: '#10B981',
+          l4: '#F59E0B',
+          l5: '#BE185D',
+          s_assigned:  '#6B7280',
+          s_scheduled: '#2563EB',
+          s_completed: '#16A34A',
+          s_feedback:  '#7C3AED',
+          s_auto:      '#D97706',
+          s_unassign:  '#B91C1C',
+        },
+        fontFamily: {
+          display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+          sans:    ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui'],
+          mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        },
+        letterSpacing: { micro: '0.14em' },
+      }
+    }
+  }
+</script>
+<style>
+  html, body { background: #FBFAF7; color: #16140F; font-family: 'IBM Plex Sans', system-ui; }
+  .font-display { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; }
+  .smallcaps { text-transform: uppercase; letter-spacing: 0.14em; font-size: 10.5px; font-weight: 500; }
+  .hairline { border-color: #E8E5DE; }
+  .hairline-soft { border-color: #F1EEE7; }
+  /* subtle paper grain */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(rgba(22,20,15,0.025) 1px, transparent 1px);
+    background-size: 3px 3px; opacity: 0.6;
+  }
+  .row-hover:hover { background: #F7F4ED; }
+  .expand-row { background: linear-gradient(180deg, #F7F4ED 0%, #FBFAF7 100%); }
+  .focus-ring:focus { outline: 2px solid #E10078; outline-offset: 2px; }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .dot { width: 6px; height: 6px; border-radius: 999px; display:inline-block; }
+  .reason-chip {
+    display: inline-flex; align-items:center; gap: 6px;
+    padding: 3px 9px; border: 1px solid #E8E5DE; border-radius: 999px;
+    font-size: 11.5px; color: #4A463F; background: #FFFFFF;
+  }
+  .level-mark {
+    display:inline-flex; align-items:center; justify-content:center;
+    width: 22px; height: 22px; border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+  }
+  .status-pill {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size: 11.5px; padding: 3px 9px 3px 8px; border-radius: 999px; font-weight: 500;
+    border: 1px solid transparent;
+  }
+  .nav-item {
+    display:flex; align-items:center; gap: 10px; padding: 7px 10px;
+    border-radius: 6px; font-size: 13.5px; color: #3A3630;
+  }
+  .nav-item:hover { background: #F1EEE7; }
+  .nav-item.active { background: #16140F; color: #FBFAF7; }
+  .nav-item.active .nav-ico { color: #FBFAF7; }
+  .nav-section { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #A09B92; padding: 0 10px; }
+  .topbar-cyclepill {
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 4px 10px 4px 8px; border-radius: 999px; background: #16140F; color: #FBFAF7;
+    font-size: 11.5px;
+  }
+  .filter-btn {
+    display:inline-flex; align-items:center; gap: 6px;
+    padding: 6px 10px; border: 1px solid #E8E5DE; border-radius: 6px;
+    background: #FFFFFF; font-size: 12.5px; color: #3A3630;
+  }
+  .filter-btn:hover { border-color: #16140F; }
+  .filter-btn.active { background: #16140F; color: #FBFAF7; border-color: #16140F; }
+  .table-head th {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #A09B92; font-weight: 500; padding: 10px 16px;
+    border-bottom: 1px solid #E8E5DE; background: #FBFAF7;
+  }
+  .table-row td { padding: 14px 16px; border-bottom: 1px solid #F1EEE7; }
+  .btn-primary {
+    background: #E10078; color: #fff; padding: 7px 13px;
+    border-radius: 6px; font-size: 12.5px; font-weight: 500;
+    box-shadow: 0 1px 0 rgba(22,20,15,0.06), inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  .btn-primary:hover { background: #C20068; }
+  .btn-ghost {
+    padding: 6px 11px; border-radius: 6px; font-size: 12.5px;
+    color: #3A3630; border: 1px solid #E8E5DE; background: #fff;
+  }
+  .btn-ghost:hover { border-color: #16140F; }
+  .btn-quiet {
+    font-size: 12.5px; color: #3A3630; padding: 6px 9px; border-radius: 6px;
+  }
+  .btn-quiet:hover { background: #F1EEE7; }
+  .ring-magenta { box-shadow: 0 0 0 3px rgba(225,0,120,0.14); }
+  .ann { font-family: 'Fraunces', serif; font-style: italic; color: #6B6760; }
+  details > summary { list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  .chev { transition: transform 160ms ease; }
+  details[open] .chev { transform: rotate(90deg); }
+  .candidate-row:hover { background: #FFFFFF; }
+  .pick-btn {
+    border: 1px solid #E8E5DE; background: #FFFFFF; padding: 5px 10px;
+    border-radius: 6px; font-size: 12px; color: #16140F;
+  }
+  .pick-btn:hover { border-color: #16140F; background: #16140F; color: #FBFAF7; }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color: #FBFAF7; font-size: 11.5px; font-weight: 500;
+    font-family: 'IBM Plex Sans';
+  }
+  .kbd {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    padding: 1px 5px; border: 1px solid #E8E5DE; border-bottom-width: 2px;
+    border-radius: 4px; color: #6B6760; background: #FBFAF7;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="relative z-10 flex min-h-screen">
+
+  <!-- ───────────── SIDEBAR ───────────── -->
+  <aside class="w-[232px] shrink-0 border-r hairline bg-paper flex flex-col">
+    <div class="px-5 pt-5 pb-4 border-b hairline-soft">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-md bg-ink text-paper flex items-center justify-center">
+          <span class="font-display text-[15px] leading-none">cr</span>
+        </div>
+        <div class="leading-tight">
+          <div class="text-[13.5px] font-medium">Cross Reviews</div>
+          <div class="text-[10.5px] text-muted -mt-0.5">Visma · internal</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="flex-1 px-3 py-4 space-y-5 text-[13.5px]">
+      <div>
+        <div class="nav-section pb-2">Personal</div>
+        <a class="nav-item" href="#"><span class="nav-ico">◇</span> Dashboard</a>
+        <a class="nav-item" href="#"><span class="nav-ico">▢</span> My sessions
+          <span class="ml-auto text-[10.5px] text-muted tabular">2</span>
+        </a>
+        <a class="nav-item" href="#"><span class="nav-ico">○</span> Profile &amp; level</a>
+      </div>
+
+      <div>
+        <div class="nav-section pb-2">Coach</div>
+        <a class="nav-item active" href="#"><span class="nav-ico">▣</span> Coachees
+          <span class="ml-auto text-[10.5px] tabular opacity-80">8</span>
+        </a>
+        <a class="nav-item" href="#"><span class="nav-ico">▦</span> Assignments</a>
+      </div>
+
+      <div>
+        <div class="nav-section pb-2">Reference</div>
+        <a class="nav-item" href="#"><span class="nav-ico">✦</span> AI level guide</a>
+        <a class="nav-item" href="#"><span class="nav-ico">◌</span> Notifications</a>
+      </div>
+    </nav>
+
+    <div class="px-4 py-4 border-t hairline-soft">
+      <div class="flex items-center gap-3">
+        <div class="avatar" style="background:#16140F">TŠ</div>
+        <div class="leading-tight">
+          <div class="text-[12.5px] font-medium">Tomas Šturas</div>
+          <div class="text-[11px] text-muted">Coach · Visma.net BG</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ───────────── MAIN ───────────── -->
+  <main class="flex-1 min-w-0 flex flex-col">
+
+    <!-- TOPBAR -->
+    <div class="h-[52px] border-b hairline flex items-center justify-between px-7">
+      <div class="flex items-center gap-4">
+        <div class="text-[12px] text-muted">Coach</div>
+        <div class="text-[12px] text-subtle">/</div>
+        <div class="text-[12.5px] font-medium">Coachees</div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="topbar-cyclepill">
+          <span class="dot" style="background:#10B981"></span>
+          Cycle 2026‑H1 · <span class="tabular ml-0.5">61 days left</span>
+        </div>
+        <button class="btn-ghost flex items-center gap-2">
+          <span>Search</span>
+          <span class="kbd">⌘K</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- PAGE HEADER -->
+    <header class="px-7 pt-9 pb-6 border-b hairline-soft">
+      <div class="flex items-end justify-between gap-8">
+        <div class="max-w-2xl">
+          <div class="smallcaps text-subtle mb-3">Coach workspace · roster</div>
+          <h1 class="font-display text-[34px] leading-[1.05] tracking-tight">Your coachees, this cycle.</h1>
+          <p class="text-[14px] text-muted mt-3 leading-relaxed">
+            Eight engineers expect one cross-project review from you by <span class="text-ink font-medium">12 July 2026</span>.
+            Pair them with a reviewer one AI level up — agree out-of-band, then record the pairing here.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 pb-1">
+          <button class="btn-ghost">Export CSV</button>
+          <button class="btn-ghost">Preview auto-pair</button>
+          <button class="btn-primary">Assign reviewer</button>
+        </div>
+      </div>
+
+      <!-- meta strip -->
+      <div class="mt-7 grid grid-cols-4 gap-px bg-line border hairline rounded-md overflow-hidden">
+        <div class="bg-card px-5 py-3">
+          <div class="smallcaps text-subtle">Total coachees</div>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="font-display text-[24px] leading-none tabular">8</span>
+            <span class="text-[11.5px] text-muted">this cycle</span>
+          </div>
+        </div>
+        <div class="bg-card px-5 py-3">
+          <div class="smallcaps text-subtle">Unassigned</div>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="font-display text-[24px] leading-none tabular text-ink">3</span>
+            <span class="text-[11.5px]" style="color:#B91C1C">needs your pick</span>
+          </div>
+        </div>
+        <div class="bg-card px-5 py-3">
+          <div class="smallcaps text-subtle">Scheduled</div>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="font-display text-[24px] leading-none tabular">3</span>
+            <span class="text-[11.5px] text-muted">awaiting session</span>
+          </div>
+        </div>
+        <div class="bg-card px-5 py-3">
+          <div class="smallcaps text-subtle">Completed</div>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="font-display text-[24px] leading-none tabular">2</span>
+            <span class="text-[11.5px] text-muted">1 with feedback in</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- FILTER BAR -->
+    <div class="px-7 py-4 flex items-center justify-between gap-4 sticky top-0 bg-paper z-10 border-b hairline-soft">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="smallcaps text-subtle pr-1">Status</span>
+        <button class="filter-btn active">All <span class="tabular text-[11px] opacity-70">8</span></button>
+        <button class="filter-btn">Unassigned <span class="tabular text-[11px]" style="color:#B91C1C">3</span></button>
+        <button class="filter-btn">Assigned <span class="tabular text-[11px] opacity-60">0</span></button>
+        <button class="filter-btn">Scheduled <span class="tabular text-[11px] opacity-60">3</span></button>
+        <button class="filter-btn">Completed <span class="tabular text-[11px] opacity-60">2</span></button>
+
+        <span class="w-px h-5 bg-line mx-2"></span>
+
+        <span class="smallcaps text-subtle pr-1">Level</span>
+        <button class="filter-btn">Any level</button>
+
+        <span class="w-px h-5 bg-line mx-2"></span>
+
+        <span class="smallcaps text-subtle pr-1">Project</span>
+        <button class="filter-btn">All projects</button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 border hairline rounded-md px-3 py-1.5 bg-card">
+          <span class="text-subtle text-[12px]">⌕</span>
+          <input class="bg-transparent outline-none text-[13px] w-44 placeholder:text-subtle" placeholder="Find coachee…" />
+        </div>
+        <button class="btn-quiet text-muted">Reset</button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <section class="px-7 pt-2 pb-12">
+
+      <table class="w-full border-separate border-spacing-0">
+        <thead class="table-head">
+          <tr>
+            <th class="text-left w-[28%]">Coachee</th>
+            <th class="text-left w-[22%]">Project</th>
+            <th class="text-left w-[7%]">Level</th>
+            <th class="text-left w-[14%]">Last review</th>
+            <th class="text-left w-[14%]">Status</th>
+            <th class="text-right w-[15%]">Action</th>
+          </tr>
+        </thead>
+
+        <tbody class="bg-card">
+
+          <!-- 1. unassigned, expanded with suggestion panel -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <details open>
+                <summary class="flex items-center gap-3 cursor-pointer">
+                  <span class="chev text-subtle text-[12px] w-3 inline-block">›</span>
+                  <span class="avatar" style="background:#1F2937">EK</span>
+                  <span class="leading-tight">
+                    <span class="block text-[13.5px] font-medium">Eglė Kazlauskaitė</span>
+                    <span class="block text-[11.5px] text-muted">Senior Engineer · Kaunas</span>
+                  </span>
+                </summary>
+              </details>
+            </td>
+            <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
+            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td class="text-[13px] tabular text-muted">14 Nov 2025</td>
+            <td>
+              <span class="status-pill" style="background:#FEF2F2;color:#B91C1C;border-color:#FECACA">
+                <span class="dot" style="background:#B91C1C"></span> Unassigned
+              </span>
+            </td>
+            <td class="text-right">
+              <button class="btn-primary">Pick reviewer</button>
+            </td>
+          </tr>
+
+          <!-- INLINE EXPAND: ReviewerSuggestionPanel -->
+          <tr class="expand-row">
+            <td colspan="6" class="px-0 py-0 border-b hairline">
+              <div class="pl-[60px] pr-7 py-5">
+                <div class="flex items-end justify-between mb-3">
+                  <div>
+                    <div class="smallcaps text-subtle">Suggested reviewers · top 5</div>
+                    <div class="font-display text-[18px] mt-1">Ranked for <span class="italic">Eglė Kazlauskaitė</span> — L4, Visma.net Expense</div>
+                    <div class="text-[12px] text-muted mt-1">Hard filters applied: level &gt; L4, different project, ≤2 active load, no repeat from last 2 cycles.</div>
+                  </div>
+                  <a href="#" class="text-[12.5px] underline underline-offset-4 decoration-line hover:decoration-ink">Search all reviewers →</a>
+                </div>
+
+                <div class="rounded-md border hairline bg-card divide-y divide-lineSoft overflow-hidden">
+
+                  <div class="candidate-row grid grid-cols-[22px_36px_1fr_auto_auto] items-center gap-4 px-4 py-3">
+                    <span class="font-mono text-[11px] text-subtle tabular">01</span>
+                    <span class="avatar" style="background:#0EA5E9">MJ</span>
+                    <div class="leading-tight">
+                      <div class="text-[13.5px] font-medium">Mantas Jankauskas <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
+                      <div class="text-[11.5px] text-muted">Staff Engineer · Payroll 4867 · Visma Lithuania</div>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                      <span class="reason-chip">L5, +1 from coachee</span>
+                      <span class="reason-chip">Different project</span>
+                      <span class="reason-chip">Same company</span>
+                      <span class="reason-chip tabular">0 / 2 load</span>
+                    </div>
+                    <button class="pick-btn">Pick</button>
+                  </div>
+
+                  <div class="candidate-row grid grid-cols-[22px_36px_1fr_auto_auto] items-center gap-4 px-4 py-3">
+                    <span class="font-mono text-[11px] text-subtle tabular">02</span>
+                    <span class="avatar" style="background:#10B981">AP</span>
+                    <div class="leading-tight">
+                      <div class="text-[13.5px] font-medium">Aušra Petraitytė <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
+                      <div class="text-[11.5px] text-muted">Principal · Visma.net AutoInvoice · Visma Lithuania</div>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                      <span class="reason-chip">L5, different stack</span>
+                      <span class="reason-chip">Same company</span>
+                      <span class="reason-chip tabular">1 / 2 load</span>
+                      <span class="reason-chip ann italic">Skill fit</span>
+                    </div>
+                    <button class="pick-btn">Pick</button>
+                  </div>
+
+                  <div class="candidate-row grid grid-cols-[22px_36px_1fr_auto_auto] items-center gap-4 px-4 py-3">
+                    <span class="font-mono text-[11px] text-subtle tabular">03</span>
+                    <span class="avatar" style="background:#7C3AED">HV</span>
+                    <div class="leading-tight">
+                      <div class="text-[13.5px] font-medium">Henrik Vatne <span class="level-mark ml-1" style="background:#FEF3C7;color:#92400E">L4</span></div>
+                      <div class="text-[11.5px] text-muted">Senior · Visma Sign · Visma Norge</div>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                      <span class="reason-chip">L4 · cross-company</span>
+                      <span class="reason-chip">Different stack (TS)</span>
+                      <span class="reason-chip tabular">0 / 2 load</span>
+                    </div>
+                    <button class="pick-btn">Pick</button>
+                  </div>
+
+                  <div class="candidate-row grid grid-cols-[22px_36px_1fr_auto_auto] items-center gap-4 px-4 py-3">
+                    <span class="font-mono text-[11px] text-subtle tabular">04</span>
+                    <span class="avatar" style="background:#BE185D">RB</span>
+                    <div class="leading-tight">
+                      <div class="text-[13.5px] font-medium">Rasa Bertašius <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
+                      <div class="text-[11.5px] text-muted">Staff · Severa · Visma Lithuania</div>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                      <span class="reason-chip">L5 orchestrator</span>
+                      <span class="reason-chip">Different project</span>
+                      <span class="reason-chip tabular">2 / 2 load</span>
+                      <span class="reason-chip" style="color:#92400E;border-color:#FDE68A;background:#FFFBEB">High load</span>
+                    </div>
+                    <button class="pick-btn">Pick</button>
+                  </div>
+
+                  <div class="candidate-row grid grid-cols-[22px_36px_1fr_auto_auto] items-center gap-4 px-4 py-3">
+                    <span class="font-mono text-[11px] text-subtle tabular">05</span>
+                    <span class="avatar" style="background:#16140F">JN</span>
+                    <div class="leading-tight">
+                      <div class="text-[13.5px] font-medium">Jonas Naujokas <span class="level-mark ml-1" style="background:#FEF3C7;color:#92400E">L4</span></div>
+                      <div class="text-[11.5px] text-muted">Senior · Visma Spcs · Visma Sverige</div>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                      <span class="reason-chip">L4 · cross-company</span>
+                      <span class="reason-chip">.NET → Python switch</span>
+                      <span class="reason-chip tabular">1 / 2 load</span>
+                    </div>
+                    <button class="pick-btn">Pick</button>
+                  </div>
+                </div>
+
+                <div class="mt-3 flex items-center justify-between">
+                  <p class="text-[11.5px] text-muted">
+                    Ranking: closer level &gt; lower load &gt; same company &gt; different stack. Agree out-of-band before recording the pairing.
+                  </p>
+                  <div class="flex items-center gap-2">
+                    <button class="btn-quiet">Collapse</button>
+                    <button class="btn-ghost">Search all reviewers</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 2. unassigned -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#0EA5E9">DM</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Domas Mockus</span>
+                  <span class="block text-[11.5px] text-muted">Engineer · Vilnius</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Payroll <span class="text-subtle font-mono text-[11.5px]">4867</span></td>
+            <td><span class="level-mark" style="background:#E0F2FE;color:#075985">L2</span></td>
+            <td class="text-[13px] tabular text-muted">22 Sep 2025</td>
+            <td>
+              <span class="status-pill" style="background:#FEF2F2;color:#B91C1C;border-color:#FECACA">
+                <span class="dot" style="background:#B91C1C"></span> Unassigned
+              </span>
+            </td>
+            <td class="text-right">
+              <button class="btn-ghost">Pick reviewer</button>
+            </td>
+          </tr>
+
+          <!-- 3. unassigned -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#BE185D">UB</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Ugnė Balčiūnaitė</span>
+                  <span class="block text-[11.5px] text-muted">Engineer · Kaunas</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma Sign <span class="text-subtle font-mono text-[11.5px]">221</span></td>
+            <td>
+              <span class="level-mark" style="background:#F1F5F9;color:#334155">L1</span>
+              <span class="ml-1.5 text-[10.5px] text-muted italic">unverified</span>
+            </td>
+            <td class="text-[13px] tabular text-muted">— first cycle</td>
+            <td>
+              <span class="status-pill" style="background:#FEF2F2;color:#B91C1C;border-color:#FECACA">
+                <span class="dot" style="background:#B91C1C"></span> Unassigned
+              </span>
+            </td>
+            <td class="text-right">
+              <button class="btn-ghost">Pick reviewer</button>
+            </td>
+          </tr>
+
+          <!-- 4. assigned (recently) -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#10B981">LP</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Linas Paulauskas</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Vilnius</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
+            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td class="text-[13px] tabular text-muted">06 Feb 2026</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#F3F4F6;color:#374151;border-color:#E5E7EB">
+                  <span class="dot" style="background:#6B7280"></span> Assigned
+                </span>
+                <div class="text-[11px] text-muted mt-1">→ Aušra Petraitytė (L5)</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-quiet">View</button>
+            </td>
+          </tr>
+
+          <!-- 5. scheduled -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#F59E0B">VR</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Viltė Rudaitytė</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Kaunas</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Severa <span class="text-subtle font-mono text-[11.5px]">312</span></td>
+            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td class="text-[13px] tabular text-muted">11 Oct 2025</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE">
+                  <span class="dot" style="background:#2563EB"></span> Scheduled
+                </span>
+                <div class="text-[11px] text-muted mt-1 tabular">18 May · 10:30</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-quiet">View</button>
+            </td>
+          </tr>
+
+          <!-- 6. scheduled -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#2563EB">AG</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Andrius Gudaitis</span>
+                  <span class="block text-[11.5px] text-muted">Engineer · Vilnius</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma.net AutoInvoice <span class="text-subtle font-mono text-[11.5px]">901</span></td>
+            <td><span class="level-mark" style="background:#E0F2FE;color:#075985">L2</span></td>
+            <td class="text-[13px] tabular text-muted">04 Dec 2025</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE">
+                  <span class="dot" style="background:#2563EB"></span> Scheduled
+                </span>
+                <div class="text-[11px] text-muted mt-1 tabular">22 May · 14:00</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-quiet">View</button>
+            </td>
+          </tr>
+
+          <!-- 7. scheduled -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#7C3AED">SK</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Sigitas Karpis</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Vilnius</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Payroll <span class="text-subtle font-mono text-[11.5px]">4867</span></td>
+            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td class="text-[13px] tabular text-muted">19 Aug 2025</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE">
+                  <span class="dot" style="background:#2563EB"></span> Scheduled
+                </span>
+                <div class="text-[11px] text-muted mt-1 tabular">28 May · 09:00</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-quiet">View</button>
+            </td>
+          </tr>
+
+          <!-- 8. completed, feedback pending -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#16A34A">KM</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Kristina Mažeikienė</span>
+                  <span class="block text-[11.5px] text-muted">Senior · Vilnius</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma Spcs <span class="text-subtle font-mono text-[11.5px]">188</span></td>
+            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td class="text-[13px] tabular text-muted">02 May 2026</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#ECFDF5;color:#166534;border-color:#BBF7D0">
+                  <span class="dot" style="background:#16A34A"></span> Completed
+                </span>
+                <div class="text-[11px] text-muted mt-1">awaiting feedback</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-quiet">View</button>
+            </td>
+          </tr>
+
+          <!-- 9. completed + feedback submitted -->
+          <tr class="table-row row-hover align-middle">
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="text-subtle text-[12px] w-3 inline-block">›</span>
+                <span class="avatar" style="background:#475569">PT</span>
+                <span class="leading-tight">
+                  <span class="block text-[13.5px] font-medium">Povilas Tamošaitis</span>
+                  <span class="block text-[11.5px] text-muted">Engineer · Kaunas</span>
+                </span>
+              </div>
+            </td>
+            <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
+            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td class="text-[13px] tabular text-muted">28 Apr 2026</td>
+            <td>
+              <div>
+                <span class="status-pill" style="background:#F5F3FF;color:#5B21B6;border-color:#DDD6FE">
+                  <span class="dot" style="background:#7C3AED"></span> Feedback in
+                </span>
+                <div class="text-[11px] text-muted mt-1">+1 level shift recorded</div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="btn-quiet">Read</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <!-- footer note -->
+      <div class="mt-6 flex items-center justify-between text-[11.5px] text-muted">
+        <div>Showing <span class="tabular text-ink">8</span> of <span class="tabular text-ink">8</span> coachees · sorted by status, then last review.</div>
+        <div class="flex items-center gap-3 ann italic">
+          Auto-pair fallback runs 5 Jul 2026 · T-7 days before cycle close.
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>

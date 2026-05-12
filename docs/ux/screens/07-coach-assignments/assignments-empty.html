@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Assignments · Coach · Cross-Project Reviews · Visma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --magenta: #E10078;
+      --magenta-deep: #C70069;
+      --surface: #FAFAFA;
+      --card: #FFFFFF;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --muted-2: #9CA3AF;
+      --border: #E5E7EB;
+      --border-strong: #D1D5DB;
+      --l1: #64748B; --l2: #0EA5E9; --l3: #10B981; --l4: #F59E0B; --l5: #BE185D;
+      --s-assigned: #6B7280; --s-scheduled: #2563EB; --s-completed: #16A34A; --s-feedback: #7C3AED; --s-autopair: #D97706;
+    }
+    html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; border-radius: 6px; }
+    .btn-primary {
+      background: var(--magenta);
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+    .btn-primary:hover { background: var(--magenta-deep); box-shadow: 0 8px 24px -8px rgba(225, 0, 120, 0.45); }
+    .btn-primary:active { transform: translateY(1px); }
+
+    .pill { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 500; }
+    .dot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; }
+    .filter-btn { border: 1px solid var(--border); background: white; height: 32px; padding: 0 10px; border-radius: 8px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; color: #374151; }
+    .filter-btn:hover { border-color: var(--border-strong); }
+    .mselect { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--border); background: white; font-size: 13px; color: #374151; }
+
+    .tile { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+    .tile-num { font-family: 'Inter Tight', sans-serif; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; color: #9CA3AF; }
+    .tile-sub { font-size: 12px; color: var(--muted); }
+
+    .nav-active { background: #F3F4F6; color: var(--ink); }
+    .nav-active::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px; background: var(--ink); border-radius: 0 2px 2px 0; }
+    .nav-item { position: relative; }
+
+    .ava { width: 28px; height: 28px; border-radius: 999px; display: inline-grid; place-items: center; font-size: 11px; font-weight: 600; color: #111827; background: #F3F4F6; border: 1px solid var(--border); }
+
+    .seg { display: inline-flex; padding: 3px; background: #F3F4F6; border-radius: 8px; }
+    .seg button { height: 26px; padding: 0 12px; border-radius: 6px; font-size: 12.5px; color: #4B5563; font-weight: 500; }
+    .seg button.on { background: white; color: #111827; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(0,0,0,0.025) 100%),
+        linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(0,0,0,0.025) 100%);
+      background-size: 56px 56px, 56px 56px;
+    }
+
+    /* Empty state illustration — minimal, brand-disciplined */
+    .empty-illu {
+      width: 240px; height: 160px; position: relative;
+      border: 1px solid var(--border); border-radius: 14px; background: linear-gradient(180deg, #FCFCFD, #F6F7F9);
+      overflow: hidden;
+    }
+    .empty-illu::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(17,17,17,0.05) 100%),
+        linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(17,17,17,0.05) 100%);
+      background-size: 24px 24px;
+      mask-image: radial-gradient(ellipse at center, black 40%, transparent 75%);
+    }
+    .empty-skel { position: absolute; left: 18px; right: 18px; border-radius: 6px; }
+    .skel-bar { height: 8px; background: #ECEEF1; }
+    .skel-pill { height: 10px; border-radius: 999px; background: #E5E7EB; }
+
+    .checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
+    .check-dot { width: 18px; height: 18px; border-radius: 999px; display: grid; place-items: center; background: #F3F4F6; color: #9CA3AF; font-size: 10px; flex: none; margin-top: 2px; }
+    .check-dot.done { background: #DCFCE7; color: #15803D; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+<!-- AppShell -->
+<div class="min-h-screen grid grid-cols-[240px_1fr]">
+
+  <!-- SideNav -->
+  <aside class="border-r border-[var(--border)] bg-white flex flex-col">
+    <div class="px-5 py-5 flex items-center gap-2.5 border-b border-[var(--border)]">
+      <div class="h-8 w-8 rounded-md grid place-items-center" style="background: var(--magenta);">
+        <span class="font-display text-white text-base font-bold leading-none">V</span>
+      </div>
+      <div class="leading-tight">
+        <div class="font-display text-[14px] font-semibold">Cross-Project</div>
+        <div class="text-[11px] text-[var(--muted)]">Reviews · Visma</div>
+      </div>
+    </div>
+    <nav class="px-3 py-4 text-[13.5px]">
+      <div class="px-2 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted-2)] font-medium">Personal</div>
+      <a href="#" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-md text-[#4B5563]"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</a>
+      <a href="#" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-md text-[#4B5563]"><i data-lucide="calendar-days" class="w-4 h-4"></i> My sessions</a>
+      <a href="#" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-md text-[#4B5563]"><i data-lucide="user-round" class="w-4 h-4"></i> Profile</a>
+      <div class="px-2 pt-5 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted-2)] font-medium">Coach</div>
+      <a href="#" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-md text-[#4B5563]"><i data-lucide="users" class="w-4 h-4"></i> Coachees <span class="ml-auto text-[10.5px] text-[var(--muted)]">11</span></a>
+      <a href="#" class="nav-item nav-active flex items-center gap-2.5 px-3 py-2 rounded-md font-medium"><i data-lucide="list-checks" class="w-4 h-4"></i> Assignments <span class="ml-auto text-[10.5px] text-[var(--ink)] font-semibold">0</span></a>
+      <div class="px-2 pt-5 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted-2)] font-medium">Insights</div>
+      <a href="#" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-md text-[#4B5563]"><i data-lucide="trending-up" class="w-4 h-4"></i> Completion</a>
+      <a href="#" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-md text-[#4B5563]"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> Levels</a>
+    </nav>
+
+    <div class="mt-auto p-4 border-t border-[var(--border)]">
+      <div class="rounded-lg border border-[var(--border)] p-3 bg-[#FAFAFA]">
+        <div class="flex items-center gap-2 text-[11.5px] text-[var(--muted)]">
+          <i data-lucide="info" class="w-3.5 h-3.5"></i> Cycle ends in <span class="text-[var(--ink)] font-medium">38 days</span>
+        </div>
+        <div class="mt-2 h-1.5 rounded-full bg-white overflow-hidden border border-[var(--border)]">
+          <div class="h-full" style="width: 79%; background: linear-gradient(90deg, var(--l3), var(--l4));"></div>
+        </div>
+        <div class="mt-2 text-[10.5px] text-[var(--muted-2)]">Auto-pair sweeps in 31 days.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex flex-col">
+    <header class="h-14 border-b border-[var(--border)] bg-white px-6 flex items-center gap-4">
+      <div class="flex items-center gap-2 text-[13px] text-[var(--muted)]">
+        <span>Coach</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i><span class="text-[var(--ink)] font-medium">Assignments</span>
+      </div>
+      <div class="ml-3 pill border border-[var(--border)] bg-white" style="height: 26px;">
+        <span class="dot" style="background: var(--l3);"></span>
+        <span class="text-[var(--ink)] font-semibold">H1 · 2026</span>
+        <span class="text-[var(--muted)]">· 38 days left</span>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--muted-2)]"></i>
+          <input type="text" placeholder="Search assignments…" disabled class="h-9 w-72 pl-8 pr-3 text-[13.5px] border border-[var(--border)] rounded-lg bg-[#FAFAFA] placeholder:text-[var(--muted-2)]" />
+        </div>
+        <div class="ml-1 flex items-center gap-2 pl-2 border-l border-[var(--border)]">
+          <div class="ava">EM</div>
+          <div class="leading-tight">
+            <div class="text-[12.5px] font-medium">Eglė Matulionytė</div>
+            <div class="text-[11px] text-[var(--muted)]">Coach · Visma Lithuania</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="px-6 py-6 grid-bg">
+
+      <!-- PageHeader -->
+      <div class="flex items-end justify-between gap-6 mb-5">
+        <div>
+          <p class="text-[11.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium mb-1.5">Coach · Assignments</p>
+          <h1 class="font-display text-[28px] font-semibold leading-[1.1]">All assignments this cycle</h1>
+          <p class="mt-2 text-[14px] text-[var(--muted)] max-w-2xl leading-relaxed">
+            Every pairing where you coach the reviewee or the reviewer. Nothing has been recorded yet for this cycle.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="focus-ring filter-btn opacity-50 cursor-not-allowed" disabled>
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+          </button>
+          <button class="focus-ring btn-primary h-9 px-3.5 rounded-lg text-white text-[13.5px] font-medium inline-flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i> Record first pairing
+          </button>
+        </div>
+      </div>
+
+      <!-- MetricTiles — zero state, low contrast -->
+      <section class="grid grid-cols-4 gap-3 mb-6">
+        <div class="tile">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[12px] text-[var(--muted)]">Completed this cycle</span>
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-[var(--muted-2)]"></i>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="tile-num">0</span>
+            <span class="text-[14px] text-[var(--muted)]">/ 11</span>
+          </div>
+          <div class="tile-sub mt-3">11 coachees in scope for H1 · 2026.</div>
+        </div>
+        <div class="tile">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[12px] text-[var(--muted)]">Overdue feedback</span>
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-[var(--muted-2)]"></i>
+          </div>
+          <div class="flex items-baseline gap-2"><span class="tile-num">0</span></div>
+          <div class="tile-sub mt-3">Nothing to chase. Yet.</div>
+        </div>
+        <div class="tile">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[12px] text-[var(--muted)]">Auto-paired</span>
+            <i data-lucide="zap" class="w-4 h-4 text-[var(--muted-2)]"></i>
+          </div>
+          <div class="flex items-baseline gap-2"><span class="tile-num">0</span></div>
+          <div class="tile-sub mt-3">Sweep runs Jun 12 — assign manually before then.</div>
+        </div>
+        <div class="tile">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[12px] text-[var(--muted)]">Awaiting schedule</span>
+            <i data-lucide="calendar-clock" class="w-4 h-4 text-[var(--muted-2)]"></i>
+          </div>
+          <div class="flex items-baseline gap-2"><span class="tile-num">0</span></div>
+          <div class="tile-sub mt-3">No pairings recorded yet.</div>
+        </div>
+      </section>
+
+      <!-- FilterBar (still rendered, disabled feel) -->
+      <section class="bg-white border border-[var(--border)] rounded-xl mb-3">
+        <div class="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-[var(--border)]">
+          <button class="mselect opacity-90">
+            <i data-lucide="calendar-range" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            <span class="font-medium">H1 · 2026</span>
+            <span class="text-[var(--muted)]">Jan – Jul</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+          </button>
+          <button class="mselect opacity-60 cursor-not-allowed" disabled>
+            <i data-lucide="list-filter" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            Status <span class="text-[var(--muted)]">·</span> <span class="font-medium">All</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+          </button>
+          <div class="seg ml-1 opacity-60">
+            <button class="on">All <span class="text-[var(--muted)] ml-1">0</span></button>
+            <button>As coach of reviewee <span class="text-[var(--muted)] ml-1">0</span></button>
+            <button>As coach of reviewer <span class="text-[var(--muted)] ml-1">0</span></button>
+          </div>
+        </div>
+
+        <!-- EmptyState body -->
+        <div class="px-10 py-14">
+          <div class="grid grid-cols-[auto_1fr] gap-10 items-start max-w-4xl">
+
+            <!-- Illustrative skeleton -->
+            <div class="empty-illu">
+              <div class="empty-skel" style="top: 24px;">
+                <div class="skel-bar" style="width: 60%;"></div>
+              </div>
+              <div class="empty-skel" style="top: 44px;">
+                <div class="flex items-center gap-2">
+                  <div class="skel-pill" style="width: 64px;"></div>
+                  <div class="skel-bar" style="width: 100px;"></div>
+                </div>
+              </div>
+              <div class="empty-skel" style="top: 78px;">
+                <div class="flex items-center gap-2">
+                  <div class="skel-pill" style="width: 48px; background: #FDE2EF;"></div>
+                  <div class="skel-bar" style="width: 80px;"></div>
+                </div>
+              </div>
+              <div class="empty-skel" style="top: 112px;">
+                <div class="flex items-center gap-2">
+                  <div class="skel-pill" style="width: 56px;"></div>
+                  <div class="skel-bar" style="width: 120px;"></div>
+                </div>
+              </div>
+              <!-- Diagonal accent line -->
+              <div style="position: absolute; right: -20px; top: -20px; width: 140px; height: 1px; background: var(--magenta); opacity: 0.4; transform: rotate(35deg); transform-origin: left;"></div>
+            </div>
+
+            <!-- Copy -->
+            <div>
+              <p class="text-[11.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium mb-2">Empty — H1 · 2026</p>
+              <h2 class="font-display text-[24px] font-semibold leading-[1.15]">No assignments recorded for this cycle yet.</h2>
+              <p class="mt-3 text-[14px] text-[var(--muted)] leading-relaxed max-w-xl">
+                Pairings are agreed out-of-band — Slack, hallway, email — and then recorded here. Start by reviewing your coachees and the suggested reviewers we ranked for each.
+              </p>
+
+              <ul class="checklist mt-6 text-[13.5px]">
+                <li>
+                  <span class="check-dot done"><i data-lucide="check" class="w-3 h-3"></i></span>
+                  <div>
+                    <div class="text-[var(--ink)] font-medium">Cycle opened</div>
+                    <div class="text-[12.5px] text-[var(--muted)]">H1 · 2026 started Jan 6. You have <span class="text-[var(--ink)] font-medium">11 coachees</span> in scope.</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="check-dot"><i data-lucide="circle" class="w-3 h-3"></i></span>
+                  <div>
+                    <div class="text-[var(--ink)] font-medium">Open Coachees and pick a reviewer</div>
+                    <div class="text-[12.5px] text-[var(--muted)]">Each coachee shows 5 ranked candidates with reason chips (level, project, load).</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="check-dot"><i data-lucide="circle" class="w-3 h-3"></i></span>
+                  <div>
+                    <div class="text-[var(--ink)] font-medium">Agree out-of-band, then record the pairing</div>
+                    <div class="text-[12.5px] text-[var(--muted)]">Use the Record pairing action — it creates the assignment and emails both parties.</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="check-dot"><i data-lucide="circle" class="w-3 h-3"></i></span>
+                  <div>
+                    <div class="text-[var(--ink)] font-medium">Auto-pair sweep — June 12</div>
+                    <div class="text-[12.5px] text-[var(--muted)]">Anything still unassigned gets a top-1 match automatically. You'll see it flagged here.</div>
+                  </div>
+                </li>
+              </ul>
+
+              <div class="mt-7 flex items-center gap-2">
+                <a href="#" class="focus-ring btn-primary h-10 px-4 rounded-lg text-white text-[13.5px] font-medium inline-flex items-center gap-1.5">
+                  <i data-lucide="users" class="w-4 h-4"></i> Go to coachees
+                </a>
+                <a href="#" class="focus-ring filter-btn h-10 px-3.5">
+                  <i data-lucide="book-open" class="w-3.5 h-3.5"></i> How matching works
+                </a>
+                <a href="#" class="focus-ring filter-btn h-10 px-3.5">
+                  <i data-lucide="history" class="w-3.5 h-3.5"></i> See H2 · 2025
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subtle stats strip -->
+          <div class="mt-12 pt-6 border-t border-[var(--border)] grid grid-cols-4 gap-6 text-[12.5px] text-[var(--muted)] max-w-4xl">
+            <div>
+              <div class="text-[var(--ink)] font-medium">11</div>
+              <div>Coachees in scope</div>
+            </div>
+            <div>
+              <div class="text-[var(--ink)] font-medium">2</div>
+              <div>Levels unverified — set before assigning</div>
+            </div>
+            <div>
+              <div class="text-[var(--ink)] font-medium">38d</div>
+              <div>Until cycle close · Jul 4</div>
+            </div>
+            <div>
+              <div class="text-[var(--ink)] font-medium">31d</div>
+              <div>Until auto-pair sweep · Jun 12</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile — Mikael Sørensen · Cross-Project Reviews</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --magenta: #E10078;
+    --ink: #111111;
+    --ink-2: #2A2A2A;
+    --muted: #6B7280;
+    --line: #E5E7EB;
+    --line-strong: #1A1A1A;
+    --surface: #FAFAF7;
+    --card: #FFFFFF;
+    --L1: #64748B;
+    --L2: #0EA5E9;
+    --L3: #10B981;
+    --L4: #F59E0B;
+    --L5: #BE185D;
+  }
+  html, body { background: var(--surface); color: var(--ink); font-family: 'Geist', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .font-display { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; letter-spacing: -0.02em; }
+  .font-mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+
+  /* hairline grid in background */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(17,17,17,0.035) 1px, transparent 1px);
+    background-size: 88px 100%;
+  }
+
+  .rule { border-top: 1px solid var(--line-strong); }
+  .rule-soft { border-top: 1px solid var(--line); }
+
+  /* Level badge — large numeric with serif */
+  .level-glyph { font-feature-settings: "ss01", "lnum"; }
+
+  /* Tick marks */
+  .tick { width: 1px; height: 10px; background: var(--ink); display: inline-block; }
+  .tick-mute { background: var(--line); }
+
+  /* Timeline */
+  .tl-rail { background: var(--ink); width: 1px; }
+  .tl-node {
+    width: 11px; height: 11px; border: 1px solid var(--ink); background: var(--surface);
+    border-radius: 999px;
+  }
+  .tl-node.filled { background: var(--ink); }
+  .tl-node.current { background: var(--magenta); border-color: var(--magenta); box-shadow: 0 0 0 4px rgba(225,0,120,0.10); }
+
+  /* Primary CTA */
+  .btn-primary {
+    background: var(--magenta); color: white; letter-spacing: -0.01em;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary:hover { background: #c4006a; transform: translateY(-1px); box-shadow: 0 8px 24px -10px rgba(225,0,120,0.55); }
+
+  /* Sidebar item hover */
+  .nav-item { transition: color .12s ease, background .12s ease; }
+  .nav-item:hover { color: var(--ink); }
+  .nav-item.active { color: var(--ink); }
+  .nav-item.active .nav-dot { background: var(--ink); }
+
+  /* Underline link */
+  .ulink { background-image: linear-gradient(currentColor, currentColor); background-size: 100% 1px; background-position: 0 100%; background-repeat: no-repeat; }
+
+  /* Tabular figures */
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* Stale chip pulse */
+  @keyframes blip { 0%,100% { opacity: 1 } 50% { opacity: 0.45 } }
+  .blip { animation: blip 2.4s ease-in-out infinite; }
+
+  /* Subtle reveal */
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .rise { animation: rise .55s ease-out both; }
+  .rise-1 { animation-delay: .05s } .rise-2 { animation-delay: .12s } .rise-3 { animation-delay: .2s }
+  .rise-4 { animation-delay: .28s } .rise-5 { animation-delay: .36s } .rise-6 { animation-delay: .44s }
+
+  /* Spec sheet labels */
+  .label { font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+  /* Feedback row hover */
+  .row { transition: background .12s ease; }
+  .row:hover { background: #F4F2EE; }
+  .row:hover .row-cta { color: var(--magenta); }
+
+  /* Big number */
+  .figure {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-feature-settings: "lnum";
+  }
+
+  /* Plus-sign progression marker */
+  .plus-mark { color: var(--magenta); }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- =================== APP SHELL =================== -->
+<div class="grid grid-cols-[240px_1fr] min-h-screen">
+
+  <!-- =================== SIDE NAV =================== -->
+  <aside class="border-r border-black/10 bg-[#F4F2EE] flex flex-col">
+    <div class="px-6 pt-7 pb-8">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full" style="background: var(--magenta)"></div>
+        <span class="font-display text-[18px] tracking-tight">Visma <em class="not-italic font-medium">/ Reviews</em></span>
+      </div>
+      <div class="label mt-1 pl-4">Cross-project · AI adoption</div>
+    </div>
+
+    <nav class="px-3 pb-6 flex-1 text-[14px]">
+      <div class="label px-3 mb-2">My work</div>
+      <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)]">
+        <span class="nav-dot w-1 h-1 rounded-full bg-[var(--muted)]"></span> Dashboard
+      </a>
+      <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)]">
+        <span class="nav-dot w-1 h-1 rounded-full bg-[var(--muted)]"></span> Sessions
+        <span class="ml-auto font-mono text-[10px] text-[var(--muted)] tnum">2</span>
+      </a>
+      <a class="nav-item active flex items-center gap-3 px-3 py-2 rounded-md">
+        <span class="nav-dot w-1 h-1 rounded-full"></span> Profile
+      </a>
+
+      <div class="label px-3 mt-6 mb-2">Coach</div>
+      <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)]">
+        <span class="nav-dot w-1 h-1 rounded-full bg-[var(--muted)]"></span> Coachees
+        <span class="ml-auto font-mono text-[10px] text-[var(--muted)] tnum">6</span>
+      </a>
+      <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)]">
+        <span class="nav-dot w-1 h-1 rounded-full bg-[var(--muted)]"></span> Assignments
+      </a>
+
+      <div class="label px-3 mt-6 mb-2">Org</div>
+      <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)]">
+        <span class="nav-dot w-1 h-1 rounded-full bg-[var(--muted)]"></span> Insights
+      </a>
+    </nav>
+
+    <div class="px-6 pb-6">
+      <div class="rule-soft mb-4"></div>
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-[var(--ink)] text-white flex items-center justify-center font-mono text-[11px]">MS</div>
+        <div class="leading-tight">
+          <div class="text-[13px] font-medium">Mikael Sørensen</div>
+          <div class="text-[11px] text-[var(--muted)]">mikael.sorensen@visma.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =================== MAIN =================== -->
+  <main class="grid-bg">
+
+    <!-- TopBar -->
+    <header class="border-b border-black/10 px-12 py-4 flex items-center gap-6 bg-[var(--surface)]/80 backdrop-blur sticky top-0 z-20">
+      <div class="label">Workspace</div>
+      <div class="text-[13px] font-medium">Engineering · 2026 H1</div>
+      <span class="ml-2 inline-flex items-center gap-2 px-2.5 py-1 border border-black/15 rounded-full text-[11px] font-mono">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        Cycle 2026-H1 · <span class="tnum">39 days left</span>
+      </span>
+
+      <div class="ml-auto flex items-center gap-5 text-[12px] text-[var(--muted)]">
+        <span>⌘K Search</span>
+        <span>·</span>
+        <span class="ulink cursor-pointer">Sign out</span>
+      </div>
+    </header>
+
+    <!-- =================== PAGE HEADER =================== -->
+    <section class="px-12 pt-12 pb-10 rise rise-1">
+      <div class="flex items-baseline justify-between gap-8">
+        <div>
+          <div class="label">Profile · /profile</div>
+          <h1 class="font-display text-[64px] leading-[0.95] mt-3 tracking-tight">Mikael Sørensen<span class="plus-mark">.</span></h1>
+          <p class="text-[15px] text-[var(--muted)] mt-3 max-w-xl">
+            Your AI-adoption profile. What level you're at, how it has moved, and what your peers have said when they reviewed you.
+          </p>
+        </div>
+
+        <button class="btn-primary px-5 py-3 rounded-md text-[13px] font-medium inline-flex items-center gap-2 shrink-0">
+          Re-take self-assessment
+          <span class="font-mono text-[11px] opacity-80">· 60s</span>
+        </button>
+      </div>
+
+      <!-- Spec sheet meta -->
+      <div class="mt-10 grid grid-cols-5 gap-px bg-[var(--line)] border border-[var(--line)] rounded-md overflow-hidden">
+        <div class="bg-[var(--card)] px-5 py-4">
+          <div class="label">Role</div>
+          <div class="text-[14px] mt-1.5">Senior Engineer</div>
+        </div>
+        <div class="bg-[var(--card)] px-5 py-4">
+          <div class="label">Project</div>
+          <div class="text-[14px] mt-1.5">Onguard · Risk Engine</div>
+        </div>
+        <div class="bg-[var(--card)] px-5 py-4">
+          <div class="label">Company</div>
+          <div class="text-[14px] mt-1.5">Visma Onguard B.V.</div>
+        </div>
+        <div class="bg-[var(--card)] px-5 py-4">
+          <div class="label">Coach</div>
+          <div class="text-[14px] mt-1.5 ulink cursor-pointer">Aušra Petraitytė</div>
+        </div>
+        <div class="bg-[var(--card)] px-5 py-4">
+          <div class="label">Employee since</div>
+          <div class="text-[14px] mt-1.5 tnum">Mar 2021</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== AI LEVEL — HERO =================== -->
+    <section class="px-12 pb-16 rise rise-2">
+      <div class="rule mb-8"></div>
+
+      <div class="grid grid-cols-12 gap-8">
+
+        <!-- Big level glyph -->
+        <div class="col-span-5">
+          <div class="label">Current AI level</div>
+          <div class="mt-6 flex items-end gap-6">
+            <div class="figure level-glyph leading-none" style="font-size: 220px; color: var(--ink);">
+              3
+              <span class="plus-mark text-[140px] align-top">.</span>
+            </div>
+            <div class="pb-8">
+              <div class="font-display text-[22px] leading-tight">CLI agent, permissioned</div>
+              <div class="text-[13px] text-[var(--muted)] mt-1 max-w-[26ch]">You run an agent in the shell and grant access per task. Verification is mostly manual.</div>
+            </div>
+          </div>
+
+          <!-- L1..L5 scale -->
+          <div class="mt-8">
+            <div class="flex items-end justify-between font-mono text-[10px] text-[var(--muted)] uppercase tracking-wider mb-2">
+              <span>L1</span><span>L2</span><span>L3 — you</span><span>L4</span><span>L5</span>
+            </div>
+            <div class="relative h-2 bg-[var(--line)] rounded-full overflow-hidden">
+              <div class="absolute inset-y-0 left-0 bg-[var(--ink)]" style="width: 50%"></div>
+              <div class="absolute inset-y-0" style="left: 50%; width: 2px; background: var(--magenta);"></div>
+            </div>
+            <div class="flex justify-between mt-2 font-mono text-[10px] text-[var(--muted)] tnum">
+              <span>Completion-only</span>
+              <span>Fleet orchestration</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Source / metadata -->
+        <div class="col-span-4 col-start-7 pl-8 border-l border-[var(--line-strong)]">
+          <div class="label">Source of record</div>
+
+          <div class="mt-6 space-y-5">
+            <div>
+              <div class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Determined by</div>
+              <div class="text-[15px] mt-1">Self-assessment <span class="text-[var(--muted)]">— in-app, 5 questions</span></div>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Set on</div>
+              <div class="text-[15px] mt-1 tnum">14 January 2026</div>
+            </div>
+            <div>
+              <div class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Last reviewed by coach</div>
+              <div class="text-[15px] mt-1">Aušra Petraitytė <span class="text-[var(--muted)] tnum">— 22 Jan 2026</span></div>
+            </div>
+          </div>
+
+          <!-- Stale indicator (4 months old here — not stale yet) -->
+          <div class="mt-8 border border-[var(--line)] bg-white px-4 py-3 rounded-md flex items-start gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+            <div class="text-[12px] leading-relaxed">
+              <span class="font-medium">Fresh.</span>
+              <span class="text-[var(--muted)]">Your level was set <span class="tnum">4 months</span> ago. We'll prompt a re-check at the 6-month mark <span class="tnum">(14 Jul 2026)</span>.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================== LEVEL TIMELINE =================== -->
+    <section class="px-12 pb-20 rise rise-3">
+      <div class="rule mb-8"></div>
+      <div class="flex items-baseline justify-between mb-10">
+        <div>
+          <div class="label">Trajectory</div>
+          <h2 class="font-display text-[36px] tracking-tight mt-2">How you got here<span class="plus-mark">.</span></h2>
+        </div>
+        <div class="text-[12px] font-mono text-[var(--muted)] tnum">L2 → L3 · 2 cycles · +1</div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-8">
+
+        <!-- Timeline rail -->
+        <div class="col-span-8 relative pl-8">
+          <div class="absolute left-[19px] top-3 bottom-3 tl-rail"></div>
+
+          <!-- Entry: Current -->
+          <article class="relative pb-12">
+            <div class="absolute -left-[18px] top-2 tl-node current"></div>
+            <div class="absolute -left-[6px] top-1.5 font-mono text-[10px] text-[var(--magenta)] tracking-widest"></div>
+            <div class="flex items-start gap-8">
+              <div class="w-36 shrink-0">
+                <div class="font-mono text-[11px] text-[var(--ink)] tnum">14 Jan 2026</div>
+                <div class="label mt-0.5">Now</div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3">
+                  <span class="font-display text-[28px]">L3</span>
+                  <span class="text-[var(--muted)] text-[13px]">CLI agent, permissioned</span>
+                  <span class="ml-auto text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">Self-assessment</span>
+                </div>
+                <p class="text-[14px] text-[var(--ink-2)] mt-3 max-w-[60ch] leading-relaxed">
+                  "Moved from per-action approval to running Claude Code in the terminal for most non-trivial tasks. Still reviewing every diff manually before commit. Running 2–3 parallel sessions on big refactors."
+                </p>
+                <div class="flex items-center gap-4 text-[11px] font-mono text-[var(--muted)] mt-3">
+                  <span>noted by you</span>
+                  <span>·</span>
+                  <span>confirmed by Aušra Petraitytė, 22 Jan</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Entry: L2 (previous cycle) -->
+          <article class="relative pb-12">
+            <div class="absolute -left-[18px] top-2 tl-node filled"></div>
+            <div class="flex items-start gap-8">
+              <div class="w-36 shrink-0">
+                <div class="font-mono text-[11px] text-[var(--ink)] tnum">08 Jul 2025</div>
+                <div class="label mt-0.5">Cycle 2025-H2</div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3">
+                  <span class="font-display text-[22px] text-[var(--ink-2)]">L2</span>
+                  <span class="text-[var(--muted)] text-[13px]">IDE agent, permission per action</span>
+                  <span class="ml-auto text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">Cross-review</span>
+                </div>
+                <p class="text-[14px] text-[var(--ink-2)] mt-3 max-w-[60ch] leading-relaxed">
+                  Promoted after cross-project session with <span class="ulink">Linnea Holmberg (L4)</span>. She observed Mikael driving Cursor agent in long autonomous runs and recommended +1.
+                </p>
+                <div class="flex items-center gap-4 text-[11px] font-mono text-[var(--muted)] mt-3">
+                  <span>recommended by reviewer</span>
+                  <span>·</span>
+                  <span>approved by coach</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Entry: L2 set initially -->
+          <article class="relative pb-12">
+            <div class="absolute -left-[18px] top-2 tl-node filled"></div>
+            <div class="flex items-start gap-8">
+              <div class="w-36 shrink-0">
+                <div class="font-mono text-[11px] text-[var(--ink)] tnum">11 Feb 2025</div>
+                <div class="label mt-0.5">Cycle 2025-H1</div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3">
+                  <span class="font-display text-[22px] text-[var(--ink-2)]">L2</span>
+                  <span class="text-[var(--muted)] text-[13px]">IDE agent, permission per action</span>
+                  <span class="ml-auto text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">Survey</span>
+                </div>
+                <p class="text-[14px] text-[var(--ink-2)] mt-3 max-w-[60ch] leading-relaxed">
+                  First on-record level from the org-wide AI adoption survey. Mikael reported using Copilot heavily in JetBrains and occasional Cursor for spike work.
+                </p>
+                <div class="flex items-center gap-4 text-[11px] font-mono text-[var(--muted)] mt-3">
+                  <span>imported from Google Form</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Entry: Baseline -->
+          <article class="relative pb-2">
+            <div class="absolute -left-[18px] top-2 tl-node"></div>
+            <div class="flex items-start gap-8">
+              <div class="w-36 shrink-0">
+                <div class="font-mono text-[11px] text-[var(--muted)] tnum">Mar 2021</div>
+                <div class="label mt-0.5">Joined Visma</div>
+              </div>
+              <div class="flex-1">
+                <div class="text-[13px] text-[var(--muted)] italic font-display">No record before this point.</div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Trajectory annotations -->
+        <aside class="col-span-3 col-start-10 pl-6 border-l border-[var(--line)]">
+          <div class="label mb-3">Pattern</div>
+          <p class="font-display text-[18px] leading-snug">
+            Two cycles, one level gained.
+          </p>
+          <p class="text-[13px] text-[var(--muted)] mt-3 leading-relaxed">
+            Median across Visma engineers in 2025 was <span class="text-[var(--ink)] tnum font-medium">+0.6 levels/year</span>. You're tracking at <span class="text-[var(--ink)] tnum font-medium">+1.0</span>.
+          </p>
+
+          <div class="mt-8 label mb-3">Next plausible step</div>
+          <div class="flex items-center gap-2 font-display text-[20px]">
+            <span class="text-[var(--muted)]">L3</span>
+            <span class="text-[var(--muted)]">→</span>
+            <span>L4</span>
+          </div>
+          <p class="text-[13px] text-[var(--muted)] mt-2 leading-relaxed">
+            Run multiple CLI agents in parallel as the default. Be explicit about verification scaffolding.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- =================== REVIEW HISTORY =================== -->
+    <section class="px-12 pb-24 rise rise-4">
+      <div class="rule mb-8"></div>
+      <div class="flex items-baseline justify-between mb-8">
+        <div>
+          <div class="label">Review history</div>
+          <h2 class="font-display text-[36px] tracking-tight mt-2">What peers said<span class="plus-mark">.</span></h2>
+        </div>
+        <div class="text-[12px] font-mono text-[var(--muted)] tnum">3 sessions · since 2024</div>
+      </div>
+
+      <!-- Header row -->
+      <div class="grid grid-cols-12 gap-6 px-5 pb-3 label">
+        <div class="col-span-2">Date</div>
+        <div class="col-span-3">Counterpart</div>
+        <div class="col-span-5">Summary</div>
+        <div class="col-span-1">Role</div>
+        <div class="col-span-1 text-right">Read</div>
+      </div>
+
+      <div class="border-y border-[var(--line-strong)]">
+
+        <!-- Row 1 -->
+        <a class="row grid grid-cols-12 gap-6 px-5 py-6 items-start border-b border-[var(--line)] cursor-pointer">
+          <div class="col-span-2">
+            <div class="font-mono text-[12px] tnum">02 Dec 2025</div>
+            <div class="text-[11px] text-[var(--muted)] mt-0.5">Cycle 2025-H2</div>
+          </div>
+          <div class="col-span-3">
+            <div class="text-[14px] font-medium">Linnea Holmberg</div>
+            <div class="text-[12px] text-[var(--muted)] mt-0.5">L4 · Visma Spcs · Stockholm</div>
+          </div>
+          <div class="col-span-5">
+            <div class="font-display text-[16px] leading-snug text-[var(--ink-2)]">
+              "Strong context-setting. Could lean harder on writing throwaway test harnesses before letting the agent iterate."
+            </div>
+            <div class="flex gap-2 mt-3">
+              <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">+1 level recommended</span>
+              <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">Cursor · Claude Code</span>
+            </div>
+          </div>
+          <div class="col-span-1 self-center">
+            <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Reviewee</span>
+          </div>
+          <div class="col-span-1 self-center text-right row-cta text-[12px] font-mono">Read →</div>
+        </a>
+
+        <!-- Row 2 -->
+        <a class="row grid grid-cols-12 gap-6 px-5 py-6 items-start border-b border-[var(--line)] cursor-pointer">
+          <div class="col-span-2">
+            <div class="font-mono text-[12px] tnum">18 Jun 2025</div>
+            <div class="text-[11px] text-[var(--muted)] mt-0.5">Cycle 2025-H1</div>
+          </div>
+          <div class="col-span-3">
+            <div class="text-[14px] font-medium">Tomáš Beneš</div>
+            <div class="text-[12px] text-[var(--muted)] mt-0.5">L1 · Visma Damacon · Prague</div>
+          </div>
+          <div class="col-span-5">
+            <div class="font-display text-[16px] leading-snug text-[var(--ink-2)]">
+              "Mikael showed me how to scope an agent prompt to a single file. Walked away with one habit I'll try this sprint."
+            </div>
+            <div class="flex gap-2 mt-3">
+              <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">Mentor session</span>
+              <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">JetBrains AI · Copilot</span>
+            </div>
+          </div>
+          <div class="col-span-1 self-center">
+            <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Reviewer</span>
+          </div>
+          <div class="col-span-1 self-center text-right row-cta text-[12px] font-mono">Read →</div>
+        </a>
+
+        <!-- Row 3 -->
+        <a class="row grid grid-cols-12 gap-6 px-5 py-6 items-start cursor-pointer">
+          <div class="col-span-2">
+            <div class="font-mono text-[12px] tnum">04 Nov 2024</div>
+            <div class="text-[11px] text-[var(--muted)] mt-0.5">Cycle 2024-H2</div>
+          </div>
+          <div class="col-span-3">
+            <div class="text-[14px] font-medium">Hilde Bakken</div>
+            <div class="text-[12px] text-[var(--muted)] mt-0.5">L3 · Visma e-conomic · Oslo</div>
+          </div>
+          <div class="col-span-5">
+            <div class="font-display text-[16px] leading-snug text-[var(--ink-2)]">
+              "Healthy skepticism of agent output. Verification is intuitive rather than systematic — would benefit from a checklist."
+            </div>
+            <div class="flex gap-2 mt-3">
+              <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">First cross-review</span>
+              <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">Copilot</span>
+            </div>
+          </div>
+          <div class="col-span-1 self-center">
+            <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Reviewee</span>
+          </div>
+          <div class="col-span-1 self-center text-right row-cta text-[12px] font-mono">Read →</div>
+        </a>
+
+      </div>
+
+      <div class="flex items-center justify-between mt-6 text-[12px]">
+        <span class="text-[var(--muted)]">Feedback retention: <span class="tnum">2 years</span>, then anonymized aggregate only.</span>
+        <a class="ulink text-[var(--ink)]">View all sessions →</a>
+      </div>
+    </section>
+
+    <!-- Footer rule -->
+    <footer class="px-12 py-10 border-t border-[var(--line)] flex items-center justify-between text-[11px] font-mono text-[var(--muted)]">
+      <span>VISMA / CROSS-PROJECT REVIEWS · v0.1</span>
+      <span class="tnum">Profile last fetched · 12 May 2026 · 09:41</span>
+    </footer>
+
+  </main>
+</div>
+
+</body>
+</html>

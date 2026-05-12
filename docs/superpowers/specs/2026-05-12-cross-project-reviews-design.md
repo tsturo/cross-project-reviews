@@ -185,6 +185,43 @@ Row-Level Security: engineers see only their own rows; coaches see coachees' row
 | Email notifications | Resend (Vercel marketplace) or transactional via Google Workspace — used for assignment confirmations, reminders, feedback nudges. Not approval. | MVP |
 | Auto-pair scheduler | Vercel cron job, daily at 06:00 UTC. | Phase 3 |
 
+## 10b. Email notifications & reminders
+
+Email is the only system-driven channel in MVP (Slack is out). Every send is logged in `notifications` for audit and rate-limiting. Users can opt out of reminders (not transactional confirmations) per category in their profile.
+
+### Trigger matrix
+
+| Trigger | Recipient | When | Type | Opt-out? |
+|---|---|---|---|---|
+| Cycle opens | All targeted engineers + coaches | Day 0 of cycle | Transactional | No |
+| Pairing recorded by coach | Reviewer + Reviewee | Immediately | Transactional | No |
+| Session in 24h | Both parties | T-24h before `scheduled_at` | Reminder | Yes |
+| Session in 1h | Both parties | T-1h | Reminder | Yes |
+| Session marked complete, schedule a date | Both parties | If no `scheduled_at` set 7 days into cycle | Reminder | Yes |
+| Feedback due in 3 days | Author (reviewer / reviewee) | T-3d before 7-day post-session deadline | Reminder | Yes |
+| Feedback overdue | Author + Coach (cc on second nudge) | T+1d and T+5d after deadline | Reminder | Yes |
+| Feedback received | Reviewee | Within 5 min of reviewer submit | Transactional | No |
+| Coachee still unassigned | Coach | T-14d, T-7d, T-1d before cycle deadline | Reminder | Yes |
+| Auto-pair imminent | Coach | T-24h before auto-pair fires | Reminder | Yes |
+| Auto-pair fired | Coach + Reviewer + Reviewee | Immediately | Transactional | No |
+| Cycle ends, summary | All engineers, BG/MD digest | Day after cycle ends | Digest | Yes |
+| Level changed (coach override) | Affected engineer | Immediately | Transactional | No |
+| Import failed | Admin | On error | Operational | No |
+
+### Delivery rules
+
+- Daily digest batching: reminder-class emails for the same recipient within 24h are combined into one digest. Transactional sends are always immediate.
+- Quiet hours: 18:00–08:00 local (recipient's profile timezone, default Europe/Vilnius). Transactional sends bypass.
+- Rate cap: max 3 reminder emails per recipient per day.
+- All emails carry: subject line with cycle name + action, plain-text fallback, deep link to the relevant screen, footer with opt-out link per category.
+- Failure handling: bounce → mark `notifications.status = 'failed'` and surface on `AdminNotificationsAudit`. Three consecutive failures → flag the employee record.
+
+### Implementation
+
+- **Provider**: Resend (Vercel marketplace). React-Email components for templates, stored in `app/emails/`.
+- **Schedule**: Vercel Cron for time-based triggers (daily at 06:00 UTC sweeps T-3d / T-1d / overdue checks; hourly sweep for T-24h / T-1h session reminders).
+- **Templates** versioned per cycle; admin can preview before sending.
+
 ## 11. Tech stack
 
 - **Framework**: Next.js 16 (App Router, RSC, Server Actions). Cache Components for dashboards.

@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard · Cross-Project Reviews · Visma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --magenta: #E10078;
+      --surface: #FAFAFA;
+      --card: #FFFFFF;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --muted-2: #9CA3AF;
+      --border: #E5E7EB;
+      /* Status palette — §7 */
+      --s-assigned: #6B7280;
+      --s-scheduled: #2563EB;
+      --s-completed: #16A34A;
+      --s-feedback: #7C3AED;
+      --s-auto: #D97706;
+      /* Level palette L1–L5 — §7 */
+      --l1: #64748B;
+      --l2: #0EA5E9;
+      --l3: #10B981;
+      --l4: #F59E0B;
+      --l5: #BE185D;
+    }
+    html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+    .btn-primary { background: var(--magenta); transition: background 120ms ease, box-shadow 120ms ease, transform 120ms ease; }
+    .btn-primary:hover { background: #C70069; box-shadow: 0 8px 24px -10px rgba(225, 0, 120, 0.5); }
+    .btn-primary:active { transform: translateY(1px); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 999px; line-height: 1.4; }
+    .pill > svg { width: 12px; height: 12px; }
+    .hairline-divider { border-color: var(--border); }
+    /* Level chip swatch: thin colored leading bar + neutral chip body, never compete with magenta */
+    .lvl {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 8px 3px 5px; border-radius: 999px;
+      background: #F3F4F6; color: var(--ink); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .lvl-dot { width: 8px; height: 8px; border-radius: 999px; box-shadow: 0 0 0 2px #fff; }
+    /* Sidebar item */
+    .nav-item { display:flex; align-items:center; gap:10px; padding: 8px 10px; border-radius: 8px; color: #374151; font-size: 13.5px; }
+    .nav-item:hover { background: #F3F4F6; color: var(--ink); }
+    .nav-item.active { background: #111111; color: #fff; }
+    .nav-item.active .lucide { color: #fff; }
+    .section-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-2); font-weight: 600; }
+    /* The hero NextSessionCard gets a single tasteful texture — Nordic, not glassmorphic */
+    .hero-texture {
+      background:
+        radial-gradient(600px 240px at 100% 0%, rgba(225, 0, 120, 0.05), transparent 70%),
+        linear-gradient(180deg, #FFFFFF 0%, #FBFBFB 100%);
+    }
+    /* sparkline / tiny bars for sessions count */
+    .spark > i { display:inline-block; width: 4px; border-radius: 2px; background: #E5E7EB; }
+    /* Mobile nav drawer */
+    @media (max-width: 767px) {
+      .sidebar { display: none; }
+    }
+    /* Stripe pattern on auto-paired chip is sometimes useful; keeping flat per §6 */
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- AppShell -->
+  <div class="min-h-screen md:grid md:grid-cols-[260px_1fr]">
+
+    <!-- SideNav -->
+    <aside class="sidebar bg-white border-r border-[var(--border)] flex flex-col">
+      <div class="px-5 pt-5 pb-4 flex items-center gap-2.5 border-b border-[var(--border)]">
+        <div class="h-8 w-8 rounded-md grid place-items-center" style="background: var(--magenta);">
+          <span class="font-display text-white text-base font-bold leading-none">V</span>
+        </div>
+        <div class="leading-tight">
+          <div class="font-display text-[14px] font-semibold">Cross-Project Reviews</div>
+          <div class="text-[11px] text-[var(--muted)]">Visma · Internal</div>
+        </div>
+      </div>
+
+      <nav class="px-3 py-4 flex-1 overflow-y-auto">
+        <div class="px-2 mb-2 section-label">Workspace</div>
+        <a href="#" class="nav-item active focus-ring">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item focus-ring">
+          <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+          <span class="flex-1">My sessions</span>
+          <span class="text-[10.5px] text-[var(--muted)] font-mono">4</span>
+        </a>
+        <a href="#" class="nav-item focus-ring">
+          <i data-lucide="user-round" class="w-4 h-4"></i>
+          <span>Profile</span>
+        </a>
+
+        <div class="px-2 mt-5 mb-2 section-label">Coach</div>
+        <a href="#" class="nav-item focus-ring">
+          <i data-lucide="users-round" class="w-4 h-4"></i>
+          <span class="flex-1">Coachees</span>
+          <span class="text-[10.5px] font-mono px-1.5 rounded" style="background:#FEF3C7; color:#92400E;">2 todo</span>
+        </a>
+        <a href="#" class="nav-item focus-ring">
+          <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+          <span>Assignments</span>
+        </a>
+
+        <div class="px-2 mt-5 mb-2 section-label">Insights</div>
+        <a href="#" class="nav-item focus-ring">
+          <i data-lucide="trending-up" class="w-4 h-4"></i>
+          <span>Completion</span>
+        </a>
+        <a href="#" class="nav-item focus-ring">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          <span>Levels</span>
+        </a>
+      </nav>
+
+      <div class="px-3 pb-4 border-t border-[var(--border)] pt-3">
+        <a href="#" class="nav-item focus-ring">
+          <i data-lucide="life-buoy" class="w-4 h-4"></i>
+          <span>Help & feedback</span>
+        </a>
+        <div class="mt-2 px-2 flex items-center gap-2.5">
+          <div class="h-7 w-7 rounded-full bg-[#FCE7F3] grid place-items-center text-[11px] font-semibold" style="color: var(--magenta);">EB</div>
+          <div class="flex-1 leading-tight">
+            <div class="text-[12.5px] font-medium">Eglė Butkevičiūtė</div>
+            <div class="text-[11px] text-[var(--muted)]">Engineer · Visma Lithuania</div>
+          </div>
+          <button class="text-[var(--muted)] hover:text-[var(--ink)] focus-ring" aria-label="Account menu">
+            <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main column -->
+    <div class="flex flex-col min-h-screen">
+
+      <!-- TopBar -->
+      <header class="bg-white border-b border-[var(--border)] sticky top-0 z-20">
+        <div class="h-14 px-5 md:px-8 flex items-center gap-4">
+          <button class="md:hidden focus-ring -ml-1 p-1.5 rounded-md hover:bg-gray-100" aria-label="Open menu">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+
+          <div class="hidden md:flex items-center gap-2">
+            <span class="text-[13px] text-[var(--muted)]">Workspace</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-[var(--muted-2)]"></i>
+            <span class="text-[13px] font-medium">Dashboard</span>
+          </div>
+
+          <div class="flex-1 max-w-md ml-2">
+            <label class="relative block">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+              <input type="text" placeholder="Search engineers, projects, sessions…"
+                class="w-full h-9 pl-9 pr-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[13.5px] placeholder:text-[var(--muted-2)] focus:bg-white focus-ring" />
+              <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10.5px] font-mono text-[var(--muted)] border border-[var(--border)] rounded px-1.5 py-0.5 bg-white">⌘K</span>
+            </label>
+          </div>
+
+          <div class="ml-auto flex items-center gap-2">
+            <!-- CyclePill -->
+            <div class="pill bg-[#F3F4F6] text-[var(--ink)] border border-[var(--border)]">
+              <i data-lucide="circle-dot" class="w-3 h-3" style="color:#16A34A;"></i>
+              <span>Cycle H1 · 2026</span>
+              <span class="text-[var(--muted)]">·</span>
+              <span class="font-mono">49d left</span>
+            </div>
+
+            <button class="relative h-9 w-9 grid place-items-center rounded-lg border border-[var(--border)] hover:bg-gray-50 focus-ring" aria-label="Notifications">
+              <i data-lucide="bell" class="w-4 h-4"></i>
+              <span class="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full text-[10px] font-semibold text-white grid place-items-center" style="background: var(--magenta);">2</span>
+            </button>
+
+            <button class="h-9 w-9 rounded-full bg-[#FCE7F3] grid place-items-center text-[12px] font-semibold focus-ring" style="color: var(--magenta);" aria-label="Account">EB</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="px-5 md:px-8 py-7 md:py-9 max-w-[1240px] w-full mx-auto">
+
+        <!-- NudgeBanner — overdue feedback -->
+        <!-- NudgeBanner -->
+        <div role="status" class="mb-7 flex items-start gap-3 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] px-4 py-3">
+          <i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 shrink-0" style="color:#B45309;"></i>
+          <div class="flex-1 text-[13.5px] leading-relaxed">
+            <span class="font-semibold text-[#92400E]">Feedback overdue</span>
+            <span class="text-[#92400E]/90"> · your review of <span class="font-medium">Mantas Kazlauskas</span> was 9 days ago. The 7-day window closed 2 days ago.</span>
+          </div>
+          <a href="#" class="text-[13px] font-medium underline decoration-[#B45309] underline-offset-2 text-[#92400E] hover:text-[#7C2D12] focus-ring">Open form</a>
+          <button class="text-[#92400E]/70 hover:text-[#92400E] focus-ring" aria-label="Dismiss">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- PageHeader -->
+        <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-[12px] uppercase tracking-[0.18em] text-[var(--muted)] font-semibold mb-2">Your home</p>
+            <h1 class="font-display text-[30px] md:text-[34px] leading-[1.1] font-semibold">Good morning, Eglė.</h1>
+            <!-- Page intent line per §6 -->
+            <p class="mt-2 text-[14.5px] text-[var(--muted)] max-w-2xl">
+              Personal home for engineers. Your next cross-project session, your current AI level, and anything waiting on you this cycle.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="h-9 px-3 inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white text-[13.5px] hover:bg-gray-50 focus-ring">
+              <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+              Prep guide
+            </button>
+            <!-- Single magenta CTA per page, per §6 principle 3 -->
+            <button class="btn-primary focus-ring h-9 px-4 inline-flex items-center gap-2 rounded-lg text-white text-[13.5px] font-medium">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+              Confirm your level
+            </button>
+          </div>
+        </div>
+
+        <!-- Top grid: NextSessionCard hero (2/3) + LevelBadge card (1/3) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+          <!-- NextSessionCard -->
+          <section class="lg:col-span-2 card hero-texture overflow-hidden">
+            <div class="p-6 md:p-7">
+              <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-2">
+                  <span class="text-[11.5px] uppercase tracking-[0.16em] font-semibold text-[var(--muted)]">Your next session</span>
+                  <!-- StatusPill: scheduled -->
+                  <span class="pill" style="background: rgba(37, 99, 235, 0.08); color: var(--s-scheduled);">
+                    <i data-lucide="calendar-check-2"></i> Scheduled
+                  </span>
+                </div>
+                <span class="text-[12px] text-[var(--muted)] font-mono">#A-2026-0418</span>
+              </div>
+
+              <div class="grid md:grid-cols-[1fr_auto] gap-6 items-start">
+                <div>
+                  <div class="flex items-center gap-2 text-[13px] text-[var(--muted)] mb-2">
+                    <i data-lucide="user-round" class="w-3.5 h-3.5"></i>
+                    You are the <span class="text-[var(--ink)] font-semibold">reviewee</span>
+                  </div>
+                  <h2 class="font-display text-[26px] md:text-[28px] font-semibold leading-[1.15]">
+                    With <span class="">Henrik Sørensen</span>
+                  </h2>
+                  <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] text-[var(--muted)]">
+                    <span class="inline-flex items-center gap-1.5"><i data-lucide="briefcase" class="w-3.5 h-3.5"></i>Visma e-conomic · Aarhus</span>
+                    <span aria-hidden="true">·</span>
+                    <span class="inline-flex items-center gap-1.5"><i data-lucide="code-2" class="w-3.5 h-3.5"></i>Go / Postgres</span>
+                    <span aria-hidden="true">·</span>
+                    <span class="inline-flex items-center gap-1.5">
+                      <span class="lvl">
+                        <span class="lvl-dot" style="background: var(--l4);"></span>L4
+                      </span>
+                      <span>two levels ahead</span>
+                    </span>
+                  </div>
+
+                  <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div>
+                      <div class="text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-semibold mb-1">When</div>
+                      <div class="text-[14px] font-medium">Thu, May 21</div>
+                      <div class="text-[12.5px] text-[var(--muted)]">14:00 – 15:30 CET</div>
+                    </div>
+                    <div>
+                      <div class="text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-semibold mb-1">Where</div>
+                      <div class="text-[14px] font-medium">Google Meet</div>
+                      <div class="text-[12.5px] text-[var(--muted)]">Auto-generated link</div>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                      <div class="text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-semibold mb-1">Focus</div>
+                      <div class="text-[14px] font-medium">Agent orchestration</div>
+                      <div class="text-[12.5px] text-[var(--muted)]">Parallel CLI workflow</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Counterpart avatar block -->
+                <div class="hidden md:flex flex-col items-center text-center w-[180px] shrink-0 pl-6 border-l border-[var(--border)]">
+                  <div class="h-16 w-16 rounded-full grid place-items-center text-[20px] font-display font-semibold" style="background:#E0F2FE; color:#075985;">HS</div>
+                  <div class="mt-3 text-[13px] font-medium">Henrik Sørensen</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">Senior Engineer</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">7 cross-reviews delivered</div>
+                </div>
+              </div>
+
+              <div class="mt-7 flex flex-wrap items-center gap-2">
+                <button class="btn-primary focus-ring h-10 px-4 inline-flex items-center gap-2 rounded-lg text-white text-[13.5px] font-medium">
+                  <i data-lucide="book-marked" class="w-4 h-4"></i>
+                  Open prep notes
+                </button>
+                <button class="h-10 px-3.5 inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white text-[13.5px] hover:bg-gray-50 focus-ring">
+                  <i data-lucide="video" class="w-4 h-4"></i>
+                  Join meeting
+                </button>
+                <button class="h-10 px-3.5 inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white text-[13.5px] hover:bg-gray-50 focus-ring">
+                  <i data-lucide="calendar" class="w-4 h-4"></i>
+                  Add to calendar
+                </button>
+                <button class="h-10 px-3 inline-flex items-center gap-2 rounded-lg text-[13px] text-[var(--muted)] hover:text-[var(--ink)] focus-ring">
+                  <i data-lucide="calendar-x-2" class="w-4 h-4"></i>
+                  Reschedule
+                </button>
+              </div>
+            </div>
+
+            <!-- Mini timeline strip -->
+            <div class="border-t border-[var(--border)] bg-[var(--surface)] px-6 md:px-7 py-3 flex items-center gap-5 text-[12px] text-[var(--muted)] overflow-x-auto">
+              <div class="flex items-center gap-2 whitespace-nowrap">
+                <span class="h-1.5 w-1.5 rounded-full bg-[#16A34A]"></span>
+                Recorded · Apr 28
+              </div>
+              <div class="flex items-center gap-2 whitespace-nowrap">
+                <span class="h-1.5 w-1.5 rounded-full bg-[#16A34A]"></span>
+                Scheduled · May 02
+              </div>
+              <div class="flex items-center gap-2 whitespace-nowrap text-[var(--ink)] font-medium">
+                <span class="h-1.5 w-1.5 rounded-full" style="background: var(--magenta);"></span>
+                Session · May 21
+              </div>
+              <div class="flex items-center gap-2 whitespace-nowrap">
+                <span class="h-1.5 w-1.5 rounded-full bg-[var(--border)]"></span>
+                Feedback due · May 28
+              </div>
+            </div>
+          </section>
+
+          <!-- LevelBadge card -->
+          <section class="card p-6">
+            <div class="flex items-center justify-between">
+              <span class="text-[11.5px] uppercase tracking-[0.16em] font-semibold text-[var(--muted)]">Your AI level</span>
+              <span class="text-[11px] text-[var(--muted)]">Source: survey · Mar 2026</span>
+            </div>
+
+            <!-- LevelBadge primary -->
+            <div class="mt-5 flex items-center gap-4">
+              <div class="h-14 w-14 rounded-xl grid place-items-center font-display text-2xl font-bold text-white" style="background: var(--l3);">
+                L3
+              </div>
+              <div>
+                <div class="font-display text-[20px] font-semibold leading-tight">CLI agent</div>
+                <div class="text-[12.5px] text-[var(--muted)]">Permissioned · single agent</div>
+              </div>
+            </div>
+
+            <!-- Level ladder mini -->
+            <div class="mt-5">
+              <div class="flex items-end gap-1.5 h-9">
+                <div class="flex-1 rounded-sm opacity-30" style="background: var(--l1); height: 22%;"></div>
+                <div class="flex-1 rounded-sm opacity-30" style="background: var(--l2); height: 44%;"></div>
+                <div class="flex-1 rounded-sm" style="background: var(--l3); height: 66%;"></div>
+                <div class="flex-1 rounded-sm opacity-30" style="background: var(--l4); height: 84%;"></div>
+                <div class="flex-1 rounded-sm opacity-30" style="background: var(--l5); height: 100%;"></div>
+              </div>
+              <div class="grid grid-cols-5 gap-1.5 mt-1.5 text-[10px] text-[var(--muted)] font-mono">
+                <div>L1</div><div>L2</div><div class="text-[var(--ink)] font-semibold">L3</div><div>L4</div><div>L5</div>
+              </div>
+            </div>
+
+            <div class="mt-5 pt-5 border-t border-[var(--border)] space-y-2 text-[12.5px]">
+              <div class="flex items-center justify-between">
+                <span class="text-[var(--muted)]">Last change</span>
+                <span class="font-medium">Mar 14, 2026 · 11:42</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-[var(--muted)]">Previous</span>
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="lvl"><span class="lvl-dot" style="background: var(--l2);"></span>L2</span>
+                  <i data-lucide="arrow-right" class="w-3 h-3 text-[var(--muted-2)]"></i>
+                  <span class="lvl"><span class="lvl-dot" style="background: var(--l3);"></span>L3</span>
+                </span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-[var(--muted)]">Confirmed by</span>
+                <span class="font-medium">You · self-survey</span>
+              </div>
+            </div>
+
+            <div class="mt-5 flex items-center gap-2">
+              <button class="flex-1 h-9 rounded-lg border border-[var(--border)] bg-white text-[13px] hover:bg-gray-50 focus-ring inline-flex items-center justify-center gap-1.5">
+                <i data-lucide="history" class="w-3.5 h-3.5"></i>
+                View history
+              </button>
+              <button class="flex-1 h-9 rounded-lg border border-[var(--border)] bg-white text-[13px] hover:bg-gray-50 focus-ring inline-flex items-center justify-center gap-1.5">
+                <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>
+                Re-assess
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Middle row: pending nudges + quick stats -->
+        <div class="mt-5 grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+          <!-- Pending feedback / NudgeBanner (compact, in-flow) -->
+          <!-- NudgeBanner -->
+          <section class="lg:col-span-2 card p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-display text-[16px] font-semibold">Waiting on you</h3>
+              <span class="text-[12px] text-[var(--muted)]">2 items · sorted by deadline</span>
+            </div>
+            <ul class="divide-y divide-[var(--border)] -mx-1">
+              <li class="py-3 px-1 flex items-center gap-4">
+                <div class="h-9 w-9 rounded-lg grid place-items-center" style="background:#FEE2E2;">
+                  <i data-lucide="alarm-clock" class="w-4 h-4" style="color:#B91C1C;"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[14px] font-medium leading-tight">Feedback form · Mantas Kazlauskas</div>
+                  <div class="text-[12.5px] text-[var(--muted)]">Session Apr 30 · reviewer variant · <span class="text-[#B91C1C] font-medium">2 days overdue</span></div>
+                </div>
+                <span class="pill" style="background: rgba(124, 58, 237, 0.08); color: var(--s-feedback);">
+                  <i data-lucide="message-square-text"></i> Feedback
+                </span>
+                <a href="#" class="text-[13px] font-medium text-[var(--ink)] hover:underline focus-ring inline-flex items-center gap-1">
+                  Open <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </li>
+              <li class="py-3 px-1 flex items-center gap-4">
+                <div class="h-9 w-9 rounded-lg grid place-items-center" style="background:#FEF3C7;">
+                  <i data-lucide="file-pen-line" class="w-4 h-4" style="color:#B45309;"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[14px] font-medium leading-tight">Confirm AI level for cycle H1</div>
+                  <div class="text-[12.5px] text-[var(--muted)]">Last survey was 64 days ago · takes ~60 seconds</div>
+                </div>
+                <span class="pill" style="background:#F3F4F6; color: var(--ink);">
+                  <i data-lucide="info"></i> Stale
+                </span>
+                <a href="#" class="text-[13px] font-medium text-[var(--ink)] hover:underline focus-ring inline-flex items-center gap-1">
+                  Re-assess <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </li>
+            </ul>
+          </section>
+
+          <!-- Cycle progress tile -->
+          <section class="card p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-display text-[16px] font-semibold">This cycle</h3>
+              <span class="text-[12px] text-[var(--muted)] font-mono">H1 · 2026</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <div class="text-[28px] font-display font-semibold leading-none">2<span class="text-[var(--muted-2)] text-[18px]">/2</span></div>
+                <div class="text-[11.5px] text-[var(--muted)] mt-1">As reviewee</div>
+              </div>
+              <div>
+                <div class="text-[28px] font-display font-semibold leading-none">1<span class="text-[var(--muted-2)] text-[18px]">/2</span></div>
+                <div class="text-[11.5px] text-[var(--muted)] mt-1">As reviewer</div>
+              </div>
+            </div>
+            <div class="mt-4 h-1.5 w-full bg-[var(--border)] rounded-full overflow-hidden">
+              <div class="h-full rounded-full" style="width: 75%; background: var(--ink);"></div>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[11.5px] text-[var(--muted)]">
+              <span>75% complete</span>
+              <span>49 days left</span>
+            </div>
+          </section>
+        </div>
+
+        <!-- Recent sessions: AssignmentCard x3 -->
+        <section class="mt-9">
+          <div class="flex items-end justify-between mb-4">
+            <div>
+              <h2 class="font-display text-[20px] font-semibold leading-tight">Recent sessions</h2>
+              <p class="text-[13px] text-[var(--muted)] mt-1">Your last three assignments across both roles.</p>
+            </div>
+            <a href="#" class="text-[13px] font-medium text-[var(--ink)] hover:underline focus-ring inline-flex items-center gap-1">
+              All sessions <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+            <!-- AssignmentCard 1: completed, feedback submitted -->
+            <article class="card p-5 flex flex-col gap-4">
+              <header class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-full grid place-items-center text-[12px] font-semibold" style="background:#E0F2FE; color:#075985;">HS</div>
+                  <div class="leading-tight">
+                    <div class="text-[14px] font-semibold">Henrik Sørensen</div>
+                    <div class="text-[12px] text-[var(--muted)]">e-conomic · Aarhus</div>
+                  </div>
+                </div>
+                <span class="lvl"><span class="lvl-dot" style="background: var(--l4);"></span>L4</span>
+              </header>
+
+              <div class="flex items-center gap-2 flex-wrap">
+                <!-- StatusPill: feedback_submitted -->
+                <span class="pill" style="background: rgba(124, 58, 237, 0.08); color: var(--s-feedback);">
+                  <i data-lucide="message-square-check"></i> Feedback submitted
+                </span>
+                <span class="text-[11.5px] text-[var(--muted)]">You were reviewee</span>
+              </div>
+
+              <p class="text-[13px] text-[var(--muted)] leading-relaxed border-l-2 border-[var(--border)] pl-3 italic">
+                "Spotted a strong verification habit. Try splitting context per agent next time — fewer tool retries."
+              </p>
+
+              <footer class="flex items-center justify-between text-[12px] text-[var(--muted)] pt-3 border-t border-[var(--border)]">
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i>Apr 14, 2026</span>
+                <a href="#" class="text-[var(--ink)] font-medium hover:underline focus-ring inline-flex items-center gap-1">Open <i data-lucide="arrow-up-right" class="w-3 h-3"></i></a>
+              </footer>
+            </article>
+
+            <!-- AssignmentCard 2: completed, awaiting your feedback (you = reviewer) -->
+            <article class="card p-5 flex flex-col gap-4">
+              <header class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-full grid place-items-center text-[12px] font-semibold" style="background:#FEF3C7; color:#92400E;">MK</div>
+                  <div class="leading-tight">
+                    <div class="text-[14px] font-semibold">Mantas Kazlauskas</div>
+                    <div class="text-[12px] text-[var(--muted)]">Visma Solutions · Vilnius</div>
+                  </div>
+                </div>
+                <span class="lvl"><span class="lvl-dot" style="background: var(--l2);"></span>L2</span>
+              </header>
+
+              <div class="flex items-center gap-2 flex-wrap">
+                <!-- StatusPill: completed -->
+                <span class="pill" style="background: rgba(22, 163, 74, 0.08); color: var(--s-completed);">
+                  <i data-lucide="check-circle-2"></i> Completed
+                </span>
+                <span class="text-[11.5px] text-[var(--muted)]">You were reviewer</span>
+              </div>
+
+              <div class="rounded-md bg-[#FFFBEB] border border-[#FDE68A] px-3 py-2.5 text-[12.5px] text-[#92400E]">
+                <span class="font-semibold">Feedback overdue.</span> 2 days past the 7-day window.
+              </div>
+
+              <footer class="flex items-center justify-between text-[12px] text-[var(--muted)] pt-3 border-t border-[var(--border)]">
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i>Apr 30, 2026</span>
+                <a href="#" class="text-[var(--ink)] font-medium hover:underline focus-ring inline-flex items-center gap-1">Fill form <i data-lucide="arrow-up-right" class="w-3 h-3"></i></a>
+              </footer>
+            </article>
+
+            <!-- AssignmentCard 3: auto-paired, assigned -->
+            <article class="card p-5 flex flex-col gap-4">
+              <header class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-full grid place-items-center text-[12px] font-semibold" style="background:#DCFCE7; color:#166534;">AN</div>
+                  <div class="leading-tight">
+                    <div class="text-[14px] font-semibold">Astrid Nordby</div>
+                    <div class="text-[12px] text-[var(--muted)]">Visma Software · Oslo</div>
+                  </div>
+                </div>
+                <span class="lvl"><span class="lvl-dot" style="background: var(--l3);"></span>L3</span>
+              </header>
+
+              <div class="flex items-center gap-2 flex-wrap">
+                <!-- StatusPill: assigned -->
+                <span class="pill" style="background: rgba(107, 114, 128, 0.10); color: var(--s-assigned);">
+                  <i data-lucide="user-plus"></i> Assigned
+                </span>
+                <!-- StatusPill: auto_paired -->
+                <span class="pill" style="background: rgba(217, 119, 6, 0.10); color: var(--s-auto);">
+                  <i data-lucide="sparkles"></i> Auto-paired
+                </span>
+                <span class="text-[11.5px] text-[var(--muted)]">You will review</span>
+              </div>
+
+              <div class="text-[12.5px] text-[var(--muted)] leading-relaxed">
+                Pairing reason: <span class="text-[var(--ink)]">same company, different stack (TS/Node), one level below you</span>.
+              </div>
+
+              <footer class="flex items-center justify-between text-[12px] text-[var(--muted)] pt-3 border-t border-[var(--border)]">
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>Propose slots</span>
+                <a href="#" class="text-[var(--ink)] font-medium hover:underline focus-ring inline-flex items-center gap-1">Schedule <i data-lucide="arrow-up-right" class="w-3 h-3"></i></a>
+              </footer>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- Self-assess CTA region: only renders because level is "stale" not unverified, so it's a soft prompt -->
+        <section class="mt-9 card p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-5">
+          <div class="h-12 w-12 rounded-xl grid place-items-center shrink-0" style="background: #F3F4F6;">
+            <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-[18px] font-semibold leading-tight">Re-confirm your AI level for cycle H1</h3>
+            <p class="text-[13.5px] text-[var(--muted)] mt-1 max-w-2xl">
+              Your last survey response is 64 days old. A 60-second self-assessment keeps your level current and improves the quality of cross-project pairings — for you, and for the people you'll be matched with.
+            </p>
+          </div>
+          <button class="btn-primary focus-ring h-10 px-4 inline-flex items-center justify-center gap-2 rounded-lg text-white text-[13.5px] font-medium">
+            Start self-assessment
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </section>
+
+        <!-- EmptyState acknowledgement region — visible empty/loading state for past cycles list -->
+        <section class="mt-9 mb-4">
+          <h3 class="font-display text-[16px] font-semibold mb-2">Past cycles</h3>
+          <div class="card p-8 grid place-items-center text-center">
+            <div class="h-12 w-12 rounded-full grid place-items-center mb-3 border border-dashed border-[var(--border)]">
+              <i data-lucide="archive" class="w-5 h-5 text-[var(--muted)]"></i>
+            </div>
+            <div class="text-[14px] font-medium">No past cycles yet</div>
+            <p class="text-[12.5px] text-[var(--muted)] mt-1 max-w-sm">H1 · 2026 is your first cross-project cycle at Visma. Past sessions and feedback will appear here once H2 opens.</p>
+          </div>
+        </section>
+
+        <footer class="pt-6 pb-2 text-[11.5px] text-[var(--muted)] flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span>Visma · Cross-Project Reviews</span>
+          <span aria-hidden="true">·</span>
+          <span>Data last synced 2 hours ago</span>
+          <span aria-hidden="true">·</span>
+          <a href="#" class="hover:text-[var(--ink)] focus-ring">Privacy</a>
+          <a href="#" class="hover:text-[var(--ink)] focus-ring">Keyboard shortcuts</a>
+        </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

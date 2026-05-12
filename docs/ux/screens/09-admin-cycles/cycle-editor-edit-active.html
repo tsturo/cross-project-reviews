@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>H1·2026 — Spring ladder · Admin · Cross-Project Reviews · Visma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --magenta: #E10078;
+      --magenta-hover: #C70069;
+      --surface: #FAFAFA;
+      --card: #FFFFFF;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --muted-2: #9CA3AF;
+      --border: #E5E7EB;
+    }
+    html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+    .hairline { box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
+    .btn-primary {
+      background: var(--magenta); color: #fff;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+    .btn-primary:hover { background: var(--magenta-hover); box-shadow: 0 8px 24px -10px rgba(225,0,120,0.45); }
+    .btn-primary:active { transform: translateY(1px); }
+    .input { height: 36px; border: 1px solid var(--border); border-radius: 6px; background: #fff; padding: 0 10px; font-size: 13px; width: 100%; }
+    .input:focus { outline: 2px solid var(--magenta); outline-offset: 1px; border-color: transparent; }
+    .input.dirty { box-shadow: inset 0 0 0 1px #F59E0B; background: #FFFBEB; }
+    .field-label { font-size: 12px; font-weight: 500; color: #374151; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+    .field-help { font-size: 11.5px; color: var(--muted); margin-top: 5px; }
+    .lock { font-size: 10.5px; color: #92400E; background: #FEF3C7; border: 1px solid #FDE68A; padding: 1px 6px; border-radius: 999px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; color: #374151; font-size: 13.5px; font-weight: 500; }
+    .nav-item:hover { background: #F3F4F6; color: var(--ink); }
+    .nav-item.active { background: #111827; color: #fff; }
+    .nav-item.active .lucide { color: #fff; }
+    .nav-section { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); padding: 16px 10px 6px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 500; }
+    .cycle-pill { background: #FFF1F8; color: #9D0356; border: 1px solid #FAD3E5; }
+    .section-card { background: #fff; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); padding: 22px 24px; }
+    .section-num { width: 22px; height: 22px; border-radius: 999px; background: #F3F4F6; color: #374151; font-size: 11.5px; font-weight: 600; display: inline-grid; place-items: center; font-family: 'JetBrains Mono', monospace; }
+    input[type="range"].slider { -webkit-appearance: none; height: 4px; background: linear-gradient(90deg, #111827 var(--p,50%), #E5E7EB var(--p,50%)); border-radius: 999px; width: 100%; }
+    input[type="range"].slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 999px; background: #fff; border: 2px solid #111827; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+    .toggle { width: 36px; height: 20px; border-radius: 999px; background: #111827; position: relative; cursor: pointer; }
+    .toggle::after { content: ""; position: absolute; top: 2px; left: 18px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 120ms ease; }
+    .filter-token { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: #F3F4F6; color: #1F2937; }
+    .filter-token b { font-weight: 600; color: #111827; background: #fff; border: 1px solid #E5E7EB; padding: 1px 6px; border-radius: 999px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+    .filter-token .x { width: 14px; height: 14px; border-radius: 999px; background: #fff; display: grid; place-items: center; cursor: pointer; }
+    .filter-token.locked { background: #FEF3C7; color: #92400E; }
+    .filter-token.locked b { background: #fff; border-color: #FDE68A; color: #92400E; }
+    .sentence-builder { line-height: 32px; font-size: 13.5px; color: #1F2937; }
+    .chip-add { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 500; color: var(--muted); border: 1px dashed #D1D5DB; background: #fff; cursor: pointer; }
+    .chip-add:hover { color: var(--ink); border-color: #9CA3AF; }
+    .bar-row { display: grid; grid-template-columns: 28px 1fr 80px; align-items: center; gap: 10px; font-size: 12px; }
+    .bar { height: 8px; border-radius: 4px; }
+    .progress-track { background: #F3F4F6; border-radius: 999px; height: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #111827, #374151); }
+    /* Warning banner stripe */
+    .warning-banner {
+      background:
+        linear-gradient(90deg, rgba(245,158,11,0.07), rgba(245,158,11,0)),
+        #FFFBEB;
+      border: 1px solid #FDE68A;
+    }
+    .warning-banner::before {
+      content: "";
+      position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+      background: #F59E0B;
+      border-top-left-radius: 12px; border-bottom-left-radius: 12px;
+    }
+    .impact-card { background: #fff; border: 1px solid #FDE68A; border-radius: 8px; padding: 12px 14px; }
+    .small-dot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="min-h-screen grid grid-cols-[244px_1fr]">
+
+    <!-- SideNav -->
+    <aside class="border-r border-[var(--border)] bg-white flex flex-col">
+      <div class="px-4 pt-5 pb-4 flex items-center gap-2.5">
+        <div class="h-8 w-8 rounded-md grid place-items-center" style="background: var(--magenta);">
+          <span class="font-display text-white text-[15px] font-bold leading-none">V</span>
+        </div>
+        <div class="leading-tight">
+          <div class="font-display text-[13.5px] font-semibold">Cross-Project Reviews</div>
+          <div class="text-[11px] text-[var(--muted)]">Admin console</div>
+        </div>
+      </div>
+      <nav class="px-3 pb-3 flex-1 overflow-auto">
+        <div class="nav-section">Workspace</div>
+        <a href="#" class="nav-item"><i data-lucide="layout-dashboard" class="w-4 h-4 text-[#6B7280]"></i> Dashboard</a>
+        <a href="#" class="nav-item"><i data-lucide="calendar-check-2" class="w-4 h-4 text-[#6B7280]"></i> My sessions</a>
+
+        <div class="nav-section">Admin</div>
+        <a href="#" class="nav-item active"><i data-lucide="repeat" class="w-4 h-4"></i> Cycles</a>
+        <a href="#" class="nav-item"><i data-lucide="database" class="w-4 h-4 text-[#6B7280]"></i> Imports</a>
+        <a href="#" class="nav-item"><i data-lucide="shield" class="w-4 h-4 text-[#6B7280]"></i> Overrides</a>
+        <a href="#" class="nav-item"><i data-lucide="clipboard-list" class="w-4 h-4 text-[#6B7280]"></i> Forms</a>
+
+        <div class="nav-section">Insights</div>
+        <a href="#" class="nav-item"><i data-lucide="bar-chart-3" class="w-4 h-4 text-[#6B7280]"></i> Completion</a>
+        <a href="#" class="nav-item"><i data-lucide="trending-up" class="w-4 h-4 text-[#6B7280]"></i> Levels</a>
+      </nav>
+      <div class="px-3 py-3 border-t border-[var(--border)]">
+        <div class="flex items-center gap-2.5 px-1">
+          <div class="h-8 w-8 rounded-full bg-[#111827] text-white grid place-items-center text-[11.5px] font-semibold">TS</div>
+          <div class="leading-tight">
+            <div class="text-[12.5px] font-semibold">Tomek Szturo</div>
+            <div class="text-[11px] text-[var(--muted)]">Admin · Visma BG</div>
+          </div>
+          <button class="ml-auto p-1.5 rounded hover:bg-[#F3F4F6] focus-ring"><i data-lucide="log-out" class="w-3.5 h-3.5 text-[#6B7280]"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="flex flex-col min-h-screen">
+      <!-- TopBar -->
+      <header class="h-14 border-b border-[var(--border)] bg-white/80 backdrop-blur flex items-center px-7 gap-4">
+        <div class="text-[12.5px] text-[var(--muted)] flex items-center gap-1.5">
+          <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+          <span>Admin</span>
+          <i data-lucide="chevron-right" class="w-3 h-3 text-[var(--muted-2)]"></i>
+          <a href="cycle-list.html" class="hover:text-[var(--ink)]">Cycles</a>
+          <i data-lucide="chevron-right" class="w-3 h-3 text-[var(--muted-2)]"></i>
+          <span class="text-[var(--ink)] font-medium">H1 · 2026 — Spring ladder</span>
+          <span class="pill ml-2" style="background:#ECFDF5;color:#15803D;border:1px solid #BBF7D0;"><span class="small-dot" style="background:#16A34A;"></span> Active</span>
+        </div>
+        <div class="ml-auto flex items-center gap-3">
+          <span class="cycle-pill pill"><span class="small-dot" style="background:#E10078;"></span> H1·2026 · <span class="font-mono">37 d left</span></span>
+          <span class="text-[11.5px] text-[var(--muted)] inline-flex items-center gap-1.5"><span class="small-dot" style="background:#F59E0B;"></span> 3 unsaved changes</span>
+        </div>
+      </header>
+
+      <!-- PageHeader -->
+      <section class="px-7 pt-7 pb-5 bg-white border-b border-[var(--border)]">
+        <div class="flex items-end justify-between gap-6">
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium mb-2">Admin · Cycles · Edit</p>
+            <h1 class="font-display text-[26px] font-semibold leading-tight">H1 · 2026 — Spring ladder</h1>
+            <p class="text-[13.5px] text-[var(--muted)] mt-1.5 max-w-[680px]">In-flight cycle. <span class="font-medium text-[var(--ink)]">287 engineers</span> targeted · <span class="font-medium text-[var(--ink)]">134 assigned</span> · 81 completed · auto-pair sweep in <span class="font-mono">30 d</span>.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="h-9 px-3 rounded-md text-[13px] font-medium text-[var(--muted)] hover:text-[var(--ink)] focus-ring">Discard changes</button>
+            <button class="h-9 px-3 rounded-md border border-[var(--border)] bg-white text-[13px] font-medium hover:bg-[#F9FAFB] focus-ring inline-flex items-center gap-1.5">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i> Preview impact
+            </button>
+            <button class="btn-primary h-9 px-3.5 rounded-md text-[13px] font-semibold focus-ring inline-flex items-center gap-1.5">
+              <i data-lucide="save" class="w-4 h-4"></i> Save changes
+            </button>
+          </div>
+        </div>
+
+        <!-- Cycle progress strip -->
+        <div class="mt-5 rounded-lg border border-[var(--border)] bg-[#FAFAFB] px-4 py-3 grid grid-cols-[2fr_1fr_1fr_1fr] gap-5 items-center">
+          <div>
+            <div class="flex items-center justify-between text-[11.5px] text-[var(--muted)] mb-1.5">
+              <span>Feb 01 <span class="font-mono">·</span> start</span>
+              <span class="font-mono text-[var(--ink)] font-medium">day 144 / 181</span>
+              <span>Jul 31 <span class="font-mono">·</span> end</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 80%;"></div></div>
+          </div>
+          <div>
+            <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Assigned</div>
+            <div class="font-display text-[18px] font-semibold leading-none mt-1">134 <span class="text-[12px] text-[var(--muted)] font-mono">/ 287</span></div>
+          </div>
+          <div>
+            <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Completed</div>
+            <div class="font-display text-[18px] font-semibold leading-none mt-1">81 <span class="text-[12px] text-[var(--muted)] font-mono">· 28%</span></div>
+          </div>
+          <div>
+            <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Auto-pair</div>
+            <div class="font-display text-[18px] font-semibold leading-none mt-1 font-mono">Jul 24</div>
+            <div class="text-[11px] text-[var(--muted)] mt-0.5">in 30 d</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid grid-cols-[1fr_360px] gap-7 px-7 py-6 bg-[var(--surface)] flex-1">
+
+        <div class="space-y-5">
+
+          <!-- WARNING BANNER -->
+          <div class="warning-banner relative rounded-xl p-5 pl-6">
+            <div class="flex items-start gap-3">
+              <div class="h-8 w-8 rounded-md grid place-items-center" style="background:#FEF3C7; border:1px solid #FDE68A;">
+                <i data-lucide="alert-triangle" class="w-4 h-4" style="color:#B45309;"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-display text-[14.5px] font-semibold" style="color:#78350F;">You're editing an active cycle</h3>
+                <p class="text-[12.5px] mt-1" style="color:#92400E;">134 assignments already exist. Some changes <b>re-run targeting and may create or drop assignments</b>. Review the impact column before saving.</p>
+
+                <div class="mt-3.5 grid grid-cols-3 gap-2.5">
+                  <div class="impact-card">
+                    <div class="text-[11px] uppercase tracking-[0.1em]" style="color:#92400E;">Re-targets population</div>
+                    <ul class="mt-1 space-y-0.5 text-[12px]" style="color:#78350F;">
+                      <li class="flex items-center gap-1.5"><span class="small-dot" style="background:#F59E0B;"></span> Target filter rules</li>
+                      <li class="flex items-center gap-1.5"><span class="small-dot" style="background:#F59E0B;"></span> Start date (cohort cutoff)</li>
+                    </ul>
+                  </div>
+                  <div class="impact-card">
+                    <div class="text-[11px] uppercase tracking-[0.1em]" style="color:#92400E;">Affects auto-pair only</div>
+                    <ul class="mt-1 space-y-0.5 text-[12px]" style="color:#78350F;">
+                      <li class="flex items-center gap-1.5"><span class="small-dot" style="background:#9CA3AF;"></span> Scoring weights</li>
+                      <li class="flex items-center gap-1.5"><span class="small-dot" style="background:#9CA3AF;"></span> Load cap, auto-pair date</li>
+                    </ul>
+                  </div>
+                  <div class="impact-card">
+                    <div class="text-[11px] uppercase tracking-[0.1em]" style="color:#92400E;">Safe to edit</div>
+                    <ul class="mt-1 space-y-0.5 text-[12px]" style="color:#78350F;">
+                      <li class="flex items-center gap-1.5"><span class="small-dot" style="background:#10B981;"></span> Cycle name</li>
+                      <li class="flex items-center gap-1.5"><span class="small-dot" style="background:#10B981;"></span> End date (extend only)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <button class="text-[11.5px] text-[#92400E] underline-offset-2 hover:underline">Hide</button>
+            </div>
+          </div>
+
+          <!-- 1. Basic info -->
+          <section class="section-card">
+            <div class="flex items-center gap-2 mb-5">
+              <span class="section-num">01</span>
+              <h2 class="font-display text-[16px] font-semibold">Basic info</h2>
+            </div>
+
+            <div class="grid grid-cols-2 gap-5">
+              <div class="col-span-2">
+                <label class="field-label">Cycle name <span class="lock" style="background:#ECFDF5;border-color:#BBF7D0;color:#15803D;"><i data-lucide="check" class="w-2.5 h-2.5"></i> safe</span></label>
+                <input class="input dirty" value="H1 · 2026 — Spring ladder" />
+              </div>
+              <div>
+                <label class="field-label">Start date <span class="lock"><i data-lucide="lock" class="w-2.5 h-2.5"></i> re-targets cohort</span></label>
+                <div class="relative">
+                  <input class="input pl-9 font-mono" value="2026-02-01" disabled style="background:#F9FAFB; color: var(--muted);" />
+                  <i data-lucide="calendar" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+                </div>
+                <p class="field-help">Locked: 81 sessions already completed against this start date.</p>
+              </div>
+              <div>
+                <label class="field-label">End date <span class="lock" style="background:#ECFDF5;border-color:#BBF7D0;color:#15803D;"><i data-lucide="arrow-right" class="w-2.5 h-2.5"></i> extend-only</span></label>
+                <div class="relative">
+                  <input class="input pl-9 font-mono dirty" value="2026-08-14" />
+                  <i data-lucide="calendar" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+                </div>
+                <p class="field-help text-[#B45309]"><i data-lucide="arrow-up" class="w-3 h-3 inline-block align-text-bottom"></i> Was 2026-07-31. Extends cycle by 14 days. Reminder emails for pending feedback re-schedule.</p>
+              </div>
+              <div class="col-span-2">
+                <label class="field-label">Auto-pair date <span class="lock"><i data-lucide="zap" class="w-2.5 h-2.5"></i> sweep window only</span></label>
+                <div class="relative max-w-[280px]">
+                  <input class="input pl-9 font-mono dirty" value="2026-08-07" />
+                  <i data-lucide="zap" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
+                </div>
+                <p class="field-help">Cron at 06:00 UTC. Currently <span class="font-mono">153 reviewees</span> would still be unassigned at this date — they'd be auto-paired.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. Target filter -->
+          <section class="section-card">
+            <div class="flex items-center justify-between mb-1">
+              <div class="flex items-center gap-2">
+                <span class="section-num">02</span>
+                <h2 class="font-display text-[16px] font-semibold">Target population</h2>
+                <span class="lock ml-2"><i data-lucide="lock" class="w-2.5 h-2.5"></i> changes here re-run targeting</span>
+              </div>
+              <span class="text-[11.5px] text-[var(--muted)] inline-flex items-center gap-1"><i data-lucide="refresh-cw" class="w-3 h-3"></i> Preview refreshing…</span>
+            </div>
+            <p class="text-[12.5px] text-[var(--muted)] mb-5">Who is included in this cycle. Engineers already assigned won't be removed; new matches will be added to the unassigned pool.</p>
+
+            <div class="rounded-lg border border-[var(--border)] bg-[#FAFAFB] p-5">
+              <p class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)] mb-3">Include engineers where…</p>
+
+              <div class="sentence-builder">
+                their <b>last cross-project review</b> was
+                <span class="filter-token locked">
+                  <span>before</span>
+                  <b>2025-08-01</b>
+                  <i data-lucide="lock" class="w-3 h-3"></i>
+                </span>
+                and they belong to
+                <span class="filter-token">
+                  <span>BG</span>
+                  <b>any of: Visma · Connect · Solutions · Public</b>
+                  <span class="x"><i data-lucide="x" class="w-2.5 h-2.5"></i></span>
+                </span>
+                and their
+                <span class="filter-token">
+                  <span>tenure</span>
+                  <b>≥ 12 months</b>
+                  <span class="x"><i data-lucide="x" class="w-2.5 h-2.5"></i></span>
+                </span>
+                <br />
+                <span class="text-[var(--muted)] text-[12.5px]">excluding</span>
+                <span class="filter-token" style="background:#FEF2F2; color:#991B1B;">
+                  <span>role is</span>
+                  <b style="background:#fff;border-color:#FECACA;color:#991B1B;">Engineering Manager · MD</b>
+                  <span class="x"><i data-lucide="x" class="w-2.5 h-2.5"></i></span>
+                </span>
+                <span class="filter-token" style="background:#FEF2F2; color:#991B1B;">
+                  <span>employment</span>
+                  <b style="background:#fff;border-color:#FECACA;color:#991B1B;">on parental leave</b>
+                  <span class="x"><i data-lucide="x" class="w-2.5 h-2.5"></i></span>
+                </span>
+                <span class="filter-token" style="background:#FEF2F2; color:#991B1B;">
+                  <span>notice period</span>
+                  <b style="background:#fff;border-color:#FECACA;color:#991B1B;">started</b>
+                  <span class="x"><i data-lucide="x" class="w-2.5 h-2.5"></i></span>
+                </span>
+              </div>
+
+              <div class="mt-4 flex flex-wrap gap-2">
+                <button class="chip-add"><i data-lucide="plus" class="w-3 h-3"></i> Add include rule</button>
+                <button class="chip-add"><i data-lucide="minus" class="w-3 h-3"></i> Add exclude rule</button>
+                <span class="ml-auto text-[11px] text-[var(--muted)] font-mono">5 rules · 1 exclusion group · 1 locked</span>
+              </div>
+            </div>
+
+            <!-- Preview -->
+            <div class="mt-5 grid grid-cols-[220px_1fr] gap-5 items-stretch">
+              <div class="rounded-lg border border-[var(--border)] bg-white p-4">
+                <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Resulting population</div>
+                <div class="font-display text-[34px] font-semibold leading-none mt-2">287</div>
+                <div class="text-[11.5px] text-[var(--muted)] mt-1">engineers · was 274</div>
+                <div class="mt-3 text-[11.5px] flex items-center gap-1.5" style="color:#B45309;">
+                  <i data-lucide="git-pull-request" class="w-3 h-3"></i> Pending change: <span class="font-mono">+13 added</span> · <span class="font-mono">0 removed</span>
+                </div>
+                <div class="mt-2 text-[11px] text-[var(--muted)]">134 already assigned · 153 awaiting pair</div>
+              </div>
+
+              <div class="rounded-lg border border-[var(--border)] bg-white p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">By AI level · current vs. after change</div>
+                  <div class="text-[10.5px] text-[var(--muted)] inline-flex items-center gap-3"><span class="inline-flex items-center gap-1"><span class="small-dot" style="background:#D1D5DB;"></span> now</span><span class="inline-flex items-center gap-1"><span class="small-dot" style="background:#111827;"></span> after</span></div>
+                </div>
+                <div class="space-y-1.5">
+                  <div class="bar-row"><span class="font-mono text-[11px]">L1</span>
+                    <div class="relative h-3"><div class="bar absolute top-0.5" style="background:#CBD5E1; width: 9%;"></div><div class="bar absolute top-[6px] !h-1" style="background:#111827; width: 11%;"></div></div>
+                    <span class="font-mono text-[11px] text-[var(--muted)] text-right">19 → 24</span>
+                  </div>
+                  <div class="bar-row"><span class="font-mono text-[11px]">L2</span>
+                    <div class="relative h-3"><div class="bar absolute top-0.5" style="background:#7DD3FC; width: 58%;"></div><div class="bar absolute top-[6px] !h-1" style="background:#111827; width: 60%;"></div></div>
+                    <span class="font-mono text-[11px] text-[var(--muted)] text-right">112 → 118</span>
+                  </div>
+                  <div class="bar-row"><span class="font-mono text-[11px]">L3</span>
+                    <div class="relative h-3"><div class="bar absolute top-0.5" style="background:#6EE7B7; width: 44%;"></div><div class="bar absolute top-[6px] !h-1" style="background:#111827; width: 44%;"></div></div>
+                    <span class="font-mono text-[11px] text-[var(--muted)] text-right">86 → 87</span>
+                  </div>
+                  <div class="bar-row"><span class="font-mono text-[11px]">L4</span>
+                    <div class="relative h-3"><div class="bar absolute top-0.5" style="background:#FCD34D; width: 24%;"></div><div class="bar absolute top-[6px] !h-1" style="background:#111827; width: 24%;"></div></div>
+                    <span class="font-mono text-[11px] text-[var(--muted)] text-right">46 → 47</span>
+                  </div>
+                  <div class="bar-row"><span class="font-mono text-[11px]">L5</span>
+                    <div class="relative h-3"><div class="bar absolute top-0.5" style="background:#F472B6; width: 6%;"></div><div class="bar absolute top-[6px] !h-1" style="background:#111827; width: 6%;"></div></div>
+                    <span class="font-mono text-[11px] text-[var(--muted)] text-right">11 → 11</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. Pairing & load -->
+          <section class="section-card">
+            <div class="flex items-center gap-2 mb-5">
+              <span class="section-num">03</span>
+              <h2 class="font-display text-[16px] font-semibold">Pairing & load</h2>
+            </div>
+            <div class="grid grid-cols-2 gap-5">
+              <div>
+                <label class="field-label">Reviewer load cap</label>
+                <div class="flex items-center gap-3">
+                  <input class="input font-mono w-20 text-center" value="2" />
+                  <span class="text-[12.5px] text-[var(--muted)]">active assignments per reviewer</span>
+                </div>
+                <p class="field-help">Currently <span class="font-mono">4 reviewers</span> at cap, <span class="font-mono">28 reviewers</span> with one free slot.</p>
+              </div>
+              <div>
+                <label class="field-label">Auto-pair sweep <span class="lock" style="background:#ECFDF5;border-color:#BBF7D0;color:#15803D;"><i data-lucide="check" class="w-2.5 h-2.5"></i> on</span></label>
+                <div class="flex items-center gap-3 h-9">
+                  <span class="toggle"></span>
+                  <span class="text-[13px] font-medium">Enabled</span>
+                  <span class="text-[11.5px] text-[var(--muted)]">runs daily 06:00 UTC after Aug 07</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. Scoring weights -->
+          <section class="section-card">
+            <div class="flex items-center justify-between mb-1">
+              <div class="flex items-center gap-2">
+                <span class="section-num">04</span>
+                <h2 class="font-display text-[16px] font-semibold">Scoring weights</h2>
+                <span class="lock"><i data-lucide="zap" class="w-2.5 h-2.5"></i> auto-pair only · doesn't affect existing 134</span>
+              </div>
+              <button class="text-[11.5px] text-[var(--muted)] hover:text-[var(--ink)] inline-flex items-center gap-1"><i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset to defaults</button>
+            </div>
+            <p class="text-[12.5px] text-[var(--muted)] mb-5">These weights affect the next auto-pair sweep and the coach suggestion ranking. Already-recorded pairings are untouched.</p>
+
+            <div class="grid grid-cols-2 gap-x-7 gap-y-5">
+              <div>
+                <div class="flex items-baseline justify-between mb-1.5"><label class="field-label !mb-0">Level-gap closeness</label><span class="font-mono text-[12px]">0.50 <span class="text-[#B45309]">↑</span></span></div>
+                <input type="range" min="0" max="100" value="50" class="slider" style="--p:50%" />
+                <p class="field-help">Was 0.40. Closer level gaps weighted higher this cycle.</p>
+              </div>
+              <div>
+                <div class="flex items-baseline justify-between mb-1.5"><label class="field-label !mb-0">Different tech stack</label><span class="font-mono text-[12px]">0.15</span></div>
+                <input type="range" min="0" max="100" value="15" class="slider" style="--p:15%" />
+                <p class="field-help">Broader exposure across stacks.</p>
+              </div>
+              <div>
+                <div class="flex items-baseline justify-between mb-1.5"><label class="field-label !mb-0">Low current load</label><span class="font-mono text-[12px]">0.20</span></div>
+                <input type="range" min="0" max="100" value="20" class="slider" style="--p:20%" />
+                <p class="field-help">Spreads assignments across the reviewer pool.</p>
+              </div>
+              <div>
+                <div class="flex items-baseline justify-between mb-1.5"><label class="field-label !mb-0">Same company</label><span class="font-mono text-[12px]">0.15</span></div>
+                <input type="range" min="0" max="100" value="15" class="slider" style="--p:15%" />
+                <p class="field-help">Same legal entity preferred for HR simplicity.</p>
+              </div>
+            </div>
+
+            <div class="mt-5 pt-4 border-t border-dashed border-[var(--border)] flex items-center gap-3 text-[12px]">
+              <i data-lucide="sigma" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+              <span class="text-[var(--muted)]">Weights normalise to 1.00 at scoring time.</span>
+              <span class="ml-auto font-mono">Σ = 1.00</span>
+            </div>
+          </section>
+
+          <!-- Audit -->
+          <section class="section-card">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="section-num">05</span>
+              <h2 class="font-display text-[16px] font-semibold">Activity</h2>
+            </div>
+            <ul class="space-y-3 text-[12.5px]">
+              <li class="flex gap-3"><div class="w-1.5 mt-1.5 h-1.5 rounded-full bg-[#16A34A]"></div><div><div><b>Auto-pair date moved</b> from Jul 24 → Aug 07 · by Tomek S. · <span class="text-[var(--muted)] font-mono">2 min ago, unsaved</span></div></div></li>
+              <li class="flex gap-3"><div class="w-1.5 mt-1.5 h-1.5 rounded-full bg-[#16A34A]"></div><div><div><b>End date extended</b> Jul 31 → Aug 14 · by Tomek S. · <span class="text-[var(--muted)] font-mono">3 min ago, unsaved</span></div></div></li>
+              <li class="flex gap-3"><div class="w-1.5 mt-1.5 h-1.5 rounded-full bg-[#6B7280]"></div><div><div>Reviewer load cap raised 1 → 2 · by Tomek S. · <span class="text-[var(--muted)] font-mono">Mar 22, 11:04</span></div></div></li>
+              <li class="flex gap-3"><div class="w-1.5 mt-1.5 h-1.5 rounded-full bg-[#6B7280]"></div><div><div>Cycle created from H2·2025 template · by Tomek S. · <span class="text-[var(--muted)] font-mono">Jan 14, 09:21</span></div></div></li>
+            </ul>
+          </section>
+
+        </div>
+
+        <!-- Sticky summary -->
+        <aside class="space-y-4">
+          <div class="section-card sticky top-7">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">Pending changes</div>
+              <span class="pill" style="background:#FFFBEB;color:#B45309;border:1px solid #FDE68A;"><i data-lucide="alert-triangle" class="w-3 h-3"></i> 3</span>
+            </div>
+
+            <ul class="space-y-3 text-[12.5px]">
+              <li>
+                <div class="flex items-center justify-between">
+                  <div class="font-medium">End date</div>
+                  <span class="pill" style="background:#ECFDF5;color:#15803D;border:1px solid #BBF7D0;">safe</span>
+                </div>
+                <div class="text-[var(--muted)] font-mono text-[11.5px] mt-0.5">Jul 31 → Aug 14</div>
+              </li>
+              <li>
+                <div class="flex items-center justify-between">
+                  <div class="font-medium">Auto-pair date</div>
+                  <span class="pill" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">sweep only</span>
+                </div>
+                <div class="text-[var(--muted)] font-mono text-[11.5px] mt-0.5">Jul 24 → Aug 07</div>
+              </li>
+              <li>
+                <div class="flex items-center justify-between">
+                  <div class="font-medium">Scoring weight</div>
+                  <span class="pill" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">sweep only</span>
+                </div>
+                <div class="text-[var(--muted)] font-mono text-[11.5px] mt-0.5">Level-gap 0.40 → 0.50</div>
+              </li>
+            </ul>
+
+            <div class="mt-5 pt-4 border-t border-[var(--border)]">
+              <div class="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)] mb-2">Impact on save</div>
+              <ul class="space-y-1.5 text-[12px]">
+                <li class="flex items-center gap-2 text-[#15803D]"><i data-lucide="check-circle-2" class="w-3 h-3"></i> 0 existing assignments dropped</li>
+                <li class="flex items-center gap-2 text-[#B45309]"><i data-lucide="arrow-up" class="w-3 h-3"></i> 13 new engineers join target</li>
+                <li class="flex items-center gap-2 text-[var(--muted)]"><i data-lucide="mail" class="w-3 h-3"></i> Coach digest re-sent tomorrow</li>
+                <li class="flex items-center gap-2 text-[var(--muted)]"><i data-lucide="zap" class="w-3 h-3"></i> Next sweep: Aug 07, 06:00 UTC</li>
+              </ul>
+            </div>
+
+            <button class="btn-primary mt-5 w-full h-9 rounded-md text-[13px] font-semibold focus-ring inline-flex items-center justify-center gap-1.5">
+              <i data-lucide="save" class="w-4 h-4"></i> Save 3 changes
+            </button>
+            <button class="mt-2 w-full h-9 rounded-md border border-[var(--border)] bg-white text-[13px] font-medium hover:bg-[#F9FAFB] focus-ring inline-flex items-center justify-center gap-1.5">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i> Preview impact
+            </button>
+            <button class="mt-2 w-full h-9 rounded-md text-[13px] font-medium text-[var(--muted)] hover:text-[var(--ink)] focus-ring">Discard</button>
+
+            <p class="text-[11px] text-[var(--muted)] mt-4 leading-relaxed">Saving notifies <b class="text-[var(--ink)]">14 coaches</b> whose coachee roster changed. Affected engineers receive an email only when actually re-paired.</p>
+          </div>
+        </aside>
+
+      </div>
+    </main>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

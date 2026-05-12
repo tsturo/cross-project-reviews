@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Completion · Insights · Cross-Project Reviews · Visma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --magenta: #E10078;
+      --magenta-deep: #BE185D;
+      --surface: #FAFAFA;
+      --card: #FFFFFF;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --muted-2: #9CA3AF;
+      --border: #E5E7EB;
+      --border-2: #F1F2F4;
+      --l1: #64748B;
+      --l2: #0EA5E9;
+      --l3: #10B981;
+      --l4: #F59E0B;
+      --l5: #BE185D;
+      --status-scheduled: #2563EB;
+      --status-completed: #16A34A;
+      --status-feedback: #7C3AED;
+      --status-autopair: #D97706;
+    }
+    html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+    .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+    .hairline { box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
+    .card { background: var(--card); border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
+    .btn-primary {
+      background: var(--magenta); color:#fff;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+    .btn-primary:hover { background: #C70069; box-shadow: 0 6px 18px -8px rgba(225,0,120,0.5); }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-ghost { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--border); }
+    .btn-ghost:hover { background:#F9FAFB; }
+    .chip { background:#fff; box-shadow: inset 0 0 0 1px var(--border); }
+    .row-hover:hover { background: #FBFBFC; }
+    .nav-item.active { background:#F4F5F7; color: var(--ink); }
+    .nav-item.active .nav-dot { background: var(--magenta); }
+    /* Subtle Nordic backdrop */
+    .backdrop {
+      background-image:
+        radial-gradient(900px 480px at 95% -4%, rgba(225,0,120,0.04), transparent 60%);
+    }
+    /* Bar shimmer on hover */
+    .bar { transition: filter 160ms ease; }
+    .bar:hover { filter: brightness(0.92); }
+    .spark path { transition: stroke-width 120ms ease; }
+    .ring-dot { box-shadow: 0 0 0 3px #fff, 0 0 0 4px var(--border); }
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display:none; }
+    details[open] .chev { transform: rotate(90deg); }
+    .chev { transition: transform 140ms ease; }
+    .divider-v { width:1px; background: var(--border); }
+    /* hide native scrollbar on the bar chart axis */
+    .no-scrollbar::-webkit-scrollbar { display:none; }
+  </style>
+</head>
+<body class="min-h-screen backdrop">
+
+  <!-- AppShell -->
+  <div class="min-h-screen grid grid-cols-[260px_1fr]">
+
+    <!-- SideNav (BG / MD role) -->
+    <aside class="border-r border-[var(--border)] bg-white flex flex-col">
+      <div class="px-5 h-16 flex items-center gap-3 border-b border-[var(--border)]">
+        <div class="h-8 w-8 rounded-md grid place-items-center" style="background: var(--magenta);">
+          <span class="font-display text-white text-base font-bold leading-none">V</span>
+        </div>
+        <div class="leading-tight">
+          <div class="font-display text-[14px] font-semibold">Cross-Project Reviews</div>
+          <div class="text-[11px] text-[var(--muted)]">Visma · Internal</div>
+        </div>
+      </div>
+
+      <nav class="px-3 py-5 flex-1 text-[13.5px]">
+        <div class="px-3 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)]">Workspace</div>
+        <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="calendar-clock" class="w-4 h-4"></i> My sessions
+        </a>
+
+        <div class="px-3 pt-5 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)]">Insights</div>
+        <a href="#" class="nav-item active flex items-center justify-between px-3 py-2 rounded-md">
+          <span class="flex items-center gap-3"><i data-lucide="trending-up" class="w-4 h-4"></i> Completion</span>
+          <span class="nav-dot w-1.5 h-1.5 rounded-full bg-[var(--muted-2)]"></span>
+        </a>
+        <a href="./insights-levels.html" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Level distribution
+        </a>
+        <a href="#" class="nav-item flex items-center justify-between px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <span class="flex items-center gap-3"><i data-lucide="sparkles" class="w-4 h-4"></i> Themes</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-[var(--border-2)] text-[var(--muted)]">soon</span>
+        </a>
+
+        <div class="px-3 pt-5 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)]">Account</div>
+        <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="user-round" class="w-4 h-4"></i> Profile
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="settings" class="w-4 h-4"></i> Settings
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-[var(--border)]">
+        <div class="flex items-center gap-3">
+          <div class="h-8 w-8 rounded-full grid place-items-center text-[12px] font-medium" style="background:#F1F2F4; color:var(--ink);">TS</div>
+          <div class="leading-tight">
+            <div class="text-[13px] font-medium">Tomek Szturo</div>
+            <div class="text-[11px] text-[var(--muted)]">BG Manager · Custom Solutions</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex flex-col min-w-0">
+
+      <!-- TopBar -->
+      <header class="h-16 px-8 flex items-center justify-between border-b border-[var(--border)] bg-white">
+        <div class="flex items-center gap-4">
+          <div class="text-[13px] text-[var(--muted)] flex items-center gap-2">
+            <span>Insights</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <span class="text-[var(--ink)] font-medium">Completion</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <!-- CyclePill -->
+          <div class="chip rounded-full pl-2 pr-3 py-1 flex items-center gap-2 text-[12.5px]">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+            <span class="font-medium">Cycle H1 · 2026</span>
+            <span class="text-[var(--muted)]">·</span>
+            <span class="text-[var(--muted)]">42 days left</span>
+          </div>
+          <button class="btn-ghost focus-ring rounded-md px-3 h-9 text-[13px] inline-flex items-center gap-2">
+            <i data-lucide="search" class="w-3.5 h-3.5"></i> Search
+            <span class="font-mono text-[10.5px] text-[var(--muted)] ml-1">⌘K</span>
+          </button>
+          <button class="btn-ghost focus-ring rounded-md w-9 h-9 grid place-items-center" aria-label="Help">
+            <i data-lucide="life-buoy" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page body -->
+      <div class="px-8 pt-8 pb-16">
+
+        <!-- PageHeader -->
+        <div class="flex items-end justify-between gap-6 flex-wrap">
+          <div>
+            <p class="text-[11.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Insights · BG / MD view</p>
+            <h1 class="font-display text-[32px] leading-[1.1] font-semibold mt-2">Completion</h1>
+            <p class="mt-2 text-[14.5px] text-[var(--muted)] max-w-[640px]">
+              Who is on pace to complete one cross-project review this cycle. Filter to find lagging teams; drill into a BG to see project-level pace.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn-ghost focus-ring rounded-md px-3 h-9 text-[13px] inline-flex items-center gap-2">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Cycle H1 · 2026
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <!-- Primary action: magenta -->
+            <button class="btn-primary focus-ring rounded-md px-3.5 h-9 text-[13px] font-medium inline-flex items-center gap-2">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+            </button>
+          </div>
+        </div>
+
+        <!-- FilterBar -->
+        <section class="mt-7">
+          <div class="card p-3 flex items-center gap-2 flex-wrap">
+            <div class="flex items-center gap-2 pr-2">
+              <i data-lucide="filter" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+              <span class="text-[12px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium">Filters</span>
+            </div>
+            <div class="divider-v h-6"></div>
+
+            <!-- BG select -->
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">BG</span>
+              <span class="font-medium">All 6</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">Company</span>
+              <span class="font-medium">All entities</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">Project</span>
+              <span class="font-medium">Any</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">Cycle</span>
+              <span class="font-medium">H1 · 2026</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+
+            <div class="divider-v h-6"></div>
+
+            <!-- Saved view -->
+            <div class="text-[12.5px] text-[var(--muted)] flex items-center gap-2 pl-1">
+              <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
+              <span>View:</span>
+              <span class="text-[var(--ink)] font-medium">Org overview</span>
+            </div>
+
+            <div class="flex-1"></div>
+
+            <!-- Persistence note -->
+            <div class="text-[11.5px] text-[var(--muted)] flex items-center gap-1.5 pr-2">
+              <i data-lucide="link-2" class="w-3.5 h-3.5"></i>
+              Filters persist in URL & per-user
+            </div>
+            <button class="text-[12.5px] text-[var(--muted)] hover:text-[var(--ink)] focus-ring px-2 h-8 rounded-md inline-flex items-center gap-1">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
+            </button>
+          </div>
+        </section>
+
+        <!-- Hero KPIs -->
+        <section class="mt-6 grid grid-cols-4 gap-4">
+
+          <!-- MetricTile: Overall completion -->
+          <div class="card p-5">
+            <div class="flex items-center justify-between">
+              <p class="text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium">Overall completion</p>
+              <span class="text-[11px] px-1.5 py-0.5 rounded bg-[#ECFDF5] text-[#047857] font-medium">+8.4 pp</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="font-display text-[40px] leading-none font-semibold num">62<span class="text-[24px] text-[var(--muted)]">.4%</span></span>
+            </div>
+            <p class="mt-1 text-[12.5px] text-[var(--muted)] num">412 of 660 engineers reviewed</p>
+            <!-- Tiny progress vs target -->
+            <div class="mt-4">
+              <div class="relative h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden">
+                <div class="absolute inset-y-0 left-0 rounded-full" style="width:62.4%; background: var(--ink);"></div>
+                <div class="absolute inset-y-[-3px] w-px bg-[var(--magenta)]" style="left:80%;"></div>
+              </div>
+              <div class="mt-2 flex items-center justify-between text-[11px] text-[var(--muted)]">
+                <span>Today</span>
+                <span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background:var(--magenta);"></span>Target 80%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MetricTile: Target -->
+          <div class="card p-5">
+            <div class="flex items-center justify-between">
+              <p class="text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium">Cycle target</p>
+              <span class="text-[11px] text-[var(--muted)]">H1 · 2026</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="font-display text-[40px] leading-none font-semibold num">80<span class="text-[24px] text-[var(--muted)]">%</span></span>
+            </div>
+            <p class="mt-1 text-[12.5px] text-[var(--muted)] num">Gap to target: 116 sessions</p>
+            <div class="mt-4 flex items-center gap-3 text-[12px]">
+              <div class="flex items-center gap-1.5"><i data-lucide="clock-3" class="w-3.5 h-3.5 text-[var(--muted)]"></i><span class="text-[var(--muted)]">42 days left</span></div>
+              <div class="flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-[var(--muted)]"></i><span class="text-[var(--muted)]">~2.8 / day pace</span></div>
+            </div>
+          </div>
+
+          <!-- MetricTile: On-track teams -->
+          <div class="card p-5">
+            <div class="flex items-center justify-between">
+              <p class="text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium">On-track teams</p>
+              <span class="text-[11px] px-1.5 py-0.5 rounded bg-[#ECFDF5] text-[#047857] font-medium">29 / 47</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="font-display text-[40px] leading-none font-semibold num">61<span class="text-[24px] text-[var(--muted)]">%</span></span>
+            </div>
+            <p class="mt-1 text-[12.5px] text-[var(--muted)] num">Projects pacing ≥ 80% of target</p>
+            <!-- Mini dot matrix -->
+            <div class="mt-4 grid grid-cols-12 gap-[3px]">
+              <!-- 47 dots, ~29 filled -->
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#10B981;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+              <span class="block h-1.5 rounded-sm" style="background:#E5E7EB;"></span>
+            </div>
+          </div>
+
+          <!-- MetricTile: Lagging teams -->
+          <div class="card p-5">
+            <div class="flex items-center justify-between">
+              <p class="text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium">Lagging teams</p>
+              <span class="text-[11px] px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] font-medium">Needs attention</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="font-display text-[40px] leading-none font-semibold num">9</span>
+              <span class="text-[13px] text-[var(--muted)]">projects · 142 engineers</span>
+            </div>
+            <p class="mt-1 text-[12.5px] text-[var(--muted)] num">Pacing &lt; 50% with &lt; 6 weeks left</p>
+            <div class="mt-4 flex flex-col gap-1.5">
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="text-[var(--muted)] truncate">eAccounting · Web</span>
+                <span class="num font-medium">28%</span>
+              </div>
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="text-[var(--muted)] truncate">Visma.net Payroll · NO</span>
+                <span class="num font-medium">31%</span>
+              </div>
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="text-[var(--muted)] truncate">SuperOffice · CRM</span>
+                <span class="num font-medium">34%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bar chart: completion per BG -->
+        <section class="mt-8 grid grid-cols-3 gap-4">
+          <!-- Chart -->
+          <div class="card p-6 col-span-2">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="font-display text-[18px] font-semibold">Completion by Business Group</h2>
+                <p class="text-[12.5px] text-[var(--muted)] mt-0.5">Top 10 BGs and units, ranked by completion rate this cycle</p>
+              </div>
+              <div class="flex items-center gap-3 text-[11.5px] text-[var(--muted)]">
+                <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#1A1A1A]"></span>Completed</span>
+                <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#E5E7EB]"></span>Remaining</span>
+                <span class="inline-flex items-center gap-1.5"><span class="w-2 h-px bg-[var(--magenta)]"></span>Target 80%</span>
+              </div>
+            </div>
+
+            <!-- SVG chart -->
+            <div class="mt-6">
+              <svg viewBox="0 0 720 360" class="w-full h-auto" role="img" aria-label="Completion per Business Group">
+                <!-- Y axis ticks (0, 25, 50, 75, 100) -->
+                <g font-family="Inter" font-size="10" fill="#9CA3AF" class="num">
+                  <text x="20" y="14" text-anchor="end">100%</text>
+                  <text x="20" y="84" text-anchor="end">75%</text>
+                  <text x="20" y="154" text-anchor="end">50%</text>
+                  <text x="20" y="224" text-anchor="end">25%</text>
+                  <text x="20" y="294" text-anchor="end">0%</text>
+                </g>
+                <!-- Grid lines -->
+                <g stroke="#F1F2F4" stroke-width="1">
+                  <line x1="28" y1="10" x2="710" y2="10"/>
+                  <line x1="28" y1="80" x2="710" y2="80"/>
+                  <line x1="28" y1="150" x2="710" y2="150"/>
+                  <line x1="28" y1="220" x2="710" y2="220"/>
+                  <line x1="28" y1="290" x2="710" y2="290"/>
+                </g>
+                <!-- Target line at 80% -->
+                <line x1="28" y1="66" x2="710" y2="66" stroke="#E10078" stroke-dasharray="3 3" stroke-width="1"/>
+                <text x="712" y="69" font-family="Inter" font-size="9.5" fill="#E10078" class="num" font-weight="600">80</text>
+
+                <!-- Bars (10) -->
+                <!-- chart area: x in [40..700], width=660, 10 bars, gap 16, bw = (660 - 9*16)/10 = 51.6 -->
+                <!-- y0 = 290, h scale 280 per 100% -->
+                <g font-family="Inter" font-size="10.5" fill="#1A1A1A" class="num">
+
+                  <!-- 1 Public · 78 -->
+                  <g class="bar">
+                    <rect x="40" y="71.6" width="52" height="218.4" fill="#E5E7EB" rx="2"/>
+                    <rect x="40" y="71.6" width="52" height="218.4" fill="#1A1A1A" rx="2" opacity="0"/>
+                    <rect x="40" y="71.6" width="52" height="218.4" rx="2" fill="url(#g1)"/>
+                  </g>
+                  <text x="66" y="306" text-anchor="middle" fill="#6B7280" font-size="10">Public</text>
+                  <text x="66" y="65" text-anchor="middle" font-weight="600">78%</text>
+
+                  <!-- 2 Commerce 71 -->
+                  <g class="bar">
+                    <rect x="108" y="90.8" width="52" height="199.2" fill="#E5E7EB" rx="2"/>
+                    <rect x="108" y="90.8" width="52" height="199.2" rx="2" fill="url(#g2)"/>
+                  </g>
+                  <text x="134" y="306" text-anchor="middle" fill="#6B7280" font-size="10">Commerce</text>
+                  <text x="134" y="84" text-anchor="middle" font-weight="600">71%</text>
+
+                  <!-- 3 Custom Solutions 68 -->
+                  <g class="bar">
+                    <rect x="176" y="99.2" width="52" height="190.8" fill="#E5E7EB" rx="2"/>
+                    <rect x="176" y="99.2" width="52" height="190.8" rx="2" fill="url(#g3)"/>
+                  </g>
+                  <text x="202" y="306" text-anchor="middle" fill="#6B7280" font-size="10">Custom Sol.</text>
+                  <text x="202" y="93" text-anchor="middle" font-weight="600">68%</text>
+
+                  <!-- 4 SaaS Productivity 64 -->
+                  <g class="bar">
+                    <rect x="244" y="110.4" width="52" height="179.6" fill="#E5E7EB" rx="2"/>
+                    <rect x="244" y="110.4" width="52" height="179.6" rx="2" fill="url(#g4)"/>
+                  </g>
+                  <text x="270" y="306" text-anchor="middle" fill="#6B7280" font-size="10">SaaS Prod.</text>
+                  <text x="270" y="104" text-anchor="middle" font-weight="600">64%</text>
+
+                  <!-- 5 SMB North 61 -->
+                  <g class="bar">
+                    <rect x="312" y="118.8" width="52" height="171.2" fill="#E5E7EB" rx="2"/>
+                    <rect x="312" y="118.8" width="52" height="171.2" rx="2" fill="url(#g5)"/>
+                  </g>
+                  <text x="338" y="306" text-anchor="middle" fill="#6B7280" font-size="10">SMB North</text>
+                  <text x="338" y="112" text-anchor="middle" font-weight="600">61%</text>
+
+                  <!-- 6 Enterprise NO 58 -->
+                  <g class="bar">
+                    <rect x="380" y="127.2" width="52" height="162.8" fill="#E5E7EB" rx="2"/>
+                    <rect x="380" y="127.2" width="52" height="162.8" rx="2" fill="url(#g6)"/>
+                  </g>
+                  <text x="406" y="306" text-anchor="middle" fill="#6B7280" font-size="10">Enterprise NO</text>
+                  <text x="406" y="121" text-anchor="middle" font-weight="600">58%</text>
+
+                  <!-- 7 SMB Central 55 -->
+                  <g class="bar">
+                    <rect x="448" y="135.6" width="52" height="154.4" fill="#E5E7EB" rx="2"/>
+                    <rect x="448" y="135.6" width="52" height="154.4" rx="2" fill="url(#g7)"/>
+                  </g>
+                  <text x="474" y="306" text-anchor="middle" fill="#6B7280" font-size="10">SMB Central</text>
+                  <text x="474" y="129" text-anchor="middle" font-weight="600">55%</text>
+
+                  <!-- 8 Enterprise SE 49 -->
+                  <g class="bar">
+                    <rect x="516" y="152.4" width="52" height="137.6" fill="#E5E7EB" rx="2"/>
+                    <rect x="516" y="152.4" width="52" height="137.6" rx="2" fill="url(#g8)"/>
+                  </g>
+                  <text x="542" y="306" text-anchor="middle" fill="#6B7280" font-size="10">Enterprise SE</text>
+                  <text x="542" y="146" text-anchor="middle" font-weight="600">49%</text>
+
+                  <!-- 9 SMB South 44 -->
+                  <g class="bar">
+                    <rect x="584" y="166.4" width="52" height="123.6" fill="#E5E7EB" rx="2"/>
+                    <rect x="584" y="166.4" width="52" height="123.6" rx="2" fill="url(#g9)"/>
+                  </g>
+                  <text x="610" y="306" text-anchor="middle" fill="#6B7280" font-size="10">SMB South</text>
+                  <text x="610" y="160" text-anchor="middle" font-weight="600">44%</text>
+
+                  <!-- 10 SuperOffice 36 -->
+                  <g class="bar">
+                    <rect x="652" y="188.8" width="52" height="101.2" fill="#E5E7EB" rx="2"/>
+                    <rect x="652" y="188.8" width="52" height="101.2" rx="2" fill="url(#g10)"/>
+                  </g>
+                  <text x="678" y="306" text-anchor="middle" fill="#6B7280" font-size="10">SuperOffice</text>
+                  <text x="678" y="182" text-anchor="middle" font-weight="600">36%</text>
+                </g>
+
+                <!-- Axis baseline -->
+                <line x1="28" y1="290" x2="710" y2="290" stroke="#D1D5DB" stroke-width="1"/>
+
+                <!-- Gradient defs: dark to light by performance vs target -->
+                <defs>
+                  <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#1A1A1A"/><stop offset="1" stop-color="#1A1A1A" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#1A1A1A"/><stop offset="1" stop-color="#1A1A1A" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#1A1A1A"/><stop offset="1" stop-color="#1A1A1A" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#374151"/><stop offset="1" stop-color="#374151" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g5" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#374151"/><stop offset="1" stop-color="#374151" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g6" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#4B5563"/><stop offset="1" stop-color="#4B5563" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g7" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#6B7280"/><stop offset="1" stop-color="#6B7280" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g8" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#9CA3AF"/><stop offset="1" stop-color="#9CA3AF" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g9" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#9CA3AF"/><stop offset="1" stop-color="#9CA3AF" stop-opacity="0.85"/>
+                  </linearGradient>
+                  <linearGradient id="g10" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#9CA3AF"/><stop offset="1" stop-color="#9CA3AF" stop-opacity="0.85"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+
+            <div class="mt-4 flex items-center gap-4 text-[11.5px] text-[var(--muted)]">
+              <span class="inline-flex items-center gap-1.5"><i data-lucide="info" class="w-3.5 h-3.5"></i> Bar shade reflects distance from target. Click a bar to filter the table below.</span>
+            </div>
+          </div>
+
+          <!-- Status mix card -->
+          <div class="card p-6 flex flex-col">
+            <h2 class="font-display text-[18px] font-semibold">Pipeline this cycle</h2>
+            <p class="text-[12.5px] text-[var(--muted)] mt-0.5">660 expected sessions</p>
+
+            <!-- Stacked bar -->
+            <div class="mt-6">
+              <div class="flex w-full h-3 rounded-full overflow-hidden hairline">
+                <div title="Completed 412" style="width:62.4%; background: var(--status-completed);"></div>
+                <div title="Scheduled 98" style="width:14.8%; background: var(--status-scheduled);"></div>
+                <div title="Assigned 78" style="width:11.8%; background: #6B7280;"></div>
+                <div title="Auto-paired 24" style="width:3.6%; background: var(--status-autopair);"></div>
+                <div title="Unassigned 48" style="width:7.4%; background: #E5E7EB;"></div>
+              </div>
+            </div>
+
+            <ul class="mt-5 text-[13px] space-y-2.5">
+              <li class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-sm" style="background:var(--status-completed);"></span>Completed</span>
+                <span class="num font-medium">412 · 62.4%</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-sm" style="background:var(--status-scheduled);"></span>Scheduled</span>
+                <span class="num font-medium">98 · 14.8%</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-sm bg-[#6B7280]"></span>Assigned</span>
+                <span class="num font-medium">78 · 11.8%</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-sm" style="background:var(--status-autopair);"></span>Auto-paired</span>
+                <span class="num font-medium">24 · 3.6%</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-sm bg-[#E5E7EB]"></span>Unassigned</span>
+                <span class="num font-medium">48 · 7.4%</span>
+              </li>
+            </ul>
+
+            <div class="mt-auto pt-5 text-[12px] text-[var(--muted)] border-t border-[var(--border-2)] flex items-center gap-2">
+              <i data-lucide="bell" class="w-3.5 h-3.5"></i>
+              Auto-pair sweep runs in <span class="text-[var(--ink)] font-medium num">35 days</span>.
+            </div>
+          </div>
+        </section>
+
+        <!-- Drill-down table -->
+        <section class="mt-8">
+          <div class="card overflow-hidden">
+            <div class="px-6 pt-6 pb-4 flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <h2 class="font-display text-[18px] font-semibold">Drill-down by BG and project</h2>
+                <p class="text-[12.5px] text-[var(--muted)] mt-0.5">Expand a BG to see its projects. Sparkline shows completion across the last three cycles.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="btn-ghost focus-ring rounded-md px-2.5 h-8 text-[12.5px] inline-flex items-center gap-1.5">
+                  <i data-lucide="arrow-down-up" class="w-3.5 h-3.5"></i> Sort: Completion ↓
+                </button>
+                <button class="btn-ghost focus-ring rounded-md px-2.5 h-8 text-[12.5px] inline-flex items-center gap-1.5">
+                  <i data-lucide="columns-3" class="w-3.5 h-3.5"></i> Columns
+                </button>
+              </div>
+            </div>
+
+            <!-- Header -->
+            <div class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-2.5 text-[11px] uppercase tracking-[0.12em] text-[var(--muted)] font-medium border-y border-[var(--border-2)] bg-[#FBFBFC]">
+              <div></div>
+              <div>Business Group</div>
+              <div>Project / unit</div>
+              <div>Completion</div>
+              <div class="text-right num">Completed</div>
+              <div class="text-right num">Remaining</div>
+              <div class="text-right">Last 3 cycles</div>
+            </div>
+
+            <!-- Row group: Visma Public (78%) -->
+            <details open class="border-b border-[var(--border-2)]">
+              <summary class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3.5 items-center row-hover">
+                <div class="grid place-items-center">
+                  <i data-lucide="chevron-right" class="chev w-4 h-4 text-[var(--muted)]"></i>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-7 rounded-full" style="background:var(--l3);"></span>
+                  <div>
+                    <div class="text-[14px] font-medium">Visma Public</div>
+                    <div class="text-[11.5px] text-[var(--muted)]">3 units · 84 engineers</div>
+                  </div>
+                </div>
+                <div class="text-[12.5px] text-[var(--muted)]">All units</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden">
+                      <div class="h-full" style="width:78%; background:#1A1A1A;"></div>
+                    </div>
+                    <span class="num text-[13px] font-medium w-10 text-right">78%</span>
+                  </div>
+                </div>
+                <div class="text-right num text-[13px]">66</div>
+                <div class="text-right num text-[13px] text-[var(--muted)]">18</div>
+                <div class="flex justify-end">
+                  <svg width="96" height="26" viewBox="0 0 96 26" class="spark">
+                    <polyline points="2,18 32,14 64,8 94,4" fill="none" stroke="#10B981" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="94" cy="4" r="2" fill="#10B981"/>
+                  </svg>
+                </div>
+              </summary>
+              <!-- project rows -->
+              <div class="bg-[#FBFBFC] border-t border-[var(--border-2)]">
+                <div class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3 items-center text-[13px]">
+                  <div></div>
+                  <div class="text-[var(--muted)]">↳</div>
+                  <div>Skatt · Tax filing platform</div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:84%; background:#10B981;"></div></div>
+                      <span class="num font-medium w-10 text-right">84%</span>
+                    </div>
+                  </div>
+                  <div class="text-right num">26</div>
+                  <div class="text-right num text-[var(--muted)]">5</div>
+                  <div class="flex justify-end">
+                    <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,18 32,14 64,10 94,5" fill="none" stroke="#10B981" stroke-width="1.6"/></svg>
+                  </div>
+                </div>
+                <div class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3 items-center text-[13px]">
+                  <div></div>
+                  <div class="text-[var(--muted)]">↳</div>
+                  <div>Edu · School management</div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:76%; background:#10B981;"></div></div>
+                      <span class="num font-medium w-10 text-right">76%</span>
+                    </div>
+                  </div>
+                  <div class="text-right num">22</div>
+                  <div class="text-right num text-[var(--muted)]">7</div>
+                  <div class="flex justify-end">
+                    <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,16 32,15 64,11 94,7" fill="none" stroke="#10B981" stroke-width="1.6"/></svg>
+                  </div>
+                </div>
+                <div class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3 items-center text-[13px]">
+                  <div></div>
+                  <div class="text-[var(--muted)]">↳</div>
+                  <div>Helse · Healthcare modules</div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:73%; background:#10B981;"></div></div>
+                      <span class="num font-medium w-10 text-right">73%</span>
+                    </div>
+                  </div>
+                  <div class="text-right num">18</div>
+                  <div class="text-right num text-[var(--muted)]">6</div>
+                  <div class="flex justify-end">
+                    <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,20 32,17 64,11 94,8" fill="none" stroke="#10B981" stroke-width="1.6"/></svg>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <!-- Row group: Visma Commerce (71%) -->
+            <details class="border-b border-[var(--border-2)]">
+              <summary class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3.5 items-center row-hover">
+                <div class="grid place-items-center"><i data-lucide="chevron-right" class="chev w-4 h-4 text-[var(--muted)]"></i></div>
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-7 rounded-full" style="background:var(--l3);"></span>
+                  <div>
+                    <div class="text-[14px] font-medium">Visma Commerce Solutions</div>
+                    <div class="text-[11.5px] text-[var(--muted)]">4 units · 102 engineers</div>
+                  </div>
+                </div>
+                <div class="text-[12.5px] text-[var(--muted)]">All units</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:71%; background:#1A1A1A;"></div></div>
+                    <span class="num text-[13px] font-medium w-10 text-right">71%</span>
+                  </div>
+                </div>
+                <div class="text-right num text-[13px]">72</div>
+                <div class="text-right num text-[13px] text-[var(--muted)]">30</div>
+                <div class="flex justify-end">
+                  <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,20 32,15 64,11 94,6" fill="none" stroke="#10B981" stroke-width="1.8"/></svg>
+                </div>
+              </summary>
+            </details>
+
+            <!-- Custom Solutions (68) -->
+            <details class="border-b border-[var(--border-2)]">
+              <summary class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3.5 items-center row-hover">
+                <div class="grid place-items-center"><i data-lucide="chevron-right" class="chev w-4 h-4 text-[var(--muted)]"></i></div>
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-7 rounded-full" style="background:var(--l2);"></span>
+                  <div>
+                    <div class="text-[14px] font-medium">Visma Custom Solutions</div>
+                    <div class="text-[11.5px] text-[var(--muted)]">6 units · 138 engineers · LT/PL</div>
+                  </div>
+                </div>
+                <div class="text-[12.5px] text-[var(--muted)]">All units</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:68%; background:#1A1A1A;"></div></div>
+                    <span class="num text-[13px] font-medium w-10 text-right">68%</span>
+                  </div>
+                </div>
+                <div class="text-right num text-[13px]">94</div>
+                <div class="text-right num text-[13px] text-[var(--muted)]">44</div>
+                <div class="flex justify-end">
+                  <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,17 32,14 64,11 94,8" fill="none" stroke="#10B981" stroke-width="1.8"/></svg>
+                </div>
+              </summary>
+            </details>
+
+            <!-- SaaS Productivity (64) -->
+            <details class="border-b border-[var(--border-2)]">
+              <summary class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3.5 items-center row-hover">
+                <div class="grid place-items-center"><i data-lucide="chevron-right" class="chev w-4 h-4 text-[var(--muted)]"></i></div>
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-7 rounded-full" style="background:var(--l2);"></span>
+                  <div>
+                    <div class="text-[14px] font-medium">Visma SaaS Productivity</div>
+                    <div class="text-[11.5px] text-[var(--muted)]">5 units · 96 engineers</div>
+                  </div>
+                </div>
+                <div class="text-[12.5px] text-[var(--muted)]">All units</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:64%; background:#1A1A1A;"></div></div>
+                    <span class="num text-[13px] font-medium w-10 text-right">64%</span>
+                  </div>
+                </div>
+                <div class="text-right num text-[13px]">61</div>
+                <div class="text-right num text-[13px] text-[var(--muted)]">35</div>
+                <div class="flex justify-end">
+                  <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,14 32,13 64,12 94,9" fill="none" stroke="#10B981" stroke-width="1.8"/></svg>
+                </div>
+              </summary>
+            </details>
+
+            <!-- SMB North (61) -->
+            <details class="border-b border-[var(--border-2)]">
+              <summary class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3.5 items-center row-hover">
+                <div class="grid place-items-center"><i data-lucide="chevron-right" class="chev w-4 h-4 text-[var(--muted)]"></i></div>
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-7 rounded-full" style="background:var(--l2);"></span>
+                  <div>
+                    <div class="text-[14px] font-medium">Visma SMB · North</div>
+                    <div class="text-[11.5px] text-[var(--muted)]">7 units · 124 engineers · NO/FI/SE</div>
+                  </div>
+                </div>
+                <div class="text-[12.5px] text-[var(--muted)]">All units</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:61%; background:#1A1A1A;"></div></div>
+                    <span class="num text-[13px] font-medium w-10 text-right">61%</span>
+                  </div>
+                </div>
+                <div class="text-right num text-[13px]">75</div>
+                <div class="text-right num text-[13px] text-[var(--muted)]">49</div>
+                <div class="flex justify-end">
+                  <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,16 32,14 64,13 94,10" fill="none" stroke="#10B981" stroke-width="1.8"/></svg>
+                </div>
+              </summary>
+            </details>
+
+            <!-- Enterprise NO (58) -->
+            <details class="border-b border-[var(--border-2)]">
+              <summary class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3.5 items-center row-hover">
+                <div class="grid place-items-center"><i data-lucide="chevron-right" class="chev w-4 h-4 text-[var(--muted)]"></i></div>
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-7 rounded-full" style="background:var(--l2);"></span>
+                  <div>
+                    <div class="text-[14px] font-medium">Visma Enterprise · NO</div>
+                    <div class="text-[11.5px] text-[var(--muted)]">4 units · 72 engineers</div>
+                  </div>
+                </div>
+                <div class="text-[12.5px] text-[var(--muted)]">All units</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:58%; background:#1A1A1A;"></div></div>
+                    <span class="num text-[13px] font-medium w-10 text-right">58%</span>
+                  </div>
+                </div>
+                <div class="text-right num text-[13px]">42</div>
+                <div class="text-right num text-[13px] text-[var(--muted)]">30</div>
+                <div class="flex justify-end">
+                  <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,12 32,11 64,12 94,11" fill="none" stroke="#F59E0B" stroke-width="1.8"/></svg>
+                </div>
+              </summary>
+            </details>
+
+            <!-- SuperOffice (36) - lagging -->
+            <details class="border-b border-[var(--border-2)]">
+              <summary class="grid grid-cols-[36px_2fr_1.4fr_140px_120px_120px_120px] gap-4 px-6 py-3.5 items-center row-hover">
+                <div class="grid place-items-center"><i data-lucide="chevron-right" class="chev w-4 h-4 text-[var(--muted)]"></i></div>
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-7 rounded-full" style="background:var(--l1);"></span>
+                  <div>
+                    <div class="text-[14px] font-medium flex items-center gap-2">
+                      SuperOffice
+                      <span class="inline-flex items-center gap-1 text-[10.5px] font-medium px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E]">
+                        <i data-lucide="alert-triangle" class="w-3 h-3"></i> Lagging
+                      </span>
+                    </div>
+                    <div class="text-[11.5px] text-[var(--muted)]">3 units · 44 engineers · SE</div>
+                  </div>
+                </div>
+                <div class="text-[12.5px] text-[var(--muted)]">All units</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1 h-1.5 rounded-full bg-[#F1F2F4] overflow-hidden"><div class="h-full" style="width:36%; background:#1A1A1A;"></div></div>
+                    <span class="num text-[13px] font-medium w-10 text-right">36%</span>
+                  </div>
+                </div>
+                <div class="text-right num text-[13px]">16</div>
+                <div class="text-right num text-[13px] text-[var(--muted)]">28</div>
+                <div class="flex justify-end">
+                  <svg width="96" height="26" viewBox="0 0 96 26"><polyline points="2,10 32,13 64,16 94,17" fill="none" stroke="#DC2626" stroke-width="1.8"/></svg>
+                </div>
+              </summary>
+            </details>
+
+            <div class="px-6 py-3 flex items-center justify-between text-[12px] text-[var(--muted)] bg-[#FBFBFC]">
+              <span class="num">Showing 7 of 10 BGs · 47 projects</span>
+              <div class="flex items-center gap-2">
+                <button class="btn-ghost focus-ring rounded-md h-7 px-2 text-[12px] inline-flex items-center gap-1">
+                  <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i> Prev
+                </button>
+                <button class="btn-ghost focus-ring rounded-md h-7 px-2 text-[12px] inline-flex items-center gap-1">
+                  Next <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer note -->
+        <p class="mt-8 text-[11.5px] text-[var(--muted)] flex items-center gap-1.5">
+          <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+          Aggregated view. Individual feedback content is never shown on this screen — see anonymity boundary in UX principles §6.
+        </p>
+
+      </div>
+    </main>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

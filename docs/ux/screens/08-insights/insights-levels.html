@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Level distribution · Insights · Cross-Project Reviews · Visma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --magenta: #E10078;
+      --surface: #FAFAFA;
+      --card: #FFFFFF;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --muted-2: #9CA3AF;
+      --border: #E5E7EB;
+      --border-2: #F1F2F4;
+      --l1: #64748B;
+      --l2: #0EA5E9;
+      --l3: #10B981;
+      --l4: #F59E0B;
+      --l5: #BE185D;
+    }
+    html, body { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    .font-display { font-family: 'Inter Tight', 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+    .focus-ring:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+    .card { background: var(--card); border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
+    .hairline { box-shadow: inset 0 0 0 1px rgba(17,17,17,0.06); }
+    .btn-primary {
+      background: var(--magenta); color:#fff;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+    .btn-primary:hover { background:#C70069; box-shadow: 0 6px 18px -8px rgba(225,0,120,0.5); }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-ghost { background:#fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--border); }
+    .btn-ghost:hover { background:#F9FAFB; }
+    .chip { background:#fff; box-shadow: inset 0 0 0 1px var(--border); }
+    .nav-item.active { background:#F4F5F7; color: var(--ink); }
+    .nav-item.active .nav-dot { background: var(--magenta); }
+    .backdrop {
+      background-image:
+        radial-gradient(900px 480px at 95% -4%, rgba(225,0,120,0.04), transparent 60%);
+    }
+    .divider-v { width:1px; background: var(--border); }
+    .row-hover:hover { background:#FBFBFC; }
+    .bar-grow { transition: filter 160ms ease; }
+    .bar-grow:hover { filter: brightness(0.92); }
+  </style>
+</head>
+<body class="min-h-screen backdrop">
+
+  <!-- AppShell -->
+  <div class="min-h-screen grid grid-cols-[260px_1fr]">
+
+    <!-- SideNav -->
+    <aside class="border-r border-[var(--border)] bg-white flex flex-col">
+      <div class="px-5 h-16 flex items-center gap-3 border-b border-[var(--border)]">
+        <div class="h-8 w-8 rounded-md grid place-items-center" style="background: var(--magenta);">
+          <span class="font-display text-white text-base font-bold leading-none">V</span>
+        </div>
+        <div class="leading-tight">
+          <div class="font-display text-[14px] font-semibold">Cross-Project Reviews</div>
+          <div class="text-[11px] text-[var(--muted)]">Visma · Internal</div>
+        </div>
+      </div>
+
+      <nav class="px-3 py-5 flex-1 text-[13.5px]">
+        <div class="px-3 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)]">Workspace</div>
+        <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="calendar-clock" class="w-4 h-4"></i> My sessions
+        </a>
+
+        <div class="px-3 pt-5 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)]">Insights</div>
+        <a href="./insights-completion.html" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="trending-up" class="w-4 h-4"></i> Completion
+        </a>
+        <a href="#" class="nav-item active flex items-center justify-between px-3 py-2 rounded-md">
+          <span class="flex items-center gap-3"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> Level distribution</span>
+          <span class="nav-dot w-1.5 h-1.5 rounded-full bg-[var(--muted-2)]"></span>
+        </a>
+        <a href="#" class="nav-item flex items-center justify-between px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <span class="flex items-center gap-3"><i data-lucide="sparkles" class="w-4 h-4"></i> Themes</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-[var(--border-2)] text-[var(--muted)]">soon</span>
+        </a>
+
+        <div class="px-3 pt-5 pb-2 text-[10.5px] uppercase tracking-[0.16em] text-[var(--muted)]">Account</div>
+        <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="user-round" class="w-4 h-4"></i> Profile
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--ink)]">
+          <i data-lucide="settings" class="w-4 h-4"></i> Settings
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-[var(--border)]">
+        <div class="flex items-center gap-3">
+          <div class="h-8 w-8 rounded-full grid place-items-center text-[12px] font-medium" style="background:#F1F2F4; color:var(--ink);">TS</div>
+          <div class="leading-tight">
+            <div class="text-[13px] font-medium">Tomek Szturo</div>
+            <div class="text-[11px] text-[var(--muted)]">BG Manager · Custom Solutions</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex flex-col min-w-0">
+
+      <!-- TopBar -->
+      <header class="h-16 px-8 flex items-center justify-between border-b border-[var(--border)] bg-white">
+        <div class="text-[13px] text-[var(--muted)] flex items-center gap-2">
+          <span>Insights</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          <span class="text-[var(--ink)] font-medium">Level distribution</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="chip rounded-full pl-2 pr-3 py-1 flex items-center gap-2 text-[12.5px]">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+            <span class="font-medium">Cycle H1 · 2026</span>
+            <span class="text-[var(--muted)]">·</span>
+            <span class="text-[var(--muted)]">42 days left</span>
+          </div>
+          <button class="btn-ghost focus-ring rounded-md px-3 h-9 text-[13px] inline-flex items-center gap-2">
+            <i data-lucide="search" class="w-3.5 h-3.5"></i> Search
+            <span class="font-mono text-[10.5px] text-[var(--muted)] ml-1">⌘K</span>
+          </button>
+          <button class="btn-ghost focus-ring rounded-md w-9 h-9 grid place-items-center" aria-label="Help">
+            <i data-lucide="life-buoy" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="px-8 pt-8 pb-16">
+
+        <!-- PageHeader -->
+        <div class="flex items-end justify-between gap-6 flex-wrap">
+          <div>
+            <p class="text-[11.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Insights · BG / MD view</p>
+            <h1 class="font-display text-[32px] leading-[1.1] font-semibold mt-2">Level distribution</h1>
+            <p class="mt-2 text-[14.5px] text-[var(--muted)] max-w-[680px]">
+              Where the org sits on the AI-adoption ladder (L1 — none · L5 — fleet orchestration). Compare against last cycle and slice by BG, role, or tenure.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn-ghost focus-ring rounded-md px-3 h-9 text-[13px] inline-flex items-center gap-2">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i> H1 · 2026 vs H2 · 2025
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <button class="btn-primary focus-ring rounded-md px-3.5 h-9 text-[13px] font-medium inline-flex items-center gap-2">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+            </button>
+          </div>
+        </div>
+
+        <!-- FilterBar -->
+        <section class="mt-7">
+          <div class="card p-3 flex items-center gap-2 flex-wrap">
+            <div class="flex items-center gap-2 pr-2">
+              <i data-lucide="filter" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+              <span class="text-[12px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium">Filters</span>
+            </div>
+            <div class="divider-v h-6"></div>
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">BG</span>
+              <span class="font-medium">All 6</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">Company</span>
+              <span class="font-medium">All entities</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">Project</span>
+              <span class="font-medium">Any</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">Role</span>
+              <span class="font-medium">Engineers</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+            <button class="chip focus-ring rounded-md pl-2.5 pr-2 h-8 text-[12.5px] inline-flex items-center gap-2">
+              <span class="text-[var(--muted)]">Cycle</span>
+              <span class="font-medium">H1 · 2026</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[var(--muted)]"></i>
+            </button>
+
+            <div class="divider-v h-6"></div>
+            <div class="text-[12.5px] text-[var(--muted)] flex items-center gap-2 pl-1">
+              <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
+              <span>View:</span>
+              <span class="text-[var(--ink)] font-medium">Org overview</span>
+            </div>
+            <div class="flex-1"></div>
+            <div class="text-[11.5px] text-[var(--muted)] flex items-center gap-1.5 pr-2">
+              <i data-lucide="link-2" class="w-3.5 h-3.5"></i>
+              Filters persist in URL & per-user
+            </div>
+            <button class="text-[12.5px] text-[var(--muted)] hover:text-[var(--ink)] focus-ring px-2 h-8 rounded-md inline-flex items-center gap-1">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
+            </button>
+          </div>
+        </section>
+
+        <!-- NudgeBanner: survey freshness -->
+        <section class="mt-5">
+          <div class="rounded-xl hairline bg-[#FFFBEB] p-4 flex items-start gap-4">
+            <div class="h-9 w-9 rounded-md grid place-items-center bg-[#FEF3C7] text-[#92400E] shrink-0">
+              <i data-lucide="clock-alert" class="w-4.5 h-4.5"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <p class="font-display text-[14px] font-semibold text-[#78350F]">Survey freshness</p>
+                <span class="text-[10.5px] font-medium px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] num">38% stale</span>
+              </div>
+              <p class="mt-1 text-[13px] text-[#78350F] leading-relaxed max-w-[680px]">
+                <span class="num font-semibold">228 engineers</span> in the current filter have a level older than 6 months. Histogram is shown, but trend deltas may be misleading until a re-survey wave runs.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button class="chip focus-ring rounded-md px-3 h-8 text-[12.5px] inline-flex items-center gap-2 bg-white">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> See affected list
+              </button>
+              <button class="chip focus-ring rounded-md px-3 h-8 text-[12.5px] inline-flex items-center gap-2 bg-white">
+                <i data-lucide="mail" class="w-3.5 h-3.5"></i> Trigger re-survey
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- DistributionChart hero -->
+        <section class="mt-6 grid grid-cols-3 gap-4">
+
+          <!-- Histogram -->
+          <div class="card col-span-2 p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="font-display text-[18px] font-semibold">Distribution across the org</h2>
+                <p class="text-[12.5px] text-[var(--muted)] mt-0.5 num">596 engineers in scope · skewed L2–L3, matches survey baseline</p>
+              </div>
+              <div class="flex items-center gap-1 text-[11.5px] text-[var(--muted)]">
+                <button class="chip focus-ring rounded-md px-2.5 h-7 inline-flex items-center gap-1.5 bg-white">
+                  <i data-lucide="percent" class="w-3.5 h-3.5"></i> %
+                </button>
+                <button class="chip focus-ring rounded-md px-2.5 h-7 inline-flex items-center gap-1.5 bg-[#F4F5F7]">
+                  <i data-lucide="hash" class="w-3.5 h-3.5"></i> Count
+                </button>
+              </div>
+            </div>
+
+            <!-- SVG histogram -->
+            <div class="mt-6">
+              <svg viewBox="0 0 720 340" class="w-full h-auto" role="img" aria-label="AI level distribution histogram">
+                <!-- Y axis -->
+                <g font-family="Inter" font-size="10" fill="#9CA3AF" class="num">
+                  <text x="32" y="14" text-anchor="end">240</text>
+                  <text x="32" y="74" text-anchor="end">180</text>
+                  <text x="32" y="134" text-anchor="end">120</text>
+                  <text x="32" y="194" text-anchor="end">60</text>
+                  <text x="32" y="254" text-anchor="end">0</text>
+                </g>
+                <!-- Grid -->
+                <g stroke="#F1F2F4" stroke-width="1">
+                  <line x1="40" y1="10" x2="710" y2="10"/>
+                  <line x1="40" y1="70" x2="710" y2="70"/>
+                  <line x1="40" y1="130" x2="710" y2="130"/>
+                  <line x1="40" y1="190" x2="710" y2="190"/>
+                  <line x1="40" y1="250" x2="710" y2="250"/>
+                </g>
+                <!-- Bars: scaled so 240 = height 240 (from y=10 to y=250) -->
+                <!-- L1: 84 (count). h = 84 -> y=166. center x positions across 5 bars, area 670px wide, gap 32 -->
+                <!-- bar width = (670 - 4*32)/5 = 108.4. positions: 50, 190.4, 330.8, 471.2, 611.6 -->
+                <g>
+                  <!-- L1 = 84 -->
+                  <g class="bar-grow">
+                    <rect x="50" y="166" width="108" height="84" rx="3" fill="#64748B"/>
+                    <!-- previous cycle ghost: L1 prev=110, h=110 -> y=140 -->
+                    <rect x="50" y="140" width="108" height="110" rx="3" fill="none" stroke="#64748B" stroke-dasharray="3 3" stroke-width="1.4" opacity="0.6"/>
+                  </g>
+                  <!-- L2 = 198 -->
+                  <g class="bar-grow">
+                    <rect x="190.4" y="52" width="108" height="198" rx="3" fill="#0EA5E9"/>
+                    <!-- prev=212 -->
+                    <rect x="190.4" y="38" width="108" height="212" rx="3" fill="none" stroke="#0EA5E9" stroke-dasharray="3 3" stroke-width="1.4" opacity="0.6"/>
+                  </g>
+                  <!-- L3 = 214 -->
+                  <g class="bar-grow">
+                    <rect x="330.8" y="36" width="108" height="214" rx="3" fill="#10B981"/>
+                    <!-- prev=178 -->
+                    <rect x="330.8" y="72" width="108" height="178" rx="3" fill="none" stroke="#10B981" stroke-dasharray="3 3" stroke-width="1.4" opacity="0.6"/>
+                  </g>
+                  <!-- L4 = 78 -->
+                  <g class="bar-grow">
+                    <rect x="471.2" y="172" width="108" height="78" rx="3" fill="#F59E0B"/>
+                    <!-- prev=64 -->
+                    <rect x="471.2" y="186" width="108" height="64" rx="3" fill="none" stroke="#F59E0B" stroke-dasharray="3 3" stroke-width="1.4" opacity="0.6"/>
+                  </g>
+                  <!-- L5 = 22 -->
+                  <g class="bar-grow">
+                    <rect x="611.6" y="228" width="108" height="22" rx="3" fill="#BE185D"/>
+                    <!-- prev=14 -->
+                    <rect x="611.6" y="236" width="108" height="14" rx="3" fill="none" stroke="#BE185D" stroke-dasharray="3 3" stroke-width="1.4" opacity="0.6"/>
+                  </g>
+                </g>
+
+                <!-- Baseline -->
+                <line x1="40" y1="250" x2="710" y2="250" stroke="#D1D5DB" stroke-width="1"/>
+
+                <!-- Labels and counts -->
+                <g font-family="Inter" font-size="12" fill="#1A1A1A" class="num">
+                  <!-- counts on top -->
+                  <text x="104" y="158" text-anchor="middle" font-weight="600">84</text>
+                  <text x="244.4" y="44" text-anchor="middle" font-weight="600">198</text>
+                  <text x="384.8" y="28" text-anchor="middle" font-weight="600">214</text>
+                  <text x="525.2" y="164" text-anchor="middle" font-weight="600">78</text>
+                  <text x="665.6" y="220" text-anchor="middle" font-weight="600">22</text>
+                </g>
+                <!-- Level chips along baseline -->
+                <g font-family="Inter" font-size="11">
+                  <text x="104" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L1</text>
+                  <text x="104" y="292" text-anchor="middle" fill="#6B7280">None</text>
+                  <text x="104" y="308" text-anchor="middle" fill="#6B7280">14.1%</text>
+
+                  <text x="244.4" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L2</text>
+                  <text x="244.4" y="292" text-anchor="middle" fill="#6B7280">IDE agent</text>
+                  <text x="244.4" y="308" text-anchor="middle" fill="#6B7280">33.2%</text>
+
+                  <text x="384.8" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L3</text>
+                  <text x="384.8" y="292" text-anchor="middle" fill="#6B7280">CLI agent</text>
+                  <text x="384.8" y="308" text-anchor="middle" fill="#6B7280">35.9%</text>
+
+                  <text x="525.2" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L4</text>
+                  <text x="525.2" y="292" text-anchor="middle" fill="#6B7280">Parallel</text>
+                  <text x="525.2" y="308" text-anchor="middle" fill="#6B7280">13.1%</text>
+
+                  <text x="665.6" y="276" text-anchor="middle" fill="#1A1A1A" font-weight="600">L5</text>
+                  <text x="665.6" y="292" text-anchor="middle" fill="#6B7280">Fleet</text>
+                  <text x="665.6" y="308" text-anchor="middle" fill="#6B7280">3.7%</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="mt-2 flex items-center gap-5 text-[11.5px] text-[var(--muted)]">
+              <span class="inline-flex items-center gap-1.5"><span class="w-3 h-2 rounded-sm bg-[#10B981]"></span>This cycle · H1 2026</span>
+              <span class="inline-flex items-center gap-1.5">
+                <span class="w-3 h-2 rounded-sm" style="background: repeating-linear-gradient(90deg,#9CA3AF 0 2px,transparent 2px 4px);"></span>
+                Previous cycle · H2 2025
+              </span>
+              <span class="ml-auto">Median <span class="text-[var(--ink)] font-semibold num">L2.7</span> · Mode <span class="text-[var(--ink)] font-semibold">L3</span></span>
+            </div>
+          </div>
+
+          <!-- Side-by-side cycle comparison -->
+          <div class="card p-6">
+            <div class="flex items-start justify-between">
+              <div>
+                <h2 class="font-display text-[18px] font-semibold">Cycle on cycle</h2>
+                <p class="text-[12.5px] text-[var(--muted)] mt-0.5">H1 · 2026 vs H2 · 2025</p>
+              </div>
+              <span class="text-[11px] text-[var(--muted)] num">596 ↗ from 578</span>
+            </div>
+
+            <ul class="mt-5 space-y-3.5">
+              <!-- L1 -->
+              <li class="grid grid-cols-[28px_1fr_72px] gap-3 items-center">
+                <span class="font-display text-[13px] font-semibold">L1</span>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <div class="flex-1 h-2 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#64748B; width:14.1%;"></div>
+                    </div>
+                    <span class="num text-[12px] w-10 text-right">14.1%</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 mt-1 opacity-70">
+                    <div class="flex-1 h-1 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#64748B; width:19.0%;"></div>
+                    </div>
+                    <span class="num text-[11px] w-10 text-right text-[var(--muted)]">19.0%</span>
+                  </div>
+                </div>
+                <div class="flex items-center justify-end gap-1 text-[12.5px]">
+                  <i data-lucide="trending-down" class="w-3.5 h-3.5 text-[#047857]"></i>
+                  <span class="num text-[#047857] font-medium">-4.9 pp</span>
+                </div>
+              </li>
+
+              <!-- L2 -->
+              <li class="grid grid-cols-[28px_1fr_72px] gap-3 items-center">
+                <span class="font-display text-[13px] font-semibold">L2</span>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <div class="flex-1 h-2 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#0EA5E9; width:33.2%;"></div>
+                    </div>
+                    <span class="num text-[12px] w-10 text-right">33.2%</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 mt-1 opacity-70">
+                    <div class="flex-1 h-1 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#0EA5E9; width:36.7%;"></div>
+                    </div>
+                    <span class="num text-[11px] w-10 text-right text-[var(--muted)]">36.7%</span>
+                  </div>
+                </div>
+                <div class="flex items-center justify-end gap-1 text-[12.5px]">
+                  <i data-lucide="trending-down" class="w-3.5 h-3.5 text-[#047857]"></i>
+                  <span class="num text-[#047857] font-medium">-3.5 pp</span>
+                </div>
+              </li>
+
+              <!-- L3 -->
+              <li class="grid grid-cols-[28px_1fr_72px] gap-3 items-center">
+                <span class="font-display text-[13px] font-semibold">L3</span>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <div class="flex-1 h-2 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#10B981; width:35.9%;"></div>
+                    </div>
+                    <span class="num text-[12px] w-10 text-right">35.9%</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 mt-1 opacity-70">
+                    <div class="flex-1 h-1 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#10B981; width:30.8%;"></div>
+                    </div>
+                    <span class="num text-[11px] w-10 text-right text-[var(--muted)]">30.8%</span>
+                  </div>
+                </div>
+                <div class="flex items-center justify-end gap-1 text-[12.5px]">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#047857]"></i>
+                  <span class="num text-[#047857] font-medium">+5.1 pp</span>
+                </div>
+              </li>
+
+              <!-- L4 -->
+              <li class="grid grid-cols-[28px_1fr_72px] gap-3 items-center">
+                <span class="font-display text-[13px] font-semibold">L4</span>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <div class="flex-1 h-2 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#F59E0B; width:13.1%;"></div>
+                    </div>
+                    <span class="num text-[12px] w-10 text-right">13.1%</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 mt-1 opacity-70">
+                    <div class="flex-1 h-1 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#F59E0B; width:11.1%;"></div>
+                    </div>
+                    <span class="num text-[11px] w-10 text-right text-[var(--muted)]">11.1%</span>
+                  </div>
+                </div>
+                <div class="flex items-center justify-end gap-1 text-[12.5px]">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#047857]"></i>
+                  <span class="num text-[#047857] font-medium">+2.0 pp</span>
+                </div>
+              </li>
+
+              <!-- L5 -->
+              <li class="grid grid-cols-[28px_1fr_72px] gap-3 items-center">
+                <span class="font-display text-[13px] font-semibold">L5</span>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <div class="flex-1 h-2 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#BE185D; width:3.7%;"></div>
+                    </div>
+                    <span class="num text-[12px] w-10 text-right">3.7%</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 mt-1 opacity-70">
+                    <div class="flex-1 h-1 rounded-full" style="background:#EEF1F4;">
+                      <div class="h-full rounded-full" style="background:#BE185D; width:2.4%;"></div>
+                    </div>
+                    <span class="num text-[11px] w-10 text-right text-[var(--muted)]">2.4%</span>
+                  </div>
+                </div>
+                <div class="flex items-center justify-end gap-1 text-[12.5px]">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#047857]"></i>
+                  <span class="num text-[#047857] font-medium">+1.3 pp</span>
+                </div>
+              </li>
+            </ul>
+
+            <div class="mt-5 pt-4 border-t border-[var(--border-2)] flex items-center justify-between text-[12px]">
+              <span class="text-[var(--muted)]">Median level</span>
+              <span class="num font-medium">L2.7 <span class="text-[#047857] ml-1">▲ +0.2</span></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Breakdown table -->
+        <section class="mt-8">
+          <div class="card overflow-hidden">
+            <div class="px-6 pt-6 pb-4 flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <h2 class="font-display text-[18px] font-semibold">Breakdown by slice</h2>
+                <p class="text-[12.5px] text-[var(--muted)] mt-0.5">Each row shows level distribution as a horizontal stacked bar. Switch slice dimension to re-segment the same population.</p>
+              </div>
+              <div class="flex items-center gap-1">
+                <button class="chip focus-ring rounded-md px-2.5 h-8 text-[12.5px] inline-flex items-center gap-1.5 bg-[#F4F5F7]">
+                  By BG
+                </button>
+                <button class="chip focus-ring rounded-md px-2.5 h-8 text-[12.5px] inline-flex items-center gap-1.5 bg-white">
+                  By role
+                </button>
+                <button class="chip focus-ring rounded-md px-2.5 h-8 text-[12.5px] inline-flex items-center gap-1.5 bg-white">
+                  By tenure
+                </button>
+                <div class="divider-v h-6 mx-2"></div>
+                <button class="btn-ghost focus-ring rounded-md px-2.5 h-8 text-[12.5px] inline-flex items-center gap-1.5">
+                  <i data-lucide="arrow-down-up" class="w-3.5 h-3.5"></i> Sort
+                </button>
+              </div>
+            </div>
+
+            <!-- Header -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-2.5 text-[11px] uppercase tracking-[0.12em] text-[var(--muted)] font-medium border-y border-[var(--border-2)] bg-[#FBFBFC]">
+              <div>Business Group</div>
+              <div class="text-right num">N</div>
+              <div>Median</div>
+              <div>L1 · L2 · L3 · L4 · L5</div>
+              <div class="text-right">Δ median</div>
+            </div>
+
+            <!-- Visma Public -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-7 rounded-full" style="background:var(--l3);"></span>
+                <div>
+                  <div class="text-[14px] font-medium">Visma Public</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">3 units · LT/NO</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">84</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L3</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.95)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" title="L1 8" style="width:9.5%; background:#64748B;">8</div>
+                  <div class="grid place-items-center" title="L2 24" style="width:28.6%; background:#0EA5E9;">24</div>
+                  <div class="grid place-items-center" title="L3 32" style="width:38.1%; background:#10B981;">32</div>
+                  <div class="grid place-items-center" title="L4 16" style="width:19.0%; background:#F59E0B;">16</div>
+                  <div class="grid place-items-center" title="L5 4" style="width:4.8%; background:#BE185D;">4</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.34
+              </div>
+            </div>
+
+            <!-- Visma Commerce -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-7 rounded-full" style="background:var(--l3);"></span>
+                <div>
+                  <div class="text-[14px] font-medium">Visma Commerce Solutions</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">4 units · NO/SE/DK</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">102</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L3</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.81)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:11.8%; background:#64748B;">12</div>
+                  <div class="grid place-items-center" style="width:32.4%; background:#0EA5E9;">33</div>
+                  <div class="grid place-items-center" style="width:36.3%; background:#10B981;">37</div>
+                  <div class="grid place-items-center" style="width:15.7%; background:#F59E0B;">16</div>
+                  <div class="grid place-items-center" style="width:3.9%; background:#BE185D;">4</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.21
+              </div>
+            </div>
+
+            <!-- Custom Solutions -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-7 rounded-full" style="background:var(--l2);"></span>
+                <div>
+                  <div class="text-[14px] font-medium">Visma Custom Solutions</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">6 units · LT/PL</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">138</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L2</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.62)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:14.5%; background:#64748B;">20</div>
+                  <div class="grid place-items-center" style="width:36.2%; background:#0EA5E9;">50</div>
+                  <div class="grid place-items-center" style="width:32.6%; background:#10B981;">45</div>
+                  <div class="grid place-items-center" style="width:12.3%; background:#F59E0B;">17</div>
+                  <div class="grid place-items-center" style="width:4.4%; background:#BE185D;">6</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.18
+              </div>
+            </div>
+
+            <!-- SaaS Productivity -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-7 rounded-full" style="background:var(--l2);"></span>
+                <div>
+                  <div class="text-[14px] font-medium">Visma SaaS Productivity</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">5 units · NO/SE</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">96</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L2</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.58)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:15.6%; background:#64748B;">15</div>
+                  <div class="grid place-items-center" style="width:37.5%; background:#0EA5E9;">36</div>
+                  <div class="grid place-items-center" style="width:31.3%; background:#10B981;">30</div>
+                  <div class="grid place-items-center" style="width:12.5%; background:#F59E0B;">12</div>
+                  <div class="grid place-items-center" style="width:3.1%; background:#BE185D;">3</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.12
+              </div>
+            </div>
+
+            <!-- SMB North -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-7 rounded-full" style="background:var(--l2);"></span>
+                <div>
+                  <div class="text-[14px] font-medium">Visma SMB · North</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">7 units · NO/FI/SE</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">124</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L2</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.41)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:17.7%; background:#64748B;">22</div>
+                  <div class="grid place-items-center" style="width:37.1%; background:#0EA5E9;">46</div>
+                  <div class="grid place-items-center" style="width:29.0%; background:#10B981;">36</div>
+                  <div class="grid place-items-center" style="width:12.9%; background:#F59E0B;">16</div>
+                  <div class="grid place-items-center" style="width:3.2%; background:#BE185D;">4</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[var(--muted)] inline-flex items-center justify-end gap-1">
+                <i data-lucide="minus" class="w-3.5 h-3.5"></i> +0.04
+              </div>
+            </div>
+
+            <!-- Enterprise NO - lagging -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-7 rounded-full" style="background:var(--l1);"></span>
+                <div>
+                  <div class="text-[14px] font-medium flex items-center gap-2">
+                    Visma Enterprise · NO
+                    <span class="inline-flex items-center gap-1 text-[10.5px] font-medium px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E]">
+                      <i data-lucide="alert-triangle" class="w-3 h-3"></i> 52% stale
+                    </span>
+                  </div>
+                  <div class="text-[11.5px] text-[var(--muted)]">4 units · NO</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">52</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L2</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.19)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:25.0%; background:#64748B;">13</div>
+                  <div class="grid place-items-center" style="width:38.5%; background:#0EA5E9;">20</div>
+                  <div class="grid place-items-center" style="width:26.9%; background:#10B981;">14</div>
+                  <div class="grid place-items-center" style="width:7.7%; background:#F59E0B;">4</div>
+                  <div class="grid place-items-center" style="width:1.9%; background:#BE185D;">1</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#B45309] inline-flex items-center justify-end gap-1">
+                <i data-lucide="minus" class="w-3.5 h-3.5"></i> 0.00
+              </div>
+            </div>
+
+            <!-- Divider for "By role" preview -->
+            <div class="px-6 py-2 bg-[#FBFBFC] border-y border-[var(--border-2)] flex items-center justify-between text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium">
+              <span>By role · preview</span>
+              <span class="normal-case tracking-normal text-[11.5px] text-[var(--muted)]">596 engineers in scope</span>
+            </div>
+
+            <!-- Engineer -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <i data-lucide="code-2" class="w-4 h-4 text-[var(--muted)]"></i>
+                <div>
+                  <div class="text-[14px] font-medium">Engineer</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">IC, all seniorities</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">478</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L3</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.74)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:12.6%; background:#64748B;">60</div>
+                  <div class="grid place-items-center" style="width:33.3%; background:#0EA5E9;">159</div>
+                  <div class="grid place-items-center" style="width:36.6%; background:#10B981;">175</div>
+                  <div class="grid place-items-center" style="width:13.6%; background:#F59E0B;">65</div>
+                  <div class="grid place-items-center" style="width:4.0%; background:#BE185D;">19</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.22
+              </div>
+            </div>
+
+            <!-- Tech Lead -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <i data-lucide="git-branch" class="w-4 h-4 text-[var(--muted)]"></i>
+                <div>
+                  <div class="text-[14px] font-medium">Tech Lead / Architect</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">62 people</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">62</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L3</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(3.21)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:6.5%; background:#64748B;">4</div>
+                  <div class="grid place-items-center" style="width:22.6%; background:#0EA5E9;">14</div>
+                  <div class="grid place-items-center" style="width:35.5%; background:#10B981;">22</div>
+                  <div class="grid place-items-center" style="width:25.8%; background:#F59E0B;">16</div>
+                  <div class="grid place-items-center" style="width:9.7%; background:#BE185D;">6</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.38
+              </div>
+            </div>
+
+            <!-- Engineering Manager -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover">
+              <div class="flex items-center gap-3">
+                <i data-lucide="users" class="w-4 h-4 text-[var(--muted)]"></i>
+                <div>
+                  <div class="text-[14px] font-medium">Engineering Manager</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">56 people · also coaches</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">56</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L2</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.32)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:21.4%; background:#64748B;">12</div>
+                  <div class="grid place-items-center" style="width:42.9%; background:#0EA5E9;">24</div>
+                  <div class="grid place-items-center" style="width:23.2%; background:#10B981;">13</div>
+                  <div class="grid place-items-center" style="width:8.9%; background:#F59E0B;">5</div>
+                  <div class="grid place-items-center" style="width:3.6%; background:#BE185D;">2</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.08
+              </div>
+            </div>
+
+            <!-- Divider: By tenure -->
+            <div class="px-6 py-2 bg-[#FBFBFC] border-y border-[var(--border-2)] flex items-center justify-between text-[11.5px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium">
+              <span>By tenure · preview</span>
+              <span class="normal-case tracking-normal text-[11.5px] text-[var(--muted)]">Bucketed at hire date</span>
+            </div>
+
+            <!-- < 1 yr -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <i data-lucide="sprout" class="w-4 h-4 text-[var(--muted)]"></i>
+                <div>
+                  <div class="text-[14px] font-medium">&lt; 1 year</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">New joiners</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">74</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L3</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.96)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:6.8%; background:#64748B;">5</div>
+                  <div class="grid place-items-center" style="width:24.3%; background:#0EA5E9;">18</div>
+                  <div class="grid place-items-center" style="width:43.2%; background:#10B981;">32</div>
+                  <div class="grid place-items-center" style="width:20.3%; background:#F59E0B;">15</div>
+                  <div class="grid place-items-center" style="width:5.4%; background:#BE185D;">4</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.41
+              </div>
+            </div>
+
+            <!-- 1-3 yr -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <i data-lucide="leaf" class="w-4 h-4 text-[var(--muted)]"></i>
+                <div>
+                  <div class="text-[14px] font-medium">1–3 years</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">Settled</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">182</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L3</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.78)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:11.5%; background:#64748B;">21</div>
+                  <div class="grid place-items-center" style="width:32.4%; background:#0EA5E9;">59</div>
+                  <div class="grid place-items-center" style="width:36.3%; background:#10B981;">66</div>
+                  <div class="grid place-items-center" style="width:15.4%; background:#F59E0B;">28</div>
+                  <div class="grid place-items-center" style="width:4.4%; background:#BE185D;">8</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.24
+              </div>
+            </div>
+
+            <!-- 3-7 yr -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover border-b border-[var(--border-2)]">
+              <div class="flex items-center gap-3">
+                <i data-lucide="tree-pine" class="w-4 h-4 text-[var(--muted)]"></i>
+                <div>
+                  <div class="text-[14px] font-medium">3–7 years</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">Mid-tenure</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">214</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L2</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.61)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:14.5%; background:#64748B;">31</div>
+                  <div class="grid place-items-center" style="width:37.4%; background:#0EA5E9;">80</div>
+                  <div class="grid place-items-center" style="width:30.4%; background:#10B981;">65</div>
+                  <div class="grid place-items-center" style="width:13.6%; background:#F59E0B;">29</div>
+                  <div class="grid place-items-center" style="width:4.2%; background:#BE185D;">9</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[#047857] inline-flex items-center justify-end gap-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +0.16
+              </div>
+            </div>
+
+            <!-- 7+ yr -->
+            <div class="grid grid-cols-[2fr_80px_1fr_2.4fr_120px] gap-4 px-6 py-3.5 items-center row-hover">
+              <div class="flex items-center gap-3">
+                <i data-lucide="trees" class="w-4 h-4 text-[var(--muted)]"></i>
+                <div>
+                  <div class="text-[14px] font-medium">7+ years</div>
+                  <div class="text-[11.5px] text-[var(--muted)]">Veterans</div>
+                </div>
+              </div>
+              <div class="text-right num text-[13px]">126</div>
+              <div class="flex items-center gap-2">
+                <span class="font-display text-[13px] font-semibold">L2</span>
+                <span class="num text-[11.5px] text-[var(--muted)]">(2.43)</span>
+              </div>
+              <div>
+                <div class="flex w-full h-5 rounded-full overflow-hidden hairline num text-[10px] font-medium text-white">
+                  <div class="grid place-items-center" style="width:21.4%; background:#64748B;">27</div>
+                  <div class="grid place-items-center" style="width:32.5%; background:#0EA5E9;">41</div>
+                  <div class="grid place-items-center" style="width:32.5%; background:#10B981;">41</div>
+                  <div class="grid place-items-center" style="width:9.5%; background:#F59E0B;">12</div>
+                  <div class="grid place-items-center" style="width:4.0%; background:#BE185D;">5</div>
+                </div>
+              </div>
+              <div class="text-right num text-[12.5px] text-[var(--muted)] inline-flex items-center justify-end gap-1">
+                <i data-lucide="minus" class="w-3.5 h-3.5"></i> +0.03
+              </div>
+            </div>
+
+            <!-- Legend footer -->
+            <div class="px-6 py-3 flex items-center justify-between text-[11.5px] text-[var(--muted)] bg-[#FBFBFC] border-t border-[var(--border-2)]">
+              <div class="flex items-center gap-4">
+                <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#64748B]"></span>L1 None</span>
+                <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#0EA5E9]"></span>L2 IDE</span>
+                <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#10B981]"></span>L3 CLI</span>
+                <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#F59E0B]"></span>L4 Parallel</span>
+                <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#BE185D]"></span>L5 Fleet</span>
+              </div>
+              <span class="num">Total population: 596</span>
+            </div>
+          </div>
+        </section>
+
+        <p class="mt-8 text-[11.5px] text-[var(--muted)] flex items-center gap-1.5">
+          <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+          Aggregated view. Individual levels and free-text feedback are not shown on this screen.
+        </p>
+
+      </div>
+    </main>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

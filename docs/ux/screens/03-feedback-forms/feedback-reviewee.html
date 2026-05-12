@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feedback — Reviewee → Reviewer · Cross-Project Reviews</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #14110f;
+      --ink-2: #3a342f;
+      --muted: #7a7269;
+      --rule: #e6e0d8;
+      --rule-2: #efeae2;
+      --paper: #f6f2ea;
+      --paper-2: #fbf8f2;
+      --card: #ffffff;
+      --magenta: #E10078;
+      --L2: #0EA5E9;
+      --L4: #F59E0B;
+    }
+    html, body { background: var(--paper); color: var(--ink); }
+    body { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-feature-settings: "ss01","cv11"; }
+    .font-display { font-family: 'Fraunces', ui-serif, Georgia, serif; font-optical-sizing: auto; letter-spacing: -0.01em; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .paper {
+      background-color: var(--paper);
+      background-image:
+        radial-gradient(rgba(20,17,15,0.035) 1px, transparent 1px),
+        radial-gradient(rgba(20,17,15,0.02) 1px, transparent 1px);
+      background-size: 3px 3px, 7px 7px;
+      background-position: 0 0, 1px 1px;
+    }
+    .hairline { border-color: var(--rule); }
+    .hairline-strong { border-color: var(--ink); }
+    .num-marker {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .field-label { font-family: 'Fraunces', serif; font-weight: 500; letter-spacing: -0.005em; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px; border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em;
+      border: 1px solid var(--rule);
+      background: var(--card);
+      color: var(--ink-2);
+    }
+    .pill .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ink); }
+    .level-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 2px 8px; border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em;
+      color: white;
+    }
+    .level-L4 { background: var(--L4); }
+    .level-L2 { background: var(--L2); }
+
+    /* Likert track */
+    .likert {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      padding: 18px 14px 22px;
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+    }
+    .likert::before {
+      content: "";
+      position: absolute;
+      left: 36px; right: 36px; top: 38px;
+      height: 2px;
+      background: var(--ink);
+      opacity: 0.85;
+    }
+    .likert-stop {
+      position: relative;
+      display: flex; flex-direction: column; align-items: center;
+      cursor: pointer;
+      padding-top: 22px;
+    }
+    .likert-stop .detent {
+      position: absolute; top: 32px;
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 2px solid var(--ink);
+      box-shadow: inset 0 0 0 2px var(--card);
+      transition: transform 120ms ease;
+    }
+    .likert-stop[data-selected="true"] .detent {
+      background: var(--ink);
+      box-shadow: inset 0 0 0 3px var(--card);
+      transform: scale(1.18);
+    }
+    .likert-stop .num {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .likert-stop[data-selected="true"] .num { color: var(--ink); }
+    .likert-stop .lab {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 18px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .likert-stop[data-selected="true"] .lab { color: var(--ink); }
+
+    /* Radio card */
+    .radio-card {
+      position: relative;
+      border: 1px solid var(--rule);
+      background: var(--card);
+      border-radius: 6px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: border-color 120ms;
+      text-align: left;
+    }
+    .radio-card:hover { border-color: var(--ink-2); }
+    .radio-card[data-selected="true"] {
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 1px var(--ink);
+    }
+    .radio-card .mark {
+      width: 12px; height: 12px; border-radius: 2px;
+      border: 1.5px solid var(--ink-2);
+      background: var(--card);
+      display: inline-block;
+    }
+    .radio-card[data-selected="true"] .mark {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+    .radio-card[data-selected="true"] .mark::after {
+      content: ""; display: block; width: 4px; height: 4px;
+      background: var(--paper); margin: 2.5px;
+    }
+
+    .text-input, .textarea {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: 'Geist', sans-serif;
+      color: var(--ink);
+      transition: border-color 120ms, box-shadow 120ms;
+    }
+    .textarea { min-height: 96px; resize: vertical; line-height: 1.55; }
+    .text-input:focus, .textarea:focus {
+      outline: none;
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 1px var(--ink);
+    }
+    .helper {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+    }
+    .counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .progress-cell {
+      width: 14px; height: 14px; border-radius: 2px;
+      border: 1px solid var(--ink);
+      background: var(--paper-2);
+    }
+    .progress-cell.done { background: var(--ink); }
+    .progress-cell.current { background: var(--paper-2); box-shadow: inset 0 0 0 2px var(--paper-2), 0 0 0 1.5px var(--ink); }
+
+    .section-h {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      align-items: baseline;
+      padding-top: 36px;
+      padding-bottom: 14px;
+      border-top: 1px solid var(--rule);
+    }
+    .section-h:first-of-type { border-top: 0; padding-top: 8px; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 12px; border-radius: 6px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+    }
+    .nav-item:hover { background: var(--paper-2); }
+    .nav-item.active { background: var(--ink); color: var(--paper-2); }
+    .nav-item .ico { width: 16px; height: 16px; }
+    .nav-section { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); padding: 14px 12px 6px; }
+
+    .btn-primary {
+      background: var(--magenta);
+      color: white;
+      padding: 12px 22px;
+      border-radius: 6px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      display: inline-flex; align-items: center; gap: 10px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 8px 24px -10px rgba(225,0,120,0.55);
+    }
+    .btn-primary:hover { filter: brightness(0.96); }
+    .btn-primary[disabled] {
+      background: var(--rule);
+      color: var(--muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-2);
+      padding: 10px 16px;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      font-size: 13.5px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+    .save-dot {
+      width: 6px; height: 6px; border-radius: 999px;
+      background: var(--muted);
+    }
+    .level-arrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      color: var(--muted);
+    }
+    .side-rail {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Inline takeaway note from reviewer (anonymised preview) */
+    .reviewer-quote {
+      background: var(--paper-2);
+      border-left: 2px solid var(--ink);
+      padding: 12px 16px;
+      font-family: 'Fraunces', serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body class="paper">
+
+<div class="min-h-screen flex">
+
+  <!-- SideNav -->
+  <aside class="w-[232px] shrink-0 border-r hairline bg-[var(--paper-2)] flex flex-col">
+    <div class="px-5 pt-6 pb-5 border-b hairline">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-md bg-[var(--ink)] text-[var(--paper-2)] grid place-items-center font-display text-[15px] leading-none pt-0.5">x</div>
+        <div>
+          <div class="font-display text-[15px] leading-none">Cross-Project</div>
+          <div class="text-[10px] font-mono tracking-widest text-[var(--muted)] mt-1">REVIEWS · VISMA</div>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center justify-between text-[11px] font-mono">
+        <span class="text-[var(--muted)]">CYCLE 26-H1</span>
+        <span class="text-[var(--ink)]">37d left</span>
+      </div>
+    </div>
+
+    <nav class="px-3 py-2 flex-1">
+      <div class="nav-section">You</div>
+      <a class="nav-item"><i data-lucide="layout-dashboard" class="ico"></i>Dashboard</a>
+      <a class="nav-item"><i data-lucide="calendar-clock" class="ico"></i>My sessions</a>
+      <a class="nav-item active"><i data-lucide="message-square-text" class="ico"></i>Feedback<span class="ml-auto text-[10px] font-mono opacity-80">1</span></a>
+      <a class="nav-item"><i data-lucide="user-round" class="ico"></i>Profile</a>
+
+      <div class="nav-section">Org</div>
+      <a class="nav-item"><i data-lucide="bar-chart-3" class="ico"></i>Insights</a>
+    </nav>
+
+    <div class="px-4 py-4 border-t hairline">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-[var(--ink)] text-[var(--paper-2)] grid place-items-center font-display text-[13px]">KP</div>
+        <div class="text-[12px] leading-tight">
+          <div class="text-[var(--ink)]">Karolis Petrauskas</div>
+          <div class="text-[var(--muted)] font-mono text-[10px] tracking-wider">L2 · ENGINEER</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 min-w-0 flex flex-col">
+
+    <!-- TopBar -->
+    <div class="h-12 border-b hairline bg-[var(--paper-2)] flex items-center px-6 gap-4">
+      <div class="flex items-center gap-2 text-[12px] text-[var(--muted)] font-mono">
+        <a class="hover:text-[var(--ink)]">My sessions</a>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <a class="hover:text-[var(--ink)]">Session #284</a>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <span class="text-[var(--ink)]">Feedback · Reviewee</span>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <span class="pill"><span class="dot" style="background:#7C3AED"></span>session completed</span>
+      </div>
+    </div>
+
+    <!-- Sticky session header -->
+    <div class="sticky top-0 z-20 bg-[var(--paper-2)]/95 backdrop-blur border-b hairline">
+      <div class="max-w-[920px] mx-auto px-10 py-5">
+        <div class="grid grid-cols-12 gap-6 items-end">
+          <div class="col-span-7">
+            <div class="num-marker mb-1">REVIEWEE → REVIEWER · SESSION 284</div>
+            <div class="flex items-baseline gap-4 flex-wrap">
+              <h1 class="font-display text-[28px] leading-[1.05] tracking-tight">
+                Feedback for <span class="italic">Tomek Szturo</span>
+              </h1>
+              <span class="level-arrow">
+                <span class="level-chip level-L2">L2</span>
+                <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                <span class="level-chip level-L4">L4</span>
+                <span class="ml-1 text-[var(--muted)]">level diff +2</span>
+              </span>
+            </div>
+            <div class="mt-2 flex items-center gap-4 text-[12px] font-mono text-[var(--muted)]">
+              <span class="inline-flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i>Session held · Mon 04 May · 14:00–15:30</span>
+              <span class="inline-flex items-center gap-1.5"><i data-lucide="briefcase" class="w-3.5 h-3.5"></i>Visma Solutions · Tampere</span>
+              <span class="inline-flex items-center gap-1.5 text-[#B45309]"><i data-lucide="clock-alert" class="w-3.5 h-3.5"></i>due in 4 days</span>
+            </div>
+          </div>
+
+          <div class="col-span-5">
+            <div class="flex items-center justify-end gap-5">
+              <div class="text-right">
+                <div class="text-[11px] font-mono text-[var(--muted)]">PROGRESS</div>
+                <div class="font-display text-[22px] leading-none mt-0.5">1<span class="text-[var(--muted)]">/5</span></div>
+              </div>
+              <div class="flex items-center gap-1.5 pl-5 border-l hairline">
+                <div class="progress-cell done"></div>
+                <div class="progress-cell current"></div>
+                <div class="progress-cell"></div>
+                <div class="progress-cell"></div>
+                <div class="progress-cell"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-end gap-2 mt-3 text-[11px] font-mono text-[var(--muted)]">
+              <span class="save-dot"></span>
+              <span>No edits yet</span>
+              <span class="text-[var(--rule)]">·</span>
+              <span>drafts saved locally</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form body -->
+    <div class="flex-1 relative">
+      <div class="absolute left-3 top-12 bottom-12 hidden xl:flex items-start">
+        <span class="side-rail">FEEDBACK · REVIEWEE VARIANT · v1.0</span>
+      </div>
+
+      <div class="max-w-[920px] mx-auto px-10 py-10">
+
+        <!-- Intent + companion note -->
+        <div class="grid grid-cols-12 gap-6 mb-10">
+          <div class="col-span-7">
+            <p class="text-[14px] text-[var(--ink-2)] leading-relaxed">
+              Short form, five questions. The point is to capture <em class="font-display italic">what you'll actually do differently</em> in the next two weeks — and to tell the program whether the pairing was worth your time.
+            </p>
+          </div>
+          <div class="col-span-5">
+            <div class="num-marker mb-2">REVIEWER ALREADY SUBMITTED</div>
+            <div class="reviewer-quote">"One concrete habit to adopt: start every non-trivial task by writing the failing assertion first…"</div>
+            <a class="helper inline-flex items-center gap-1 mt-2 hover:text-[var(--ink)]">Read full feedback on session page<i data-lucide="arrow-up-right" class="w-3 h-3"></i></a>
+          </div>
+        </div>
+
+        <!-- 1. Level higher in practice? (RADIO 3) -->
+        <section class="section-h">
+          <div>
+            <div class="num-marker">01 · LEVEL CHECK</div>
+            <div class="mt-1 text-[10px] font-mono text-[var(--muted)]">choose one</div>
+          </div>
+          <div>
+            <h2 class="field-label text-[19px]">Was the reviewer's level genuinely higher in practice?</h2>
+            <p class="helper mt-1">The matching algorithm relies on this. Be honest — "no" is useful signal, not an insult.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11 grid grid-cols-3 gap-3">
+            <button class="radio-card" data-selected="true">
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Yes — clearly</span></div>
+              <p class="helper mt-2">I saw moves I couldn't have made.</p>
+            </button>
+            <button class="radio-card" data-selected="false">
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Sort of</span></div>
+              <p class="helper mt-2">Some areas higher, some equal.</p>
+            </button>
+            <button class="radio-card" data-selected="false">
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">No</span></div>
+              <p class="helper mt-2">Different, not higher.</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Top thing learned -->
+        <section class="section-h">
+          <div><div class="num-marker">02 · LEARNED</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">free text</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">Top thing you learned</h2>
+            <p class="helper mt-1">One specific moment, technique, or insight. Skip generalities.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11">
+            <textarea class="textarea" placeholder="The one thing from the session that made you think 'oh, I should be doing that'…"></textarea>
+            <div class="flex justify-between items-center mt-1">
+              <span class="helper">Reviewer sees this. Coach sees this. Anonymised in roll-ups.</span>
+              <span class="counter">0 / 600</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Try in 2 weeks -->
+        <section class="section-h">
+          <div><div class="num-marker">03 · COMMIT</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">free text</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">What you'll try in the next two weeks</h2>
+            <p class="helper mt-1">One concrete change. We'll nudge you on day 14 to check whether it stuck.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11">
+            <textarea class="textarea" placeholder="e.g. 'Stop accepting the agent's first plan — push back with a counter-question every time.'"></textarea>
+            <div class="flex justify-between items-center mt-1">
+              <span class="helper inline-flex items-center gap-1.5"><i data-lucide="bell" class="w-3.5 h-3.5"></i>Reminder will land in Slack on 18 May.</span>
+              <span class="counter">0 / 400</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Session quality (LIKERT) -->
+        <section class="section-h">
+          <div><div class="num-marker">04 · QUALITY</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">scale 1–5</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">Quality of the session itself</h2>
+            <p class="helper mt-1">Not the reviewer's level — the session. Prep, attention, structure, momentum.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11">
+            <div class="likert" role="radiogroup" aria-label="Session quality">
+              <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">wasted time</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">mostly off</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">useful</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">strong</span></button>
+              <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">best peer time<br/>this year</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Program feedback (optional) -->
+        <section class="section-h">
+          <div><div class="num-marker">05 · PROGRAM</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">optional</div></div>
+          <div>
+            <h2 class="field-label text-[19px]">Anything to tell the people running this program?</h2>
+            <p class="helper mt-1">Pairing logic, timing, tooling, the form itself. Goes to admin, never to the reviewer.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-4">
+          <div class="col-start-2 col-span-11">
+            <textarea class="textarea" placeholder="Optional. Leave blank if nothing comes to mind."></textarea>
+            <div class="flex justify-between items-center mt-1">
+              <span class="helper">Visible only to: program admin. Never anonymised back to the reviewer.</span>
+              <span class="counter">0 / 600</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit bar -->
+        <div class="mt-14 border-t hairline-strong pt-6 flex items-center gap-4">
+          <div class="text-[12px] font-mono text-[var(--muted)]">
+            <div>FORM v1.0 · REVIEWEE VARIANT</div>
+            <div class="mt-0.5">Visible to: reviewer, your coach, program admin. Anonymised in BG roll-ups.</div>
+          </div>
+          <div class="ml-auto flex items-center gap-3">
+            <button class="btn-ghost"><i data-lucide="save" class="w-4 h-4"></i>Save & close</button>
+            <button class="btn-primary" disabled><span class="font-display text-[15px]">Submit feedback</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+        <div class="text-right mt-2"><span class="helper">Submit unlocks once Q1–Q4 are answered.</span></div>
+
+        <div class="h-16"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  document.querySelectorAll('.likert').forEach(group => {
+    group.querySelectorAll('.likert-stop').forEach(stop => {
+      stop.addEventListener('click', () => {
+        group.querySelectorAll('.likert-stop').forEach(s => s.dataset.selected = 'false');
+        stop.dataset.selected = 'true';
+      });
+    });
+  });
+
+  document.querySelectorAll('.radio-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.parentElement.querySelectorAll('.radio-card').forEach(c => c.dataset.selected = 'false');
+      card.dataset.selected = 'true';
+    });
+  });
+</script>
+</body>
+</html>

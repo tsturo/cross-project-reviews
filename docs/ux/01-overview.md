@@ -79,6 +79,10 @@ Checklist — each row is a single screen a downstream agent can take.
 - [ ] **AdminLevelOverride** — `/admin/overrides` — admin/coach — Set/override an employee's level with reason.
 - [ ] **EmptyState / NotFound** — global — all — Shared fallback screens.
 
+### MVP — email surfaces
+
+- [ ] **EmailTemplates** — rendered React-Email — all — Transactional + reminder + digest templates (see spec §10b for trigger matrix).
+
 ### Phase 2
 
 - [ ] **SessionScheduler** — embedded in SessionDetail — engineer — Pick 3 freebusy slots; both confirm.
