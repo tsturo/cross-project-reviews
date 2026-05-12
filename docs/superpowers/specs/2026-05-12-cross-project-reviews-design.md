@@ -38,7 +38,9 @@ ReviewCycle (id, name, starts_at, ends_at, auto_pair_after)
         └── Feedback (assignment_id, author_id, answers_json, submitted_at)
 ```
 
-`Assignment.status`: `proposed → reviewer_accepted → scheduled → completed → feedback_submitted`. There's also `declined` and `auto_paired`.
+`Assignment.status`: `assigned → scheduled → completed → feedback_submitted`. Auto-paired assignments carry an `auto_paired = true` flag.
+
+Approval between coach and reviewer happens out-of-band (Slack / email / hallway). The coach only records the agreed pairing in the app — no in-app accept/decline flow.
 
 ## 4. AI adoption level
 
@@ -63,14 +65,17 @@ Single integer 1–5, using the framework already used in the existing survey:
 Coach dashboard lists each coachee + suggested eligible reviewers
    │
    ▼
-Coach picks reviewer  ──►  Reviewer notified (Slack DM, fallback email)
-                                  │
-                                  ├─ accept ──► Calendar slot proposal (3 options) ──► both confirm ──► scheduled
-                                  └─ decline ──► back to coach with reason
+Coach agrees pairing with reviewer out-of-band (Slack/email)
    │
-   │ (if coach inaction)
    ▼
-T-7 days before cycle end: system auto-pairs unassigned coachees
+Coach records the pairing in the app
+   │
+   ▼
+Calendar slot proposal (3 options) ──► both confirm ──► scheduled
+   │
+   │ (if coach inaction at T-7 days before cycle end)
+   ▼
+System auto-pairs unassigned coachees; notifies coach + both parties by email
    │
    ▼
 Session happens (1–1.5h)
@@ -177,8 +182,7 @@ Row-Level Security: engineers see only their own rows; coaches see coachees' row
 | Employee/coach import | Server action that pulls Google Sheet #1 via service account (read-only). Nightly + on-demand. | MVP |
 | AI level import | Same as above for sheet #2; idempotent upsert on `(email, timestamp)`. | MVP |
 | Calendar | Google Calendar `freebusy` + event create on both calendars; user-delegated OAuth scope. | Phase 2 |
-| Slack | DM via bot token; interactive buttons hit a Next.js route. | Phase 2 |
-| Email fallback | Resend (Vercel marketplace) or transactional via Google Workspace. | Phase 2 |
+| Email notifications | Resend (Vercel marketplace) or transactional via Google Workspace — used for assignment confirmations, reminders, feedback nudges. Not approval. | MVP |
 | Auto-pair scheduler | Vercel cron job, daily at 06:00 UTC. | Phase 3 |
 
 ## 11. Tech stack
@@ -203,10 +207,9 @@ Row-Level Security: engineers see only their own rows; coaches see coachees' row
 
 **Definition of done:** a coach can log in, see their coachees, assign reviewers, and both parties can submit feedback that shows up on the BG dashboard.
 
-### Phase 2 — Calendar + Slack (target: +3 weeks)
+### Phase 2 — Calendar integration (target: +2 weeks)
 
-- Slack approval flow with buttons.
-- Google Calendar freebusy & event creation.
+- Google Calendar freebusy lookup & event creation.
 - Notification audit trail.
 
 ### Phase 3 — Automation & analytics (target: +3 weeks)
@@ -222,7 +225,6 @@ Row-Level Security: engineers see only their own rows; coaches see coachees' row
 - **Survey freshness** — 144 unique employees responded vs. ~660 total. Need a re-survey push at cycle start; consider a 60-second in-app self-assessment as a fallback.
 - **Cross-language naming** — Lithuanian/English mix in sheet #1. Normalize at import; display as-is.
 - **Calendar privacy** — `freebusy` only reveals busy/free, no event details, so this is fine; document it explicitly in the privacy notice.
-- **Slack workspace coverage** — confirm all 660 employees are in a single workspace before committing to Slack as primary channel.
 - **GDPR** — feedback is personal data tied to an identified employee. Retention: keep raw feedback 2 years, anonymized aggregates indefinitely. Confirm with Visma DPO.
 
 ## 14. Success metrics
