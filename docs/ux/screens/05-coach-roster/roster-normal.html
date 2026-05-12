@@ -66,6 +66,19 @@
     padding: 3px 9px; border: 1px solid #E8E5DE; border-radius: 999px;
     font-size: 11.5px; color: #4A463F; background: #FFFFFF;
   }
+  .hard-chip {
+    display: inline-flex; align-items:center; gap: 5px;
+    padding: 3px 9px 3px 6px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+    color: #065F46; background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.35);
+  }
+  .hard-chip .ck {
+    width: 12px; height: 12px; border-radius: 999px;
+    background: #10B981; color: white;
+    display: inline-grid; place-items: center;
+    font-size: 9px; line-height: 1; font-weight: 700;
+  }
   .level-mark {
     display:inline-flex; align-items:center; justify-content:center;
     width: 22px; height: 22px; border-radius: 5px;
@@ -226,7 +239,7 @@
           <h1 class="font-display text-[34px] leading-[1.05] tracking-tight">Your coachees, this cycle.</h1>
           <p class="text-[14px] text-muted mt-3 leading-relaxed">
             Eight engineers expect one cross-project review from you by <span class="text-ink font-medium">12 July 2026</span>.
-            Pair them with a reviewer one AI level up — agree out-of-band, then record the pairing here.
+            Pair them with a reviewer one rank up — from a different project, a different coach. Architecture, clean code, testing, and AI workflow all on the table. Agree out-of-band, then record the pairing here.
           </p>
         </div>
         <div class="flex items-center gap-2 pb-1">
@@ -351,7 +364,7 @@
                   <div>
                     <div class="smallcaps text-subtle">Suggested reviewers · top 5</div>
                     <div class="font-display text-[18px] mt-1">Ranked for <span class="italic">Eglė Kazlauskaitė</span> — L4, Visma.net Expense</div>
-                    <div class="text-[12px] text-muted mt-1">Hard filters applied: level &gt; L4, different project, ≤2 active load, no repeat from last 2 cycles.</div>
+                    <div class="text-[12px] text-muted mt-1">All candidates pass the hard rules; soft signals rank them. Hard: rank &gt; L4 · different project · different coach · no prior pair · ≤2 load.</div>
                   </div>
                   <a href="#" class="text-[12.5px] underline underline-offset-4 decoration-line hover:decoration-ink">Search all reviewers →</a>
                 </div>
@@ -365,9 +378,11 @@
                       <div class="text-[13.5px] font-medium">Mantas Jankauskas <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
                       <div class="text-[11.5px] text-muted">Staff Engineer · Payroll 4867 · Visma Lithuania</div>
                     </div>
-                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                    <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
+                      <span class="hard-chip"><span class="ck">✓</span>Different project</span>
+                      <span class="hard-chip"><span class="ck">✓</span>Different coach</span>
+                      <span class="hard-chip"><span class="ck">✓</span>No prior pair</span>
                       <span class="reason-chip">L5, +1 from coachee</span>
-                      <span class="reason-chip">Different project</span>
                       <span class="reason-chip">Same company</span>
                       <span class="reason-chip tabular">0 / 2 load</span>
                     </div>
@@ -381,7 +396,10 @@
                       <div class="text-[13.5px] font-medium">Aušra Petraitytė <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
                       <div class="text-[11.5px] text-muted">Principal · Visma.net AutoInvoice · Visma Lithuania</div>
                     </div>
-                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                    <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
+                      <span class="hard-chip"><span class="ck">✓</span>Different project</span>
+                      <span class="hard-chip"><span class="ck">✓</span>Different coach</span>
+                      <span class="hard-chip"><span class="ck">✓</span>No prior pair</span>
                       <span class="reason-chip">L5, different stack</span>
                       <span class="reason-chip">Same company</span>
                       <span class="reason-chip tabular">1 / 2 load</span>
@@ -397,7 +415,10 @@
                       <div class="text-[13.5px] font-medium">Henrik Vatne <span class="level-mark ml-1" style="background:#FEF3C7;color:#92400E">L4</span></div>
                       <div class="text-[11.5px] text-muted">Senior · Visma Sign · Visma Norge</div>
                     </div>
-                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                    <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
+                      <span class="hard-chip"><span class="ck">✓</span>Different project</span>
+                      <span class="hard-chip"><span class="ck">✓</span>Different coach</span>
+                      <span class="hard-chip"><span class="ck">✓</span>No prior pair</span>
                       <span class="reason-chip">L4 · cross-company</span>
                       <span class="reason-chip">Different stack (TS)</span>
                       <span class="reason-chip tabular">0 / 2 load</span>
@@ -412,9 +433,11 @@
                       <div class="text-[13.5px] font-medium">Rasa Bertašius <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
                       <div class="text-[11.5px] text-muted">Staff · Severa · Visma Lithuania</div>
                     </div>
-                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                    <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
+                      <span class="hard-chip"><span class="ck">✓</span>Different project</span>
+                      <span class="hard-chip"><span class="ck">✓</span>Different coach</span>
+                      <span class="hard-chip"><span class="ck">✓</span>No prior pair</span>
                       <span class="reason-chip">L5 orchestrator</span>
-                      <span class="reason-chip">Different project</span>
                       <span class="reason-chip tabular">2 / 2 load</span>
                       <span class="reason-chip" style="color:#92400E;border-color:#FDE68A;background:#FFFBEB">High load</span>
                     </div>
@@ -428,7 +451,10 @@
                       <div class="text-[13.5px] font-medium">Jonas Naujokas <span class="level-mark ml-1" style="background:#FEF3C7;color:#92400E">L4</span></div>
                       <div class="text-[11.5px] text-muted">Senior · Visma Spcs · Visma Sverige</div>
                     </div>
-                    <div class="flex flex-wrap gap-1.5 max-w-[420px] justify-end">
+                    <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
+                      <span class="hard-chip"><span class="ck">✓</span>Different project</span>
+                      <span class="hard-chip"><span class="ck">✓</span>Different coach</span>
+                      <span class="hard-chip"><span class="ck">✓</span>No prior pair</span>
                       <span class="reason-chip">L4 · cross-company</span>
                       <span class="reason-chip">.NET → Python switch</span>
                       <span class="reason-chip tabular">1 / 2 load</span>

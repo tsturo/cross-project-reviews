@@ -25,11 +25,9 @@
       --L3: #10B981;
       --L4: #F59E0B;
       --L5: #BE185D;
-      --status-assigned: #6B7280;
-      --status-scheduled: #2563EB;
-      --status-completed: #16A34A;
       --status-fb: #7C3AED;
-      --status-auto: #D97706;
+      --warn: #B45309;
+      --ok: #16A34A;
     }
     html, body { background: var(--paper); color: var(--ink); }
     body { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-feature-settings: "ss01","cv11"; }
@@ -45,7 +43,6 @@
     }
     .hairline { border-color: var(--rule); }
     .hairline-strong { border-color: var(--ink); }
-    .rule-tick { background-image: linear-gradient(to right, var(--ink) 1px, transparent 1px); background-size: 8px 1px; background-repeat: repeat-x; }
     .num-marker {
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       font-size: 10px;
@@ -74,7 +71,7 @@
     .magenta { color: var(--magenta); }
     .bg-magenta { background-color: var(--magenta); }
 
-    /* Likert track — physical scale */
+    /* Likert — physical scale */
     .likert {
       position: relative;
       display: grid;
@@ -115,7 +112,7 @@
     }
     .likert-stop .num {
       font-family: 'Fraunces', serif;
-      font-size: 28px;
+      font-size: 24px;
       line-height: 1;
       color: var(--muted);
       margin-bottom: 8px;
@@ -123,7 +120,7 @@
     .likert-stop[data-selected="true"] .num { color: var(--ink); }
     .likert-stop .lab {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 9.5px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
@@ -133,7 +130,7 @@
     }
     .likert-stop[data-selected="true"] .lab { color: var(--ink); }
 
-    /* Radio (different from Likert — squarish, labeled cards) */
+    /* Radio cards */
     .radio-card {
       position: relative;
       border: 1px solid var(--rule);
@@ -142,6 +139,7 @@
       padding: 12px 14px;
       cursor: pointer;
       transition: border-color 120ms;
+      text-align: left;
     }
     .radio-card:hover { border-color: var(--ink-2); }
     .radio-card[data-selected="true"] {
@@ -163,7 +161,7 @@
       background: var(--paper); margin: 2.5px;
     }
 
-    /* Multi-select chip */
+    /* Chips */
     .chip {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 6px 12px;
@@ -214,26 +212,84 @@
       letter-spacing: 0.06em;
     }
 
-    /* Sticky header progress dots */
+    /* Collapsed-comment affordance — a thin stub the reviewer can expand */
+    .comment-stub {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 10px;
+      border: 1px dashed var(--rule);
+      border-radius: 6px;
+      background: var(--paper-2);
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      cursor: pointer;
+    }
+    .comment-stub:hover { border-color: var(--ink-2); color: var(--ink-2); }
+
+    /* "Not covered" skip affordance */
+    .skip-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px dotted var(--rule);
+      padding-bottom: 1px;
+      cursor: pointer;
+    }
+    .skip-link:hover { color: var(--ink); border-color: var(--ink-2); }
+
+    /* Progress dots */
     .progress-cell {
-      width: 14px; height: 14px; border-radius: 2px;
+      width: 11px; height: 11px; border-radius: 2px;
       border: 1px solid var(--ink);
       background: var(--paper-2);
     }
     .progress-cell.done { background: var(--ink); }
     .progress-cell.current { background: var(--paper-2); box-shadow: inset 0 0 0 2px var(--paper-2), 0 0 0 1.5px var(--ink); }
 
-    /* Section header */
+    /* Section header — large editorial numeral */
     .section-h {
       display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 24px;
-      align-items: baseline;
-      padding-top: 36px;
-      padding-bottom: 14px;
+      grid-template-columns: 96px 1fr;
+      gap: 28px;
+      align-items: start;
+      padding-top: 44px;
+      padding-bottom: 18px;
       border-top: 1px solid var(--rule);
     }
-    .section-h:first-of-type { border-top: 0; padding-top: 8px; }
+    .section-h:first-of-type { border-top: 0; padding-top: 12px; }
+    .section-numeral {
+      font-family: 'Fraunces', serif;
+      font-size: 56px;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .section-numeral .slash { color: var(--muted); font-weight: 300; }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em;
+      color: var(--muted); text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .section-title {
+      font-family: 'Fraunces', serif; font-weight: 500;
+      font-size: 26px; line-height: 1.15; letter-spacing: -0.015em;
+    }
+    .section-sub {
+      font-size: 13.5px; color: var(--ink-2); line-height: 1.55;
+      max-width: 600px; margin-top: 6px;
+    }
+
+    /* Question block */
+    .q-block { padding-top: 22px; }
+    .q-block + .q-block { border-top: 1px dashed var(--rule-2); margin-top: 6px; }
+    .q-label-row { display: flex; align-items: baseline; gap: 12px; }
+    .q-num {
+      font-family: 'Fraunces', serif; font-size: 18px;
+      color: var(--muted); font-weight: 500; letter-spacing: -0.01em;
+      min-width: 28px;
+    }
+    .q-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 17px; letter-spacing: -0.005em; line-height: 1.3; }
 
     /* Sidebar nav */
     .nav-item {
@@ -247,7 +303,7 @@
     .nav-item .ico { width: 16px; height: 16px; }
     .nav-section { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); padding: 14px 12px 6px; }
 
-    /* Magenta CTA: ONLY for primary submit */
+    /* Magenta CTA */
     .btn-primary {
       background: var(--magenta);
       color: white;
@@ -273,7 +329,7 @@
 
     .save-dot {
       width: 6px; height: 6px; border-radius: 999px;
-      background: #16A34A;
+      background: var(--ok);
       box-shadow: 0 0 0 0 rgba(22,163,74,0.5);
       animation: pulse 2.2s ease-out infinite;
     }
@@ -283,14 +339,51 @@
       100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
     }
 
-    /* Counterpart card decorative diff arrow */
     .level-arrow {
       display: inline-flex; align-items: center; gap: 6px;
       font-family: 'JetBrains Mono', monospace; font-size: 11px;
       color: var(--muted);
     }
 
-    /* Asymmetric editorial side rail */
+    /* Right rail */
+    .rail-card {
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 14px 14px 12px;
+    }
+    .rail-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+      border-top: 1px dashed var(--rule);
+      font-size: 12.5px;
+    }
+    .rail-row:first-child { border-top: 0; }
+    .rail-row .ix {
+      font-family: 'Fraunces', serif; font-size: 16px;
+      color: var(--muted); min-width: 22px; line-height: 1;
+    }
+    .rail-row .meta {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.06em; color: var(--muted);
+    }
+    .rail-row[data-state="done"] .ix,
+    .rail-row[data-state="done"] .title { color: var(--ink); }
+    .rail-row[data-state="done"] .meta { color: var(--ok); }
+    .rail-row[data-state="active"] { position: relative; }
+    .rail-row[data-state="active"]::before {
+      content: ""; position: absolute; left: -14px; top: 50%;
+      width: 4px; height: 22px; transform: translateY(-50%);
+      background: var(--magenta); border-radius: 2px;
+    }
+    .rail-row[data-state="active"] .title { color: var(--ink); font-weight: 500; }
+    .rail-row[data-state="active"] .meta { color: var(--magenta); }
+    .rail-row[data-state="todo"] .ix,
+    .rail-row[data-state="todo"] .title { color: var(--muted); }
+    .rail-row[data-state="skipped"] .title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--rule); }
+
+    /* Side rail vertical caption */
     .side-rail {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
@@ -300,11 +393,97 @@
       text-transform: uppercase;
       color: var(--muted);
     }
+
+    /* Compact Likert variant for inline rows */
+    .likert-compact {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      background: var(--card); border: 1px solid var(--rule); border-radius: 8px;
+      padding: 8px 10px 14px;
+      position: relative;
+    }
+    .likert-compact::before {
+      content: ""; position: absolute;
+      left: 30px; right: 30px; top: 22px;
+      height: 1px; background: var(--ink); opacity: 0.6;
+    }
+    .lc-stop {
+      display: flex; flex-direction: column; align-items: center;
+      padding-top: 8px; cursor: pointer; position: relative;
+    }
+    .lc-stop .det {
+      width: 10px; height: 10px; border-radius: 999px;
+      background: var(--card); border: 1.5px solid var(--ink);
+      margin-top: 6px; z-index: 1;
+    }
+    .lc-stop[data-selected="true"] .det { background: var(--ink); transform: scale(1.2); }
+    .lc-stop .n {
+      font-family: 'Fraunces', serif; font-size: 14px;
+      color: var(--muted);
+    }
+    .lc-stop[data-selected="true"] .n { color: var(--ink); }
+    .lc-stop .l {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+      margin-top: 8px;
+    }
+    .lc-stop[data-selected="true"] .l { color: var(--ink); }
+
+    /* Stack a Likert next to a textarea cleanly */
+    .likert-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+    @media (max-width: 1100px) { .likert-row { grid-template-columns: 1fr; } }
+
+    /* 9-grid cell picker (AI maturity) */
+    .grid9 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 6px;
+      background: var(--card); border: 1px solid var(--rule); border-radius: 8px;
+      padding: 10px;
+    }
+    .cell9 {
+      position: relative;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 10px 10px 8px;
+      background: var(--paper-2);
+      cursor: pointer;
+      text-align: left;
+      min-height: 64px;
+      transition: all 120ms;
+    }
+    .cell9:hover { border-color: var(--ink-2); background: var(--card); }
+    .cell9[data-selected="true"] {
+      background: var(--ink); color: var(--paper-2); border-color: var(--ink);
+    }
+    .cell9 .glyph {
+      font-size: 18px; line-height: 1;
+    }
+    .cell9 .lab {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+    .cell9[data-selected="true"] .lab { color: var(--paper-2); opacity: 0.8; }
+    .cell9 .nm {
+      font-family: 'Fraunces', serif; font-size: 13px;
+      margin-top: 2px;
+    }
+    .cell9.empty { background: transparent; border-style: dashed; cursor: default; }
+    .cell9.empty:hover { border-color: var(--rule); }
+    .cell9 .declared {
+      position: absolute; top: 6px; right: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 8.5px;
+      letter-spacing: 0.06em; color: var(--muted);
+      border: 1px solid var(--rule); border-radius: 3px;
+      padding: 1px 4px; background: var(--paper-2);
+    }
   </style>
 </head>
 <body class="paper">
 
-<!-- AppShell -->
 <div class="min-h-screen flex">
 
   <!-- SideNav -->
@@ -362,16 +541,15 @@
         <span class="text-[var(--ink)]">Feedback · Reviewer</span>
       </div>
       <div class="ml-auto flex items-center gap-3">
-        <span class="pill"><span class="dot" style="background:#7C3AED"></span>session completed</span>
+        <span class="pill"><span class="dot" style="background:var(--status-fb)"></span>session completed</span>
         <button class="btn-ghost py-1 px-3 text-[12px]"><i data-lucide="keyboard" class="w-3.5 h-3.5"></i>Shortcuts</button>
       </div>
     </div>
 
     <!-- Sticky session header -->
     <div class="sticky top-0 z-20 bg-[var(--paper-2)]/95 backdrop-blur border-b hairline">
-      <div class="max-w-[1080px] mx-auto px-10 py-5">
+      <div class="max-w-[1240px] mx-auto px-10 py-5">
         <div class="grid grid-cols-12 gap-6 items-end">
-          <!-- counterpart -->
           <div class="col-span-7">
             <div class="num-marker mb-1">REVIEWER → REVIEWEE · SESSION 284</div>
             <div class="flex items-baseline gap-4 flex-wrap">
@@ -385,21 +563,24 @@
                 <span class="ml-1 text-[var(--muted)]">level diff −2</span>
               </span>
             </div>
-            <div class="mt-2 flex items-center gap-4 text-[12px] font-mono text-[var(--muted)]">
+            <div class="mt-2 flex items-center gap-4 text-[12px] font-mono text-[var(--muted)] flex-wrap">
               <span class="inline-flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i>Session held · Mon 04 May · 14:00–15:30</span>
               <span class="inline-flex items-center gap-1.5"><i data-lucide="briefcase" class="w-3.5 h-3.5"></i>Severa · Vilnius</span>
-              <span class="inline-flex items-center gap-1.5 text-[#B45309]"><i data-lucide="clock-alert" class="w-3.5 h-3.5"></i>due in 4 days</span>
+              <span class="inline-flex items-center gap-1.5 text-[var(--warn)]"><i data-lucide="clock-alert" class="w-3.5 h-3.5"></i>due in 4 days</span>
             </div>
           </div>
 
-          <!-- progress + autosave -->
           <div class="col-span-5">
             <div class="flex items-center justify-end gap-5">
               <div class="text-right">
                 <div class="text-[11px] font-mono text-[var(--muted)]">PROGRESS</div>
-                <div class="font-display text-[22px] leading-none mt-0.5">5<span class="text-[var(--muted)]">/8</span></div>
+                <div class="font-display text-[22px] leading-none mt-0.5">9<span class="text-[var(--muted)]">/15</span></div>
               </div>
-              <div class="flex items-center gap-1.5 pl-5 border-l hairline">
+              <div class="flex flex-wrap items-center gap-1 pl-5 border-l hairline max-w-[260px]">
+                <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
                 <div class="progress-cell done"></div>
                 <div class="progress-cell done"></div>
                 <div class="progress-cell done"></div>
@@ -408,11 +589,14 @@
                 <div class="progress-cell current"></div>
                 <div class="progress-cell"></div>
                 <div class="progress-cell"></div>
+                <div class="progress-cell"></div>
+                <div class="progress-cell"></div>
+                <div class="progress-cell"></div>
               </div>
             </div>
             <div class="flex items-center justify-end gap-2 mt-3 text-[11px] font-mono text-[var(--muted)]">
               <span class="save-dot"></span>
-              <span>Draft saved · 12s ago</span>
+              <span>Draft saved · 8s ago</span>
               <span class="text-[var(--rule)]">·</span>
               <span>autosaves every keystroke</span>
             </div>
@@ -421,240 +605,563 @@
       </div>
     </div>
 
-    <!-- Form body -->
+    <!-- Body: form + right rail -->
     <div class="flex-1 relative">
-      <!-- editorial side rail -->
       <div class="absolute left-3 top-12 bottom-12 hidden xl:flex items-start">
-        <span class="side-rail">FEEDBACK · REVIEWER VARIANT · v1.0</span>
+        <span class="side-rail">FEEDBACK · REVIEWER VARIANT · v2.0</span>
       </div>
 
-      <div class="max-w-[1080px] mx-auto px-10 py-10">
+      <div class="max-w-[1240px] mx-auto px-10 py-10 grid grid-cols-12 gap-10">
 
-        <!-- Intent line -->
-        <p class="text-[14px] text-[var(--ink-2)] max-w-[640px] leading-relaxed mb-10">
-          What did <em class="font-display italic">Karolis</em> actually do, and what should they take from your workflow? This is developmental feedback — it goes to them and to their coach, not to anyone else.
-        </p>
+        <!-- Form column -->
+        <div class="col-span-12 lg:col-span-8 min-w-0">
 
-        <!-- 1. Observed AI maturity (LIKERT) -->
-        <section class="section-h">
-          <div>
-            <div class="num-marker">01 · LEVEL</div>
-            <div class="mt-1 text-[10px] font-mono text-[var(--muted)]">1 question</div>
-          </div>
-          <div>
-            <h2 class="field-label text-[19px]">Observed AI maturity</h2>
-            <p class="helper mt-1">Where did they actually operate during the session? Declared level was <span class="text-[var(--ink)]">L2</span>.</p>
-          </div>
-        </section>
+          <!-- Intent -->
+          <p class="text-[14px] text-[var(--ink-2)] max-w-[640px] leading-relaxed mb-8">
+            Four equally-weighted dimensions, plus a short wrap-up. The form is intentionally long — <em class="font-display italic">~10–15 minutes</em>. Skip sections you didn't cover; nothing here is mandatory except the two wrap-up questions.
+          </p>
 
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-11">
-            <div class="likert" role="radiogroup" aria-label="Observed AI maturity">
-              <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">no AI<br/>completion only</span></button>
-              <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">IDE agent<br/>per-action</span></button>
-              <button class="likert-stop" data-selected="true"><span class="num">3</span><span class="detent"></span><span class="lab">CLI agent<br/>permissioned</span></button>
-              <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">parallel CLI<br/>agents</span></button>
-              <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">orchestrator<br/>fleet</span></button>
+          <!-- ============================================ -->
+          <!-- SECTION 01 — ARCHITECTURE                    -->
+          <!-- ============================================ -->
+          <section class="section-h">
+            <div>
+              <div class="section-numeral">01</div>
+              <div class="section-tag">Dimension 1 / 4</div>
             </div>
-            <div class="mt-2 flex items-center gap-2 helper">
-              <i data-lucide="info" class="w-3.5 h-3.5"></i>
-              You marked <span class="text-[var(--ink)]">L3</span> — one above their declared level. That gap shows up on the coach view.
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Tool stack (CHIPS multi) -->
-        <section class="section-h">
-          <div><div class="num-marker">02 · TOOLING</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">multi-select</div></div>
-          <div>
-            <h2 class="field-label text-[19px]">Tool stack observed</h2>
-            <p class="helper mt-1">Pick anything you actually saw them use — not what they said they use.</p>
-          </div>
-        </section>
-
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-11 flex flex-wrap gap-2">
-            <button class="chip" data-selected="true"><i data-lucide="terminal" class="icon"></i>Claude Code</button>
-            <button class="chip" data-selected="true"><i data-lucide="square-mouse-pointer" class="icon"></i>Cursor</button>
-            <button class="chip" data-selected="false"><i data-lucide="github" class="icon"></i>GitHub Copilot</button>
-            <button class="chip" data-selected="true"><i data-lucide="message-circle" class="icon"></i>ChatGPT</button>
-            <button class="chip" data-selected="false"><i data-lucide="sparkles" class="icon"></i>Gemini</button>
-            <button class="chip" data-selected="false"><i data-lucide="puzzle" class="icon"></i>Aider</button>
-            <button class="chip" data-selected="false"><i data-lucide="bot" class="icon"></i>Codex CLI</button>
-            <button class="chip" data-selected="false"><i data-lucide="plus" class="icon"></i>Add custom…</button>
-          </div>
-        </div>
-
-        <!-- 3. Prompting & context-setting (PromptingHabitField) -->
-        <section class="section-h">
-          <div><div class="num-marker">03 · PROMPTING</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">paired field</div></div>
-          <div>
-            <h2 class="field-label text-[19px]">Prompting & context-setting</h2>
-            <p class="helper mt-1">One thing they're already good at, one thing to grow into. Concrete &gt; abstract.</p>
-          </div>
-        </section>
-
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-5">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="num-marker">STRENGTH</span>
-              <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#16A34A]"></i>
-            </div>
-            <textarea class="textarea">Writes out the *intent* first — pasted the failing test, the runbook step, and the relevant module path before asking the agent to do anything. No vague "fix this".</textarea>
-            <div class="flex justify-end mt-1"><span class="counter">186 / 400</span></div>
-          </div>
-          <div class="col-span-6">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="num-marker">GROWTH</span>
-              <i data-lucide="seedling" class="w-3.5 h-3.5 text-[#B45309]"></i>
-            </div>
-            <textarea class="textarea">Doesn't push back when the agent's first plan is wrong — accepts it and patches over. Try: when the plan smells off, ask "what would change your mind?" before letting it touch files.</textarea>
-            <div class="flex justify-end mt-1"><span class="counter">220 / 400</span></div>
-          </div>
-        </div>
-
-        <!-- 4. Verification habits (RADIO cards) -->
-        <section class="section-h">
-          <div><div class="num-marker">04 · VERIFICATION</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">choose one</div></div>
-          <div>
-            <h2 class="field-label text-[19px]">Verification habits</h2>
-            <p class="helper mt-1">How did they treat the agent's output?</p>
-          </div>
-        </section>
-
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-11 grid grid-cols-3 gap-3">
-            <button class="radio-card" data-selected="false">
-              <div class="flex items-center gap-3">
-                <span class="mark"></span>
-                <span class="field-label text-[15px]">Blind trust</span>
+            <div>
+              <div class="flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                  <h2 class="section-title">Architecture & design patterns</h2>
+                  <p class="section-sub">Event-driven design, CQRS, sagas, queues, search, caching, idempotency, service boundaries.</p>
+                </div>
+                <span class="skip-link"><i data-lucide="circle-slash" class="w-3 h-3"></i>not covered — skip</span>
               </div>
-              <p class="helper mt-2">Accepts diffs, runs once, ships.</p>
-            </button>
-            <button class="radio-card" data-selected="true">
-              <div class="flex items-center gap-3">
-                <span class="mark"></span>
-                <span class="field-label text-[15px]">Spot-check</span>
+            </div>
+          </section>
+
+          <!-- Q1 -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">01</span>
+                <span class="q-title">Architectural strength — which pattern did they use well?</span>
               </div>
-              <p class="helper mt-2">Reads diffs, tests happy paths, ad-hoc.</p>
-            </button>
-            <button class="radio-card" data-selected="false">
-              <div class="flex items-center gap-3">
-                <span class="mark"></span>
-                <span class="field-label text-[15px]">Systematic</span>
+              <p class="helper mt-1 ml-[40px]">Reviewee sees this verbatim. Be specific.</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <textarea class="textarea">Clean event-sourced audit log with deterministic projections — exactly the pattern I'd reach for. Replays were quick to demo; the projection rebuild ran in under 40s from a cold cache. Smart split between the event store and the read model.</textarea>
+              <div class="flex justify-between items-center mt-1">
+                <span class="helper inline-flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-[var(--ok)]"></i>Answered</span>
+                <span class="counter">274 / 600</span>
               </div>
-              <p class="helper mt-2">Test-first; runs commands before claiming done.</p>
-            </button>
-          </div>
-        </div>
-
-        <!-- 5. Agent orchestration (RADIO 4) -->
-        <section class="section-h">
-          <div><div class="num-marker">05 · ORCHESTRATION</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">choose one</div></div>
-          <div>
-            <h2 class="field-label text-[19px]">Agent orchestration</h2>
-            <p class="helper mt-1">How they coordinate multiple agents / sessions / branches.</p>
-          </div>
-        </section>
-
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-11 grid grid-cols-4 gap-3">
-            <button class="radio-card" data-selected="true">
-              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">N/A</span></div>
-              <p class="helper mt-2">Single agent, single thread.</p>
-            </button>
-            <button class="radio-card" data-selected="false">
-              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Emerging</span></div>
-              <p class="helper mt-2">Occasional parallel session.</p>
-            </button>
-            <button class="radio-card" data-selected="false">
-              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Solid</span></div>
-              <p class="helper mt-2">Worktrees, scoped tasks per agent.</p>
-            </button>
-            <button class="radio-card" data-selected="false">
-              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Advanced</span></div>
-              <p class="helper mt-2">Fleet w/ supervisor patterns.</p>
-            </button>
-          </div>
-        </div>
-
-        <!-- 6. Architecture & clean-code (Likert + text) -->
-        <section class="section-h">
-          <div><div class="num-marker">06 · CRAFT</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">scored low-weight</div></div>
-          <div>
-            <h2 class="field-label text-[19px]">Architecture & clean-code</h2>
-            <p class="helper mt-1">The classic dimensions — single Likert + one sentence. Weighted below the AI dimensions on the report.</p>
-          </div>
-        </section>
-
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-5">
-            <div class="likert" role="radiogroup" aria-label="Architecture quality">
-              <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">tangled</span></button>
-              <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">workable</span></button>
-              <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">solid</span></button>
-              <button class="likert-stop" data-selected="true"><span class="num">4</span><span class="detent"></span><span class="lab">crisp</span></button>
-              <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">exemplary</span></button>
             </div>
           </div>
-          <div class="col-span-6">
-            <span class="num-marker">NOTE</span>
-            <textarea class="textarea mt-2">Small, well-named modules; tests live next to code. One leaky abstraction in the billing adapter — flagged it; he'll fix it next sprint.</textarea>
-          </div>
-        </div>
 
-        <!-- 7. Habit to adopt -->
-        <section class="section-h">
-          <div><div class="num-marker">07 · ADOPT</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">free text</div></div>
-          <div>
-            <h2 class="field-label text-[19px]">One concrete habit they should adopt from your workflow</h2>
-            <p class="helper mt-1">Be specific enough that they could try it tomorrow.</p>
-          </div>
-        </section>
-
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-11">
-            <textarea class="textarea" style="min-height: 110px;">Start every non-trivial task by writing the failing assertion first — even before opening the agent. Then paste that into the prompt as the success criterion. It collapses the "did it actually work?" question down to a single command.</textarea>
-            <div class="flex justify-between items-center mt-1">
-              <span class="helper">Markdown is fine. Reviewee sees this verbatim.</span>
-              <span class="counter">281 / 600</span>
+          <!-- Q2 -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">02</span>
+                <span class="q-title">Architectural growth — which pattern would have served them better?</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">e.g. "event sourcing for the audit log instead of a side table."</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <textarea class="textarea">The retry topic uses unbounded redrive — consider a DLQ with explicit alerting after N attempts, otherwise a poisoned message will quietly burn budget. Saga compensation is implicit (rolled into the handler); would be worth making it explicit so the failure paths are testable in isolation.</textarea>
+              <div class="flex justify-between items-center mt-1">
+                <span class="helper inline-flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-[var(--ok)]"></i>Answered</span>
+                <span class="counter">324 / 600</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- 8. Stealing -->
-        <section class="section-h">
-          <div><div class="num-marker">08 · STEAL</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">free text</div></div>
-          <div>
-            <h2 class="field-label text-[19px]">One thing they're doing that <em class="italic font-display">you're</em> stealing</h2>
-            <p class="helper mt-1">The bit that surprised you. This is mandatory — feedback is two-way.</p>
-          </div>
-        </section>
-
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-11">
-            <textarea class="textarea" style="min-height: 110px;" placeholder="What one habit, prompt, or pattern of theirs are you taking back to your own workflow?"></textarea>
-            <div class="flex justify-between items-center mt-1">
-              <span class="helper text-[#B45309] inline-flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>Required before submit.</span>
-              <span class="counter">0 / 600</span>
+          <!-- Q3 — Likert -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">03</span>
+                <span class="q-title">Overall architectural awareness</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">A single calibration mark — how aware they are of the trade-offs at play.</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <div class="likert" role="radiogroup" aria-label="Architectural awareness">
+                <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">unaware</span></button>
+                <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">surface</span></button>
+                <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">solid</span></button>
+                <button class="likert-stop" data-selected="true"><span class="num">4</span><span class="detent"></span><span class="lab">trade-off<br/>fluent</span></button>
+                <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">teaches<br/>others</span></button>
+              </div>
             </div>
           </div>
+
+          <!-- ============================================ -->
+          <!-- SECTION 02 — CLEAN CODE                      -->
+          <!-- ============================================ -->
+          <section class="section-h">
+            <div>
+              <div class="section-numeral">02</div>
+              <div class="section-tag">Dimension 2 / 4</div>
+            </div>
+            <div>
+              <div class="flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                  <h2 class="section-title">Clean code & engineering hygiene</h2>
+                  <p class="section-sub">SOLID, DRY, KISS, testability, naming, refactoring discipline, code organisation.</p>
+                </div>
+                <span class="skip-link"><i data-lucide="circle-slash" class="w-3 h-3"></i>not covered — skip</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Q4 — Likert + paired example (expanded since text exists) -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">04</span>
+                <span class="q-title">SOLID / DRY / KISS application</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">Mark the scale, then drop one example that landed well and (optionally) one that didn't.</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <div class="likert-row">
+                <div class="likert" role="radiogroup" aria-label="SOLID/DRY/KISS">
+                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">violated</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">inconsistent</span></button>
+                  <button class="likert-stop" data-selected="true"><span class="num">3</span><span class="detent"></span><span class="lab">applied</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">disciplined</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">exemplary</span></button>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3">
+                  <div>
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="num-marker">EXAMPLE · WORKED WELL</span>
+                      <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[var(--ok)]"></i>
+                    </div>
+                    <textarea class="textarea" style="min-height: 68px;">ISP cleanly applied in the IngestPort splitting — nice. Two adapters, two narrow interfaces, no shared bag of methods.</textarea>
+                  </div>
+                  <div>
+                    <span class="comment-stub"><i data-lucide="plus" class="w-3 h-3"></i>Add a "didn't work" example (optional)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q5 — Likert + comment (collapsed, no text) -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">05</span>
+                <span class="q-title">Testability of the change under review</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">Could you have written the test before the code without contorting the design?</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <div class="likert-row">
+                <div class="likert" role="radiogroup" aria-label="Testability">
+                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">hostile</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">awkward</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">workable</span></button>
+                  <button class="likert-stop" data-selected="true"><span class="num">4</span><span class="detent"></span><span class="lab">friendly</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">test-first<br/>shaped</span></button>
+                </div>
+                <div class="flex flex-col justify-start gap-2 pt-2">
+                  <span class="num-marker">COMMENT</span>
+                  <span class="comment-stub"><i data-lucide="message-square-plus" class="w-3 h-3"></i>Add a comment (optional)</span>
+                  <span class="helper">Skipped by ~30% of reviewers — that's fine.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q6 — Likert + comment (collapsed) -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">06</span>
+                <span class="q-title">Code organisation & naming</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">Could a stranger find the right file in 30 seconds?</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <div class="likert-row">
+                <div class="likert" role="radiogroup" aria-label="Code organisation">
+                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">chaotic</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">noisy</span></button>
+                  <button class="likert-stop" data-selected="true"><span class="num">3</span><span class="detent"></span><span class="lab">readable</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">tidy</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">obvious</span></button>
+                </div>
+                <div class="flex flex-col justify-start gap-2 pt-2">
+                  <span class="num-marker">COMMENT</span>
+                  <span class="comment-stub"><i data-lucide="message-square-plus" class="w-3 h-3"></i>Add a comment (optional)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================ -->
+          <!-- SECTION 03 — TESTING / OBSERVABILITY / SECURITY -->
+          <!-- ============================================ -->
+          <section class="section-h">
+            <div>
+              <div class="section-numeral">03</div>
+              <div class="section-tag">Dimension 3 / 4</div>
+            </div>
+            <div>
+              <div class="flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                  <h2 class="section-title">Testing, observability, security</h2>
+                  <p class="section-sub">Test strategy fit, telemetry depth, threat-model awareness, secrets & dependency hygiene.</p>
+                </div>
+                <span class="skip-link"><i data-lucide="circle-slash" class="w-3 h-3"></i>not covered — skip</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Q7 — Likert + comment (expanded) -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">07</span>
+                <span class="q-title">Test strategy fit — unit / integration / contract</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">Right tests at the right layer, or pyramid inverted?</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <div class="likert-row">
+                <div class="likert" role="radiogroup" aria-label="Test strategy">
+                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">inverted</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">patchy</span></button>
+                  <button class="likert-stop" data-selected="true"><span class="num">3</span><span class="detent"></span><span class="lab">balanced</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">deliberate</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">contract<br/>first</span></button>
+                </div>
+                <div>
+                  <span class="num-marker">COMMENT</span>
+                  <textarea class="textarea mt-2" style="min-height: 78px;">Unit coverage is fine on the projector. The gap is contract tests against the upstream Kafka schema — currently relying on integration runs to catch breaks, which is too late.</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q8 — Likert only -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">08</span>
+                <span class="q-title">Telemetry & observability</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">Logs, metrics, traces — could you have debugged this in production at 2am?</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <div class="likert" role="radiogroup" aria-label="Telemetry">
+                <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">blind</span></button>
+                <button class="likert-stop" data-selected="true"><span class="num">2</span><span class="detent"></span><span class="lab">log-only</span></button>
+                <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">metrics<br/>added</span></button>
+                <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">traced</span></button>
+                <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">slo-shaped</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q9 — Likert + flagged comment placeholder -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">09</span>
+                <span class="q-title">Security & threat-model awareness</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">Comment required only if you flag the work below 3.</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <div class="likert-row">
+                <div class="likert" role="radiogroup" aria-label="Security awareness">
+                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">naive</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">reactive</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">checks<br/>basics</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">models<br/>threats</span></button>
+                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">teaches<br/>it</span></button>
+                </div>
+                <div class="flex flex-col gap-2 pt-2">
+                  <span class="num-marker">COMMENT (IF FLAGGED)</span>
+                  <span class="comment-stub"><i data-lucide="message-square-plus" class="w-3 h-3"></i>Add a comment (optional)</span>
+                  <span class="helper">Not yet scored.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================ -->
+          <!-- SECTION 04 — AI WORKFLOW                     -->
+          <!-- ============================================ -->
+          <section class="section-h">
+            <div>
+              <div class="section-numeral">04</div>
+              <div class="section-tag">Dimension 4 / 4 · peer of 01–03</div>
+            </div>
+            <div>
+              <div class="flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                  <h2 class="section-title">AI-powered workflow</h2>
+                  <p class="section-sub">How they actually use AI — tooling, prompting, verification, orchestration. <em class="font-display italic">One dimension of four</em>, not the headline.</p>
+                </div>
+                <span class="skip-link"><i data-lucide="circle-slash" class="w-3 h-3"></i>not covered — skip</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Q10 — Observed AI maturity (9-cell picker) -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">10</span>
+                <span class="q-title">Observed AI maturity — which cell did they operate at?</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">Pick the cell on the 9-grid that matches what you actually saw. You can diverge from their declared level.</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <div class="flex items-end gap-4 mb-2 helper">
+                <div>
+                  <div class="font-mono text-[9.5px] tracking-[0.16em] uppercase text-[var(--muted)]">columns →</div>
+                  <div class="font-mono text-[10px] text-[var(--ink-2)]">in-loop · on-loop</div>
+                </div>
+                <div class="ml-auto">
+                  <div class="font-mono text-[9.5px] tracking-[0.16em] uppercase text-[var(--muted)] text-right">rows ↓</div>
+                  <div class="font-mono text-[10px] text-[var(--ink-2)] text-right">L1 → L5</div>
+                </div>
+              </div>
+              <div class="grid9" style="grid-template-columns: repeat(2, 1fr);">
+                <!-- L1 -->
+                <button class="cell9" data-selected="false"><span class="glyph">🚶</span><div class="nm">L1 · Walker</div><div class="lab">no AI</div></button>
+                <button class="cell9 empty"><span class="lab">—</span></button>
+                <!-- L2 -->
+                <button class="cell9" data-selected="false"><span class="glyph">🛴</span><div class="nm">L2 · Scooter</div><div class="lab">IDE · in-loop</div><span class="declared">DECLARED</span></button>
+                <button class="cell9" data-selected="false"><span class="glyph">🏍️</span><div class="nm">L2 · Motorbike</div><div class="lab">IDE · on-loop</div></button>
+                <!-- L3 -->
+                <button class="cell9" data-selected="true"><span class="glyph">🚲</span><div class="nm">L3 · Bicycle</div><div class="lab">CLI · in-loop</div></button>
+                <button class="cell9" data-selected="false"><span class="glyph">🏎️</span><div class="nm">L3 · Race car</div><div class="lab">CLI · on-loop</div></button>
+                <!-- L4 -->
+                <button class="cell9" data-selected="false"><span class="glyph">🏍️</span><div class="nm">L4 · Motorbike</div><div class="lab">multi · in-loop</div></button>
+                <button class="cell9" data-selected="false"><span class="glyph">✈️</span><div class="nm">L4 · Plane</div><div class="lab">multi · on-loop</div></button>
+                <!-- L5 -->
+                <button class="cell9 empty"><span class="lab">—</span></button>
+                <button class="cell9" data-selected="false"><span class="glyph">🚀</span><div class="nm">L5 · Rocket</div><div class="lab">fleet · on-loop</div></button>
+              </div>
+              <div class="mt-2 flex items-center gap-2 helper">
+                <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                You marked <span class="text-[var(--ink)]">L3 in-loop (Bicycle)</span> — one rank above their declared <span class="text-[var(--ink)]">L2 in-loop</span>. That gap shows on the coach view.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q11 — Tooling chips -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">11</span>
+                <span class="q-title">Tool stack observed</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">What they actually used, not what they said they use.</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1 flex flex-wrap gap-2">
+              <button class="chip" data-selected="true"><i data-lucide="terminal" class="icon"></i>Claude Code</button>
+              <button class="chip" data-selected="true"><i data-lucide="square-mouse-pointer" class="icon"></i>Cursor</button>
+              <button class="chip" data-selected="false"><i data-lucide="github" class="icon"></i>GitHub Copilot</button>
+              <button class="chip" data-selected="false"><i data-lucide="message-circle" class="icon"></i>ChatGPT</button>
+              <button class="chip" data-selected="false"><i data-lucide="sparkles" class="icon"></i>Gemini</button>
+              <button class="chip" data-selected="false"><i data-lucide="puzzle" class="icon"></i>Aider</button>
+              <button class="chip" data-selected="false"><i data-lucide="bot" class="icon"></i>Codex CLI</button>
+              <button class="chip" data-selected="false"><i data-lucide="plus" class="icon"></i>Add custom…</button>
+            </div>
+          </div>
+
+          <!-- Q12 — Prompting paired (not started) -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">12</span>
+                <span class="q-title">Prompting & context-setting — strength + growth</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">One thing they're already good at, one thing to grow into.</p>
+            </div>
+            <div class="col-start-2 col-span-5 mt-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="num-marker">STRENGTH</span>
+                <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[var(--ok)]"></i>
+              </div>
+              <textarea class="textarea" placeholder="What's the one prompting habit you'd want others to copy from them?"></textarea>
+              <div class="flex justify-end mt-1"><span class="counter">0 / 400</span></div>
+            </div>
+            <div class="col-span-6 mt-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="num-marker">GROWTH</span>
+                <i data-lucide="seedling" class="w-3.5 h-3.5 text-[var(--warn)]"></i>
+              </div>
+              <textarea class="textarea" placeholder="What's the one prompting habit that, if they fixed it, would unlock the next level?"></textarea>
+              <div class="flex justify-end mt-1"><span class="counter">0 / 400</span></div>
+            </div>
+          </div>
+
+          <!-- Q13 — Verification radio -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">13</span>
+                <span class="q-title">Verification habits</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">How did they treat the agent's output?</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1 grid grid-cols-3 gap-3">
+              <button class="radio-card" data-selected="false">
+                <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Blind trust</span></div>
+                <p class="helper mt-2">Accepts diffs, runs once, ships.</p>
+              </button>
+              <button class="radio-card" data-selected="false">
+                <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Spot-check</span></div>
+                <p class="helper mt-2">Reads diffs, tests happy paths, ad-hoc.</p>
+              </button>
+              <button class="radio-card" data-selected="false">
+                <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Systematic</span></div>
+                <p class="helper mt-2">Test-first; runs commands before claiming done.</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- ============================================ -->
+          <!-- SECTION 05 — WRAP-UP                          -->
+          <!-- ============================================ -->
+          <section class="section-h">
+            <div>
+              <div class="section-numeral">05</div>
+              <div class="section-tag">Wrap-up · required</div>
+            </div>
+            <div>
+              <h2 class="section-title">Wrap-up</h2>
+              <p class="section-sub">Two short prompts. The two-way exchange — what they should take from you, what you're stealing from them.</p>
+            </div>
+          </section>
+
+          <!-- Q14 -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">14</span>
+                <span class="q-title">One concrete habit they should adopt from your workflow</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">Any section. Specific enough they could try it tomorrow.</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <textarea class="textarea" style="min-height: 110px;" placeholder="e.g. 'Start every non-trivial task by writing the failing assertion first — even before opening the agent.'"></textarea>
+              <div class="flex justify-between items-center mt-1">
+                <span class="helper text-[var(--warn)] inline-flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>Required before submit.</span>
+                <span class="counter">0 / 600</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q15 -->
+          <div class="q-block grid grid-cols-12 gap-6">
+            <div class="col-span-12">
+              <div class="q-label-row">
+                <span class="q-num">15</span>
+                <span class="q-title">One thing they're doing that <em class="italic font-display">you're</em> stealing</span>
+              </div>
+              <p class="helper mt-1 ml-[40px]">The bit that surprised you. Feedback is two-way.</p>
+            </div>
+            <div class="col-start-2 col-span-11 mt-1">
+              <textarea class="textarea" style="min-height: 110px;" placeholder="What one habit, prompt, or pattern of theirs are you taking back to your own workflow?"></textarea>
+              <div class="flex justify-between items-center mt-1">
+                <span class="helper text-[var(--warn)] inline-flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>Required before submit.</span>
+                <span class="counter">0 / 600</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit bar -->
+          <div class="mt-14 border-t hairline-strong pt-6 flex items-center gap-4 flex-wrap">
+            <div class="text-[12px] font-mono text-[var(--muted)]">
+              <div>FORM v2.0 · REVIEWER VARIANT</div>
+              <div class="mt-0.5">Visible to: reviewee, their coach. Anonymised in BG roll-ups.</div>
+            </div>
+            <div class="ml-auto flex items-center gap-3">
+              <button class="btn-ghost"><i data-lucide="save" class="w-4 h-4"></i>Save & close</button>
+              <button class="btn-ghost"><i data-lucide="eye" class="w-4 h-4"></i>Preview as Karolis</button>
+              <button class="btn-primary" disabled style="background: var(--rule); color: var(--muted); box-shadow: none; cursor: not-allowed;"><span class="font-display text-[15px]">Submit feedback</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div class="text-right mt-2"><span class="helper">Submit unlocks once Q14 and Q15 are answered.</span></div>
+
+          <div class="h-16"></div>
         </div>
 
-        <!-- Submit bar -->
-        <div class="mt-14 border-t hairline-strong pt-6 flex items-center gap-4">
-          <div class="text-[12px] font-mono text-[var(--muted)]">
-            <div>FORM v1.0 · REVIEWER VARIANT</div>
-            <div class="mt-0.5">Visible to: reviewee, their coach. Anonymized in BG roll-ups.</div>
-          </div>
-          <div class="ml-auto flex items-center gap-3">
-            <button class="btn-ghost"><i data-lucide="save" class="w-4 h-4"></i>Save & close</button>
-            <button class="btn-ghost"><i data-lucide="eye" class="w-4 h-4"></i>Preview as Karolis</button>
-            <button class="btn-primary"><span class="font-display text-[15px]">Submit feedback</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-          </div>
-        </div>
+        <!-- Right rail — coverage tracker -->
+        <aside class="hidden lg:block col-span-4">
+          <div class="sticky top-[150px]">
+            <div class="num-marker mb-2">COVERAGE</div>
+            <div class="rail-card">
+              <div class="rail-row" data-state="done">
+                <span class="ix">01</span>
+                <div>
+                  <div class="title font-display text-[14px]">Architecture & patterns</div>
+                  <div class="helper">3 of 3 answered</div>
+                </div>
+                <span class="meta">DONE</span>
+              </div>
+              <div class="rail-row" data-state="done">
+                <span class="ix">02</span>
+                <div>
+                  <div class="title font-display text-[14px]">Clean code & hygiene</div>
+                  <div class="helper">3 of 3 answered · 2 comments skipped</div>
+                </div>
+                <span class="meta">DONE</span>
+              </div>
+              <div class="rail-row" data-state="done">
+                <span class="ix">03</span>
+                <div>
+                  <div class="title font-display text-[14px]">Testing · obs · security</div>
+                  <div class="helper">2 of 3 answered</div>
+                </div>
+                <span class="meta">2/3</span>
+              </div>
+              <div class="rail-row" data-state="active">
+                <span class="ix">04</span>
+                <div>
+                  <div class="title font-display text-[14px]">AI workflow</div>
+                  <div class="helper">1 of 4 answered · in progress</div>
+                </div>
+                <span class="meta">1/4</span>
+              </div>
+              <div class="rail-row" data-state="todo">
+                <span class="ix">05</span>
+                <div>
+                  <div class="title font-display text-[14px]">Wrap-up</div>
+                  <div class="helper">0 of 2 · required</div>
+                </div>
+                <span class="meta">0/2</span>
+              </div>
+            </div>
 
-        <div class="h-16"></div>
+            <div class="num-marker mb-2 mt-7">FORM CONVENTIONS</div>
+            <div class="rail-card" style="padding: 12px 14px;">
+              <ul class="text-[12.5px] text-[var(--ink-2)] space-y-2 leading-[1.45]">
+                <li class="flex items-start gap-2"><i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 mt-[3px]"></i><span><span class="font-mono text-[10px] tracking-[0.06em] text-[var(--muted)] uppercase">Likert</span> = a value on a scale.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="circle-dot" class="w-3.5 h-3.5 mt-[3px]"></i><span><span class="font-mono text-[10px] tracking-[0.06em] text-[var(--muted)] uppercase">Radio</span> = one of several states.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="circle-slash" class="w-3.5 h-3.5 mt-[3px]"></i><span>Any section you didn't cover can be skipped — that's signal, not failure.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="message-square-plus" class="w-3.5 h-3.5 mt-[3px]"></i><span>Comments stay collapsed until you have something to say.</span></li>
+              </ul>
+            </div>
+
+            <div class="mt-6 text-[11px] font-mono text-[var(--muted)] leading-[1.6]">
+              <div>Estimated time remaining</div>
+              <div class="font-display text-[22px] text-[var(--ink)] leading-none mt-1">~6 min</div>
+            </div>
+          </div>
+        </aside>
+
       </div>
     </div>
   </main>
@@ -663,7 +1170,7 @@
 <script>
   lucide.createIcons();
 
-  // Likert interaction
+  // Likert (both variants)
   document.querySelectorAll('.likert').forEach(group => {
     group.querySelectorAll('.likert-stop').forEach(stop => {
       stop.addEventListener('click', () => {
@@ -673,7 +1180,7 @@
     });
   });
 
-  // Radio cards (single-select within their parent grid)
+  // Radio cards
   document.querySelectorAll('.radio-card').forEach(card => {
     card.addEventListener('click', () => {
       card.parentElement.querySelectorAll('.radio-card').forEach(c => c.dataset.selected = 'false');
@@ -681,10 +1188,20 @@
     });
   });
 
-  // Chips (multi-select toggle)
+  // Chips multi
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
       chip.dataset.selected = chip.dataset.selected === 'true' ? 'false' : 'true';
+    });
+  });
+
+  // 9-grid single-select (skip empty cells)
+  document.querySelectorAll('.grid9').forEach(grid => {
+    grid.querySelectorAll('.cell9:not(.empty)').forEach(cell => {
+      cell.addEventListener('click', () => {
+        grid.querySelectorAll('.cell9').forEach(c => c.dataset.selected = 'false');
+        cell.dataset.selected = 'true';
+      });
     });
   });
 </script>

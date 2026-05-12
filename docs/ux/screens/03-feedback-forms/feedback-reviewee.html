@@ -22,6 +22,9 @@
       --magenta: #E10078;
       --L2: #0EA5E9;
       --L4: #F59E0B;
+      --status-fb: #7C3AED;
+      --warn: #B45309;
+      --ok: #16A34A;
     }
     html, body { background: var(--paper); color: var(--ink); }
     body { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-feature-settings: "ss01","cv11"; }
@@ -63,7 +66,7 @@
     .level-L4 { background: var(--L4); }
     .level-L2 { background: var(--L2); }
 
-    /* Likert track */
+    /* Likert */
     .likert {
       position: relative;
       display: grid;
@@ -153,6 +156,26 @@
       background: var(--paper); margin: 2.5px;
     }
 
+    /* Chips — coverage multi-select */
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 13px;
+      border: 1px solid var(--rule);
+      background: var(--card);
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 120ms;
+    }
+    .chip:hover { border-color: var(--ink-2); }
+    .chip[data-selected="true"] {
+      background: var(--ink);
+      color: var(--paper-2);
+      border-color: var(--ink);
+    }
+    .chip[data-selected="true"] svg { color: var(--paper-2); }
+    .chip .icon { width: 14px; height: 14px; }
+
     .text-input, .textarea {
       width: 100%;
       background: var(--card);
@@ -193,14 +216,29 @@
 
     .section-h {
       display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 24px;
+      grid-template-columns: 96px 1fr;
+      gap: 28px;
       align-items: baseline;
-      padding-top: 36px;
-      padding-bottom: 14px;
+      padding-top: 40px;
+      padding-bottom: 16px;
       border-top: 1px solid var(--rule);
     }
     .section-h:first-of-type { border-top: 0; padding-top: 8px; }
+    .section-numeral {
+      font-family: 'Fraunces', serif;
+      font-size: 48px;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em;
+      color: var(--muted); text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .section-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 22px; line-height: 1.2; letter-spacing: -0.012em; }
+    .section-sub { font-size: 13.5px; color: var(--ink-2); line-height: 1.55; max-width: 560px; margin-top: 6px; }
 
     .nav-item {
       display: flex; align-items: center; gap: 12px;
@@ -244,8 +282,16 @@
 
     .save-dot {
       width: 6px; height: 6px; border-radius: 999px;
-      background: var(--muted);
+      background: var(--ok);
+      box-shadow: 0 0 0 0 rgba(22,163,74,0.5);
+      animation: pulse 2.2s ease-out infinite;
     }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(22,163,74,0.45); }
+      70% { box-shadow: 0 0 0 8px rgba(22,163,74,0); }
+      100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
+    }
+
     .level-arrow {
       display: inline-flex; align-items: center; gap: 6px;
       font-family: 'JetBrains Mono', monospace; font-size: 11px;
@@ -261,7 +307,6 @@
       color: var(--muted);
     }
 
-    /* Inline takeaway note from reviewer (anonymised preview) */
     .reviewer-quote {
       background: var(--paper-2);
       border-left: 2px solid var(--ink);
@@ -329,7 +374,7 @@
         <span class="text-[var(--ink)]">Feedback · Reviewee</span>
       </div>
       <div class="ml-auto flex items-center gap-3">
-        <span class="pill"><span class="dot" style="background:#7C3AED"></span>session completed</span>
+        <span class="pill"><span class="dot" style="background:var(--status-fb)"></span>session completed</span>
       </div>
     </div>
 
@@ -350,10 +395,10 @@
                 <span class="ml-1 text-[var(--muted)]">level diff +2</span>
               </span>
             </div>
-            <div class="mt-2 flex items-center gap-4 text-[12px] font-mono text-[var(--muted)]">
+            <div class="mt-2 flex items-center gap-4 text-[12px] font-mono text-[var(--muted)] flex-wrap">
               <span class="inline-flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i>Session held · Mon 04 May · 14:00–15:30</span>
               <span class="inline-flex items-center gap-1.5"><i data-lucide="briefcase" class="w-3.5 h-3.5"></i>Visma Solutions · Tampere</span>
-              <span class="inline-flex items-center gap-1.5 text-[#B45309]"><i data-lucide="clock-alert" class="w-3.5 h-3.5"></i>due in 4 days</span>
+              <span class="inline-flex items-center gap-1.5 text-[var(--warn)]"><i data-lucide="clock-alert" class="w-3.5 h-3.5"></i>feedback due in 3 days</span>
             </div>
           </div>
 
@@ -361,21 +406,22 @@
             <div class="flex items-center justify-end gap-5">
               <div class="text-right">
                 <div class="text-[11px] font-mono text-[var(--muted)]">PROGRESS</div>
-                <div class="font-display text-[22px] leading-none mt-0.5">1<span class="text-[var(--muted)]">/5</span></div>
+                <div class="font-display text-[22px] leading-none mt-0.5">3<span class="text-[var(--muted)]">/6</span></div>
               </div>
               <div class="flex items-center gap-1.5 pl-5 border-l hairline">
                 <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
+                <div class="progress-cell done"></div>
                 <div class="progress-cell current"></div>
-                <div class="progress-cell"></div>
                 <div class="progress-cell"></div>
                 <div class="progress-cell"></div>
               </div>
             </div>
             <div class="flex items-center justify-end gap-2 mt-3 text-[11px] font-mono text-[var(--muted)]">
               <span class="save-dot"></span>
-              <span>No edits yet</span>
+              <span>Draft saved · 22s ago</span>
               <span class="text-[var(--rule)]">·</span>
-              <span>drafts saved locally</span>
+              <span>autosaves every keystroke</span>
             </div>
           </div>
         </div>
@@ -385,102 +431,123 @@
     <!-- Form body -->
     <div class="flex-1 relative">
       <div class="absolute left-3 top-12 bottom-12 hidden xl:flex items-start">
-        <span class="side-rail">FEEDBACK · REVIEWEE VARIANT · v1.0</span>
+        <span class="side-rail">FEEDBACK · REVIEWEE VARIANT · v2.0</span>
       </div>
 
       <div class="max-w-[920px] mx-auto px-10 py-10">
 
-        <!-- Intent + companion note -->
+        <!-- Intent + reviewer quote -->
         <div class="grid grid-cols-12 gap-6 mb-10">
           <div class="col-span-7">
             <p class="text-[14px] text-[var(--ink-2)] leading-relaxed">
-              Short form, five questions. The point is to capture <em class="font-display italic">what you'll actually do differently</em> in the next two weeks — and to tell the program whether the pairing was worth your time.
+              Six questions. The point is to capture <em class="font-display italic">what you'll actually do differently</em> in the next two weeks — and to tell the program whether the pairing was worth your time.
             </p>
           </div>
           <div class="col-span-5">
             <div class="num-marker mb-2">REVIEWER ALREADY SUBMITTED</div>
-            <div class="reviewer-quote">"One concrete habit to adopt: start every non-trivial task by writing the failing assertion first…"</div>
+            <div class="reviewer-quote">"Clean event-sourced audit log with deterministic projections — exactly the pattern I'd reach for…"</div>
             <a class="helper inline-flex items-center gap-1 mt-2 hover:text-[var(--ink)]">Read full feedback on session page<i data-lucide="arrow-up-right" class="w-3 h-3"></i></a>
           </div>
         </div>
 
-        <!-- 1. Level higher in practice? (RADIO 3) -->
+        <!-- ============================================ -->
+        <!-- Q1 — Level higher in practice (RADIO 4)      -->
+        <!-- ============================================ -->
         <section class="section-h">
           <div>
-            <div class="num-marker">01 · LEVEL CHECK</div>
-            <div class="mt-1 text-[10px] font-mono text-[var(--muted)]">choose one</div>
+            <div class="section-numeral">01</div>
+            <div class="section-tag">Choose one · required</div>
           </div>
           <div>
-            <h2 class="field-label text-[19px]">Was the reviewer's level genuinely higher in practice?</h2>
-            <p class="helper mt-1">The matching algorithm relies on this. Be honest — "no" is useful signal, not an insult.</p>
+            <h2 class="section-title">Was the reviewer's stage genuinely higher in practice — across the topics that mattered to you?</h2>
+            <p class="section-sub">The matching algorithm relies on this. Be honest — "no" is useful signal, not an insult.</p>
           </div>
         </section>
 
-        <div class="grid grid-cols-12 gap-6 mt-4">
-          <div class="col-start-2 col-span-11 grid grid-cols-3 gap-3">
+        <div class="grid grid-cols-12 gap-6 mt-2">
+          <div class="col-start-2 col-span-11 grid grid-cols-4 gap-3">
             <button class="radio-card" data-selected="true">
-              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Yes — clearly</span></div>
-              <p class="helper mt-2">I saw moves I couldn't have made.</p>
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Yes</span></div>
+              <p class="helper mt-2">Clearly higher across the board — saw moves I couldn't have made.</p>
             </button>
             <button class="radio-card" data-selected="false">
-              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Sort of</span></div>
-              <p class="helper mt-2">Some areas higher, some equal.</p>
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Mostly</span></div>
+              <p class="helper mt-2">Higher on most topics that mattered, even on a few.</p>
+            </button>
+            <button class="radio-card" data-selected="false">
+              <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">Partially</span></div>
+              <p class="helper mt-2">Higher on some, equal on others, different rather than ahead.</p>
             </button>
             <button class="radio-card" data-selected="false">
               <div class="flex items-center gap-3"><span class="mark"></span><span class="field-label text-[15px]">No</span></div>
-              <p class="helper mt-2">Different, not higher.</p>
+              <p class="helper mt-2">Different perspective, not a higher one.</p>
             </button>
           </div>
         </div>
 
-        <!-- 2. Top thing learned -->
+        <!-- ============================================ -->
+        <!-- Q2 — Top thing learned                        -->
+        <!-- ============================================ -->
         <section class="section-h">
-          <div><div class="num-marker">02 · LEARNED</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">free text</div></div>
           <div>
-            <h2 class="field-label text-[19px]">Top thing you learned</h2>
-            <p class="helper mt-1">One specific moment, technique, or insight. Skip generalities.</p>
+            <div class="section-numeral">02</div>
+            <div class="section-tag">Free text · required</div>
+          </div>
+          <div>
+            <h2 class="section-title">Top thing you learned</h2>
+            <p class="section-sub">Any topic counts — architecture, testing, clean code, AI workflow, anything. One specific moment, technique, or insight. Skip generalities.</p>
           </div>
         </section>
 
-        <div class="grid grid-cols-12 gap-6 mt-4">
+        <div class="grid grid-cols-12 gap-6 mt-2">
           <div class="col-start-2 col-span-11">
-            <textarea class="textarea" placeholder="The one thing from the session that made you think 'oh, I should be doing that'…"></textarea>
+            <textarea class="textarea" style="min-height: 110px;">The DLQ-with-alerting pattern for retry topics. I've been letting our retry consumer redrive indefinitely because nothing has blown up yet — Tomek walked me through how that failure mode hides until it hurts, and showed me the exact alert/threshold combo his team uses. Translatable to our worker tomorrow.</textarea>
             <div class="flex justify-between items-center mt-1">
               <span class="helper">Reviewer sees this. Coach sees this. Anonymised in roll-ups.</span>
-              <span class="counter">0 / 600</span>
+              <span class="counter">348 / 600</span>
             </div>
           </div>
         </div>
 
-        <!-- 3. Try in 2 weeks -->
+        <!-- ============================================ -->
+        <!-- Q3 — What you'll try in 2 weeks               -->
+        <!-- ============================================ -->
         <section class="section-h">
-          <div><div class="num-marker">03 · COMMIT</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">free text</div></div>
           <div>
-            <h2 class="field-label text-[19px]">What you'll try in the next two weeks</h2>
-            <p class="helper mt-1">One concrete change. We'll nudge you on day 14 to check whether it stuck.</p>
+            <div class="section-numeral">03</div>
+            <div class="section-tag">Free text · shared with reviewer</div>
+          </div>
+          <div>
+            <h2 class="section-title">What you'll try in the next two weeks</h2>
+            <p class="section-sub">One concrete commitment. This text is shared with the reviewer — they'll see what stuck. We'll nudge you on day 14 to check whether you actually did it.</p>
           </div>
         </section>
 
-        <div class="grid grid-cols-12 gap-6 mt-4">
+        <div class="grid grid-cols-12 gap-6 mt-2">
           <div class="col-start-2 col-span-11">
-            <textarea class="textarea" placeholder="e.g. 'Stop accepting the agent's first plan — push back with a counter-question every time.'"></textarea>
+            <textarea class="textarea" style="min-height: 100px;">Add a DLQ + Datadog monitor to the audit-projection retry topic this sprint. Then write the runbook entry for what "consumer paused" should mean operationally — that's the bit I keep avoiding.</textarea>
             <div class="flex justify-between items-center mt-1">
-              <span class="helper inline-flex items-center gap-1.5"><i data-lucide="bell" class="w-3.5 h-3.5"></i>Reminder will land in Slack on 18 May.</span>
-              <span class="counter">0 / 400</span>
+              <span class="helper inline-flex items-center gap-1.5"><i data-lucide="bell" class="w-3.5 h-3.5"></i>Reminder will land in your inbox on 18 May.</span>
+              <span class="counter">219 / 400</span>
             </div>
           </div>
         </div>
 
-        <!-- 4. Session quality (LIKERT) -->
+        <!-- ============================================ -->
+        <!-- Q4 — Session quality (LIKERT)                 -->
+        <!-- ============================================ -->
         <section class="section-h">
-          <div><div class="num-marker">04 · QUALITY</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">scale 1–5</div></div>
           <div>
-            <h2 class="field-label text-[19px]">Quality of the session itself</h2>
-            <p class="helper mt-1">Not the reviewer's level — the session. Prep, attention, structure, momentum.</p>
+            <div class="section-numeral">04</div>
+            <div class="section-tag">Scale 1–5 · required</div>
+          </div>
+          <div>
+            <h2 class="section-title">Quality of the session itself</h2>
+            <p class="section-sub">Not the reviewer's level — the session. Prep, attention, structure, momentum.</p>
           </div>
         </section>
 
-        <div class="grid grid-cols-12 gap-6 mt-4">
+        <div class="grid grid-cols-12 gap-6 mt-2">
           <div class="col-start-2 col-span-11">
             <div class="likert" role="radiogroup" aria-label="Session quality">
               <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">wasted time</span></button>
@@ -489,19 +556,54 @@
               <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">strong</span></button>
               <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">best peer time<br/>this year</span></button>
             </div>
+            <p class="helper mt-2">Not yet scored.</p>
           </div>
         </div>
 
-        <!-- 5. Program feedback (optional) -->
+        <!-- ============================================ -->
+        <!-- Q5 — Coverage check (CHIPS multi)             -->
+        <!-- ============================================ -->
         <section class="section-h">
-          <div><div class="num-marker">05 · PROGRAM</div><div class="mt-1 text-[10px] font-mono text-[var(--muted)]">optional</div></div>
           <div>
-            <h2 class="field-label text-[19px]">Anything to tell the people running this program?</h2>
-            <p class="helper mt-1">Pairing logic, timing, tooling, the form itself. Goes to admin, never to the reviewer.</p>
+            <div class="section-numeral">05</div>
+            <div class="section-tag">Multi-select · pick any that apply</div>
+          </div>
+          <div>
+            <h2 class="section-title">Coverage check — which topics were actually covered?</h2>
+            <p class="section-sub">Not what was <em class="font-display italic">supposed</em> to be covered — what you and the reviewer actually got to. We use this to calibrate the form against reality.</p>
           </div>
         </section>
 
-        <div class="grid grid-cols-12 gap-6 mt-4">
+        <div class="grid grid-cols-12 gap-6 mt-2">
+          <div class="col-start-2 col-span-11">
+            <div class="flex flex-wrap gap-2">
+              <button class="chip" data-selected="true"><i data-lucide="layers" class="icon"></i>Architecture</button>
+              <button class="chip" data-selected="false"><i data-lucide="brush" class="icon"></i>Clean code</button>
+              <button class="chip" data-selected="true"><i data-lucide="flask-conical" class="icon"></i>Testing</button>
+              <button class="chip" data-selected="true"><i data-lucide="activity" class="icon"></i>Observability</button>
+              <button class="chip" data-selected="false"><i data-lucide="shield" class="icon"></i>Security</button>
+              <button class="chip" data-selected="false"><i data-lucide="cpu" class="icon"></i>AI workflow</button>
+              <button class="chip" data-selected="false"><i data-lucide="more-horizontal" class="icon"></i>Other…</button>
+            </div>
+            <p class="helper mt-3 inline-flex items-center gap-1.5"><i data-lucide="info" class="w-3.5 h-3.5"></i>3 selected — your reviewer's coverage rail will show "AI workflow not covered."</p>
+          </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- Q6 — Program feedback (optional)              -->
+        <!-- ============================================ -->
+        <section class="section-h">
+          <div>
+            <div class="section-numeral">06</div>
+            <div class="section-tag">Optional · admin only</div>
+          </div>
+          <div>
+            <h2 class="section-title">Anything to tell the people running the program?</h2>
+            <p class="section-sub">Pairing logic, timing, tooling, the form itself. Goes to admin, never to the reviewer.</p>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-12 gap-6 mt-2">
           <div class="col-start-2 col-span-11">
             <textarea class="textarea" placeholder="Optional. Leave blank if nothing comes to mind."></textarea>
             <div class="flex justify-between items-center mt-1">
@@ -512,9 +614,9 @@
         </div>
 
         <!-- Submit bar -->
-        <div class="mt-14 border-t hairline-strong pt-6 flex items-center gap-4">
+        <div class="mt-14 border-t hairline-strong pt-6 flex items-center gap-4 flex-wrap">
           <div class="text-[12px] font-mono text-[var(--muted)]">
-            <div>FORM v1.0 · REVIEWEE VARIANT</div>
+            <div>FORM v2.0 · REVIEWEE VARIANT</div>
             <div class="mt-0.5">Visible to: reviewer, your coach, program admin. Anonymised in BG roll-ups.</div>
           </div>
           <div class="ml-auto flex items-center gap-3">
@@ -522,7 +624,7 @@
             <button class="btn-primary" disabled><span class="font-display text-[15px]">Submit feedback</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
           </div>
         </div>
-        <div class="text-right mt-2"><span class="helper">Submit unlocks once Q1–Q4 are answered.</span></div>
+        <div class="text-right mt-2"><span class="helper">Submit unlocks once Q1, Q2, Q3, Q4 and Q5 are answered.</span></div>
 
         <div class="h-16"></div>
       </div>
@@ -546,6 +648,12 @@
     card.addEventListener('click', () => {
       card.parentElement.querySelectorAll('.radio-card').forEach(c => c.dataset.selected = 'false');
       card.dataset.selected = 'true';
+    });
+  });
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.dataset.selected = chip.dataset.selected === 'true' ? 'false' : 'true';
     });
   });
 </script>
