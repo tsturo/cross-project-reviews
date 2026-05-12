@@ -285,7 +285,7 @@ Email is the only system-driven channel in MVP (Slack is out). Every send is log
 
 - **Framework**: Next.js 16 (App Router, RSC, Server Actions). Cache Components for dashboards.
 - **DB & Auth**: Supabase (Postgres + RLS + Google OAuth, hosted via Vercel Marketplace).
-- **UI**: Tailwind + shadcn/ui. Visma magenta-red (`#E10078`) as primary, neutral surfaces — verify against Visma brand kit before launch.
+- **UI**: Tailwind + shadcn/ui. Visma magenta-red (`#E70641`) as primary, neutral surfaces — verify against Visma brand kit before launch.
 - **Hosting**: Vercel (Fluid Compute, default Node runtime).
 - **Background jobs**: Vercel Cron for the daily auto-pair sweep; Vercel Queues if Slack/calendar workloads grow.
 - **Observability**: Vercel logs + Sentry; product analytics via PostHog (optional).

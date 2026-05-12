@@ -1,6 +1,6 @@
 # 04 — Profile & Self-assessment · design notes
 
-**Aesthetic direction.** Editorial / engineering-spec-sheet: Fraunces serif for headlines and the big level glyph, Geist sans for UI, Geist Mono for labels and metadata. Off-white surface (`#FAFAF7`) instead of pure white — feels Nordic, less SaaS, more publication. Hairline rules and uppercase mono labels frame each section as a "spec block." Magenta `#E10078` appears only on: primary CTA, the trailing punctuation dot of display headlines (a quiet brand signature), the "current" timeline node, and the position marker on the level scale.
+**Aesthetic direction.** Editorial / engineering-spec-sheet: Fraunces serif for headlines and the big level glyph, Geist sans for UI, Geist Mono for labels and metadata. Off-white surface (`#FAFAF7`) instead of pure white — feels Nordic, less SaaS, more publication. Hairline rules and uppercase mono labels frame each section as a "spec block." Magenta `#E70641` appears only on: primary CTA, the trailing punctuation dot of display headlines (a quiet brand signature), the "current" timeline node, and the position marker on the level scale.
 
 **LevelBadge / hero.** The current level renders at 220px Fraunces light — it's the loudest element on the page. A horizontal L1→L5 scale beneath visualises position and capped range; magenta tick marks the exact spot. "Stale" indicator is wired but the realistic engineer is 4 months in, so the chip shows fresh + the date the 6-month nudge will fire.
 

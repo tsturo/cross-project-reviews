@@ -272,7 +272,7 @@ Email rendering targets Outlook 2016+, Gmail web, Apple Mail, and Outlook for iO
 
 - **EmailContainer:** 600px table-based, `bg-card #FFFFFF`, `border: 1px solid #E8E2D7`, sits on `#F4F1EC` canvas.
 - **Type:** Fraunces 400 for headlines (44px hero, 22px section), IBM Plex Sans 400/500/600 for body (15px), IBM Plex Mono 500 for cycle pill labels and metadata (10–11px uppercase, `letter-spacing: 0.14–0.18em`).
-- **EmailCyclePill:** inline-block, `border: 1px solid #E10078`, `color: #E10078`, no fill, mono uppercase content.
-- **CTA button:** `bg: #E10078 color: white`, `padding: 14px 24px`, no radius (square in email for client compat), Inter/Plex Sans fallback stack.
+- **EmailCyclePill:** inline-block, `border: 1px solid #E70641`, `color: #E70641`, no fill, mono uppercase content.
+- **CTA button:** `bg: #E70641 color: white`, `padding: 14px 24px`, no radius (square in email for client compat), Inter/Plex Sans fallback stack.
 - **EmailFooter:** mono 10–11px, opt-out link present per category, "Cannot be opted out" plain copy for transactional.
 - **No SVG, no flex, no grid, no background-image, no JS.** Tables only. Inline styles only.

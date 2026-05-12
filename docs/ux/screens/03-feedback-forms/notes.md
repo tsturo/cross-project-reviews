@@ -2,7 +2,7 @@
 
 ## Aesthetic
 
-Editorial lab-notebook, not survey: warm paper background with a faint dot grain, Fraunces serif for headings and section labels (because every label reads like a prompt, not a data slot), JetBrains Mono for system signals (section numerals, status, counters, audience footers), Geist for body. Visma magenta `#E10078` appears exactly once per page — the Submit button — so the eye knows where the form actually ends. Everything else is ink-on-paper.
+Editorial lab-notebook, not survey: warm paper background with a faint dot grain, Fraunces serif for headings and section labels (because every label reads like a prompt, not a data slot), JetBrains Mono for system signals (section numerals, status, counters, audience footers), Geist for body. Visma magenta `#E70641` appears exactly once per page — the Submit button — so the eye knows where the form actually ends. Everything else is ink-on-paper.
 
 ## Structure (v2.0 — rebalanced)
 

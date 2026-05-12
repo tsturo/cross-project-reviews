@@ -183,7 +183,7 @@ Shared design glossary. Downstream agents must reuse these names verbatim.
 
 1. **Every screen opens with a one-line page intent** under the title — describes who it's for and what action it expects.
 2. **Level badges are always color-coded with the same scheme L1→L5** (cool→warm gradient); never reuse those colors for status.
-3. **Visma magenta `#E10078` is reserved for primary actions only** — never for status, never for decoration. One primary action per page.
+3. **Visma magenta `#E70641` is reserved for primary actions only** — never for status, never for decoration. One primary action per page.
 4. **Status is communicated by `StatusPill`, not by color alone** — every pill has an icon + label for accessibility.
 5. **Empty states are designed, not blank** — every list, table, and dashboard has an `EmptyState` with a next action.
 6. **No in-app approval flows** — coach/reviewer agreement happens out-of-band; the app only records. Forms must reflect this in copy ("Record the pairing you agreed on").
@@ -198,7 +198,7 @@ Shared design glossary. Downstream agents must reuse these names verbatim.
 
 **Verify against the official Visma brand kit before launch.**
 
-- **Primary:** Visma magenta-red `#E10078`. Use for primary CTA, focus rings, brand accents only.
+- **Primary:** Visma magenta-red `#E70641`. Use for primary CTA, focus rings, brand accents only.
 - **Neutrals:** near-white surface `#FAFAFA`, card `#FFFFFF`, charcoal text `#1A1A1A`, muted `#6B7280`, border `#E5E7EB`.
 - **Level palette (L1→L5):** slate `#64748B` → teal `#0EA5E9` → green `#10B981` → amber `#F59E0B` → magenta-adjacent `#BE185D`. (Magenta itself stays reserved.)
 - **Status palette:** neutral `#6B7280` (assigned), blue `#2563EB` (scheduled), green `#16A34A` (completed), violet `#7C3AED` (feedback_submitted), amber `#D97706` (auto_paired).

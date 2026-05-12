@@ -6,7 +6,7 @@ The coach's deep-dive on one coachee. The page must make the right reviewer obvi
 
 ## Aesthetic direction
 
-Nordic-clean editorial. Hairline borders, generous whitespace, faint 56px grid backdrop carried over from `login.html`. Inter + Inter Tight pairing; JetBrains Mono for numerics (levels, loads, dates) so data feels factual, not decorative. Magenta `#E10078` appears exactly once on the page (as required color tag on the dialog) and once on the dialog primary CTA — discipline per overview §6.3.
+Nordic-clean editorial. Hairline borders, generous whitespace, faint 56px grid backdrop carried over from `login.html`. Inter + Inter Tight pairing; JetBrains Mono for numerics (levels, loads, dates) so data feels factual, not decorative. Magenta `#E70641` appears exactly once on the page (as required color tag on the dialog) and once on the dialog primary CTA — discipline per overview §6.3.
 
 ## Key decisions
 

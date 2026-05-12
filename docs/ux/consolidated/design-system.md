@@ -51,8 +51,8 @@ Surface drifted hardest. The swarm produced two clusters:
 | `--border` | `#E5E7EB` | Standard 1px hairline. |
 | `--border-strong` | `#D1D5DB` | Hover-state borders on buttons, focus borders, filter active. |
 | `--hairline` | `rgba(17,17,17,0.06)` | Card inner ring (`box-shadow: inset 0 0 0 1px`). Use instead of a border when you don't want a paint. |
-| `--focus-ring` | `#E10078` (2px outline, 2px offset) | Keyboard focus only. Never aria-decorative. |
-| `--brand-primary` | `#E10078` | Visma magenta. Reserved per §6.3 — see "Magenta discipline" below. |
+| `--focus-ring` | `#E70641` (2px outline, 2px offset) | Keyboard focus only. Never aria-decorative. |
+| `--brand-primary` | `#E70641` | Visma magenta. Reserved per §6.3 — see "Magenta discipline" below. |
 | `--brand-primary-hover` | `#C70069` | Hover state for primary buttons. |
 | `--brand-primary-deep` | `#BE185D` | Used **only** as the L5 level color and as the magenta "target" line on insights charts. Coincides with `--level-5`. |
 | `--status-assigned` | `#6B7280` | Assignment in `assigned` state. |
@@ -72,7 +72,7 @@ Surface drifted hardest. The swarm produced two clusters:
 
 ### Magenta discipline
 
-`#E10078` appears **at most twice per screen**:
+`#E70641` appears **at most twice per screen**:
 
 1. The page's single primary CTA.
 2. One brand-signature anchor per page: the magenta `V` monogram in the sidebar header, the focus ring (keyboard-only), or the "target" / "current" marker on a chart (insights screens). Bundles 04 and 09 also use it as the "current node" of timelines — acceptable as a "you are here" affordance, not decoration.
@@ -178,7 +178,7 @@ Every screen file should open with this `:root` block, in this order. The swarm 
   --border-strong: #D1D5DB;
   --hairline: rgba(17,17,17,0.06);
 
-  --magenta: #E10078;
+  --magenta: #E70641;
   --magenta-hover: #C70069;
 
   --l1: #64748B;  --l2: #0EA5E9;  --l3: #10B981;  --l4: #F59E0B;  --l5: #BE185D;

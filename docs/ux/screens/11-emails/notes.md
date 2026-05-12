@@ -2,7 +2,7 @@
 
 ## Tone choices
 
-Every template treats engineers as adults. No exclamation marks, no emoji, no "🎉 You've been paired!". The voice is warm but engineering-direct: short sentences, occasional dry humor ("it's the unsung half of why this works"), no manager-speak. Magenta `#E10078` is reserved for the single primary action per email — never decorative. A pale ivory canvas `#F4F1EC` outside the email card replaces the default Outlook/Gmail grey to feel like a printed bulletin rather than a notification.
+Every template treats engineers as adults. No exclamation marks, no emoji, no "🎉 You've been paired!". The voice is warm but engineering-direct: short sentences, occasional dry humor ("it's the unsung half of why this works"), no manager-speak. Magenta `#E70641` is reserved for the single primary action per email — never decorative. A pale ivory canvas `#F4F1EC` outside the email card replaces the default Outlook/Gmail grey to feel like a printed bulletin rather than a notification.
 
 The serif (Fraunces, italic for emphasis) carries the editorial weight; IBM Plex Sans handles body; IBM Plex Mono handles metadata labels and the "cycle pill" tags. This typographic hierarchy is what keeps each email from feeling like a SaaS-default transactional blast.
 

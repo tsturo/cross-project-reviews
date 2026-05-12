@@ -10,4 +10,4 @@ The `FilterBar` is the same component on both screens: BG, Company, Project, (Ro
 
 ## Level palette discipline
 
-`L1 #64748B · L2 #0EA5E9 · L3 #10B981 · L4 #F59E0B · L5 #BE185D` is used identically to the engineer-facing `LevelBadge` — same slate→teal→green→amber→deep-magenta sequence, never reordered, never reused for status. Magenta `#E10078` appears exactly twice per screen: the primary Export CTA and the 80%-target line.
+`L1 #64748B · L2 #0EA5E9 · L3 #10B981 · L4 #F59E0B · L5 #BE185D` is used identically to the engineer-facing `LevelBadge` — same slate→teal→green→amber→deep-magenta sequence, never reordered, never reused for status. Magenta `#E70641` appears exactly twice per screen: the primary Export CTA and the 80%-target line.

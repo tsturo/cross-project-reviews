@@ -38,7 +38,7 @@ Severity scale:
 - **Severity:** **medium.** The two clusters look visibly different when placed next to each other, but neither is wrong on its own.
 - **Resolution:** **Cool `#FAFAFA` wins** in-product, per §7. Warm paper drifts editorial; it pairs with Fraunces and is rejected on the same grounds. Email canvas stays warm (`#F4F1EC`) because a different surrounding chrome (Gmail/Outlook) benefits from a non-SaaS canvas to feel un-corporate.
 
-## 4. Magenta `#E10078` overuse
+## 4. Magenta `#E70641` overuse
 
 - **Finding:** Several bundles let magenta leak beyond CTA + brand-anchor into decoration.
 - **Where:**
