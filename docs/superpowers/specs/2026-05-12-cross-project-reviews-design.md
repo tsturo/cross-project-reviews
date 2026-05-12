@@ -128,7 +128,6 @@ A cycle is typically **6 months** (matches the "1–2 reviews per year" rhythm).
 
 | Signal | Weight | Rationale |
 |---|---|---|
-| Different `company` (legal entity) | +1 | Broader exposure; Visma has several entities |
 | Different tech stack | +1 | A .NET engineer learning event sourcing from a Python engineer is the whole point |
 | Different BG | +1 | Cross-BG perspective on architecture patterns |
 | Reviewer rank ≈ reviewee rank + 1 | +2 | Closer rank is usually more useful than a chasm |

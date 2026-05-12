@@ -29,6 +29,8 @@
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
   }
+
+  /* Content slides — scaled 1280x720 frame */
   .slide {
     width: 1280px; height: 720px;
     background: var(--paper);
@@ -39,14 +41,16 @@
     border-radius: 4px;
     transform-origin: center;
     flex-direction: column;
+    overflow: hidden;
   }
   .slide.active { display: flex; }
   .slide::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
     background: var(--magenta);
+    z-index: 2;
   }
 
-  /* Top + bottom chrome — slim */
+  /* Chrome */
   .slide-meta {
     position: absolute; top: 18px; left: 56px; right: 56px;
     display: flex; justify-content: space-between; align-items: center;
@@ -55,12 +59,6 @@
     color: var(--muted);
   }
   .slide-meta .brand { color: var(--magenta); font-weight: 600; }
-  .slide-foot {
-    position: absolute; bottom: 16px; left: 56px; right: 56px;
-    display: flex; justify-content: space-between; align-items: center;
-    font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    letter-spacing: 0.08em; color: var(--muted);
-  }
 
   /* Typography */
   .eyebrow {
@@ -78,7 +76,7 @@
   h1.display .dot { color: var(--magenta); }
   h2.title {
     font-family: 'Fraunces', serif; font-weight: 400;
-    font-size: 30px; line-height: 1.1; letter-spacing: -0.012em;
+    font-size: 36px; line-height: 1.1; letter-spacing: -0.012em;
     margin: 0; color: var(--ink);
   }
   h2.title em { font-style: italic; }
@@ -100,13 +98,13 @@
     color: var(--magenta); font-weight: 600; margin-bottom: 28px;
   }
   .cover-byline {
-    position: absolute; bottom: 56px; left: 56px;
+    position: absolute; bottom: 48px; left: 56px;
     font-family: 'JetBrains Mono', monospace; font-size: 12px;
     letter-spacing: 0.1em; color: var(--muted);
   }
   .cover-byline .name { color: var(--ink); font-weight: 600; }
 
-  /* Process slide — four moves */
+  /* Process slide */
   .process { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px; margin-top: 8px; }
   .process-row { display: flex; gap: 14px; align-items: stretch; }
   .process-step {
@@ -128,82 +126,110 @@
     color: var(--magenta); font-style: italic;
   }
 
-  /* Rules slide */
-  .rules-grid {
-    flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
-    margin-top: 8px;
-  }
-  .rules-grid .col h3 {
+  /* Rules — stacked */
+  .rules-stack { flex: 1; display: flex; flex-direction: column; gap: 24px; margin-top: 8px; min-height: 0; }
+  .rules-block { display: flex; flex-direction: column; }
+  .rules-block h3 {
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
     letter-spacing: 0.12em; text-transform: uppercase;
-    margin: 0 0 12px; color: var(--muted);
+    margin: 0 0 10px; color: var(--muted);
   }
-  .rules-grid .col.hard h3 { color: var(--magenta); }
+  .rules-block.hard h3 { color: var(--magenta); }
+  .rules-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
   .rule {
     background: var(--paper-warm); border: 1px solid var(--hairline);
-    border-radius: 6px; padding: 14px 16px; margin-bottom: 10px;
-    display: flex; gap: 14px; align-items: flex-start;
+    border-radius: 6px; padding: 12px 14px;
   }
-  .rule .check {
-    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  .rule .badge {
+    width: 22px; height: 22px; border-radius: 50%;
     background: var(--magenta); color: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; margin-top: 2px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; margin-bottom: 8px;
   }
-  .rule.soft .check {
-    background: transparent; color: var(--muted); border: 1px solid var(--hairline);
+  .rule.soft .badge {
+    background: transparent; color: var(--magenta); border: 1px solid var(--magenta);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
   }
   .rule .title {
-    font-family: 'Fraunces', serif; font-size: 19px; line-height: 1.25;
-    margin-bottom: 2px;
+    font-family: 'Fraunces', serif; font-size: 16px; line-height: 1.2;
+    margin-bottom: 4px;
   }
   .rule .desc {
-    font-size: 13px; color: var(--muted); line-height: 1.45;
+    font-size: 12px; color: var(--muted); line-height: 1.4;
   }
 
-  /* Full-bleed mockup slide */
-  .slide.mockup { padding: 32px 32px 32px; }
-  .mockup-head {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin: 18px 0 12px;
+  /* MOCKUP SLIDE — TRUE FULL SCREEN */
+  .slide.mockup {
+    position: fixed; inset: 0;
+    width: 100vw; height: 100vh;
+    padding: 0;
+    background: white;
+    box-shadow: none;
+    border-radius: 0;
+    transform: none !important;
+    overflow: hidden;
   }
-  .mockup-head h2 {
-    font-family: 'Fraunces', serif; font-weight: 400;
-    font-size: 26px; margin: 0;
-  }
-  .mockup-head h2 em { font-style: italic; }
-  .mockup-head h2 .dot { color: var(--magenta); }
-  .mockup-head .role {
-    font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    color: var(--magenta); letter-spacing: 0.1em; text-transform: uppercase;
-    font-weight: 600;
-  }
-  .frame-wrap {
-    flex: 1; min-height: 0;
-    background: white; border: 1px solid var(--hairline); border-radius: 6px;
-    overflow: hidden; position: relative;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-  }
-  .frame-wrap iframe {
-    width: 100%; height: 100%; border: 0; display: block;
+  .slide.mockup::before { display: none; }
+  .slide.mockup iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0; display: block;
     background: white;
   }
-  .mockup-pair {
-    flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-height: 0;
+
+  /* Intro overlay */
+  .intro-overlay {
+    position: absolute; inset: 0;
+    background: rgba(19, 18, 17, 0.94);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 5;
+    transition: opacity 0.35s ease;
+    cursor: pointer;
+    padding: 48px;
   }
-  .mockup-pair .card {
-    background: white; border: 1px solid var(--hairline); border-radius: 6px;
-    overflow: hidden; display: flex; flex-direction: column;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  .intro-overlay.dismissed {
+    opacity: 0; pointer-events: none;
   }
-  .mockup-pair .card .cap {
-    font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--muted); padding: 7px 12px;
-    border-bottom: 1px solid var(--hairline); background: var(--paper-warm);
+  .intro-card {
+    max-width: 760px;
+    text-align: left;
+    color: var(--paper);
   }
-  .mockup-pair iframe {
-    flex: 1; width: 100%; border: 0; background: white;
+  .intro-card .eyebrow {
+    color: var(--magenta);
+    margin-bottom: 16px;
+  }
+  .intro-card h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 72px; line-height: 1.02; letter-spacing: -0.022em;
+    margin: 0 0 28px;
+    color: var(--paper);
+  }
+  .intro-card h2 em { font-style: italic; }
+  .intro-card h2 .dot { color: var(--magenta); }
+  .intro-card p {
+    font-size: 22px; line-height: 1.5; color: rgba(246,242,234,0.78);
+    margin: 0 0 40px;
+    max-width: 680px;
+  }
+  .intro-card .role {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--magenta); letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 600;
+    padding: 6px 12px;
+    border: 1px solid rgba(225,0,120,0.4);
+    border-radius: 999px;
+    margin-bottom: 32px;
+    display: inline-block;
+  }
+  .intro-card .hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: rgba(246,242,234,0.45); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .intro-card .hint kbd {
+    background: rgba(255,255,255,0.1); padding: 2px 7px; border-radius: 3px;
+    margin: 0 3px; font-family: inherit; color: rgba(246,242,234,0.7);
   }
 
   /* Roadmap */
@@ -241,14 +267,15 @@
   }
   .ask p { font-size: 13px; line-height: 1.45; color: var(--muted); margin: 0; }
 
-  /* Nav */
+  /* Minimal nav — always visible */
   .nav {
     position: fixed; bottom: 14px; right: 14px;
     display: flex; gap: 8px; align-items: center;
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
     color: rgba(255,255,255,0.7); letter-spacing: 0.08em;
-    background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 999px;
+    background: rgba(0,0,0,0.55); padding: 6px 10px; border-radius: 999px;
     backdrop-filter: blur(8px);
+    z-index: 20;
   }
   .nav button {
     background: transparent; border: 1px solid rgba(255,255,255,0.2);
@@ -259,16 +286,7 @@
   .nav .pos { min-width: 50px; text-align: center; }
   .progress {
     position: fixed; bottom: 0; left: 0; height: 3px; background: var(--magenta);
-    transition: width 0.3s ease;
-  }
-  .help {
-    position: fixed; bottom: 14px; left: 14px;
-    font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    color: rgba(255,255,255,0.45); letter-spacing: 0.08em;
-  }
-  .help kbd {
-    background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px;
-    font-family: inherit; margin: 0 2px;
+    transition: width 0.3s ease; z-index: 20;
   }
 </style>
 </head>
@@ -279,7 +297,7 @@
   <section class="slide active" data-name="cover">
     <div class="slide-meta">
       <span><span class="brand">Visma Tech Lithuania</span> · Competence Center</span>
-      <span>1 / 19</span>
+      <span>1 / 23</span>
     </div>
     <div class="cover-stack">
       <div class="super">Proposal · May 2026</div>
@@ -291,11 +309,11 @@
     </div>
   </section>
 
-  <!-- 2. PROCESS — FOUR MOVES -->
+  <!-- 2. PROCESS -->
   <section class="slide" data-name="process">
     <div class="slide-meta">
       <span><span class="brand">The process</span> · how a cycle works</span>
-      <span>2 / 19</span>
+      <span>2 / 23</span>
     </div>
     <div style="margin-top: 16px;">
       <div class="eyebrow">One cycle, six months</div>
@@ -329,331 +347,339 @@
         </div>
       </div>
     </div>
-    <div class="slide-foot">
-      <span>02 · The process</span>
-      <span>6-month cycle, 1–2 sessions per engineer per year</span>
-    </div>
   </section>
 
   <!-- 3. RULES -->
   <section class="slide" data-name="rules">
     <div class="slide-meta">
       <span><span class="brand">The rules</span> · matching &amp; auto-assignment</span>
-      <span>3 / 19</span>
+      <span>3 / 23</span>
     </div>
     <div style="margin-top: 16px;">
       <div class="eyebrow">Cross-project means cross-project</div>
       <h2 class="title">Hard rules every pairing must <em>pass<span class="dot">,</span></em> soft signals that <em>rank<span class="dot">.</span></em></h2>
     </div>
-    <div class="rules-grid">
-      <div class="col hard">
+    <div class="rules-stack">
+      <div class="rules-block hard">
         <h3>Hard rules · all must pass</h3>
-        <div class="rule">
-          <div class="check">✓</div>
-          <div>
+        <div class="rules-row">
+          <div class="rule">
+            <span class="badge">✓</span>
             <div class="title">Different project</div>
-            <div class="desc">Same project = within-project review. That's not what this is.</div>
+            <div class="desc">Same project = within-project review. Not what this is.</div>
           </div>
-        </div>
-        <div class="rule">
-          <div class="check">✓</div>
-          <div>
+          <div class="rule">
+            <span class="badge">✓</span>
             <div class="title">Different coach</div>
-            <div class="desc">Sharing a coach = sharing the same management context. Cross-coach is the cleanest "outside eyes".</div>
+            <div class="desc">Sharing a coach = sharing management context. Cleanest outside eyes.</div>
           </div>
-        </div>
-        <div class="rule">
-          <div class="check">✓</div>
-          <div>
-            <div class="title">No prior pair in the last 2 cycles</div>
-            <div class="desc">Repeat pairing rarely adds new perspective.</div>
+          <div class="rule">
+            <span class="badge">✓</span>
+            <div class="title">No prior pair in 2 cycles</div>
+            <div class="desc">Repeat pairings rarely add new perspective.</div>
           </div>
-        </div>
-        <div class="rule">
-          <div class="check">✓</div>
-          <div>
+          <div class="rule">
+            <span class="badge">✓</span>
             <div class="title">Reviewer rank strictly higher</div>
-            <div class="desc">On the 9-cell maturity grid. Exposure to one rung up is the point.</div>
+            <div class="desc">On the 9-cell maturity grid. Exposure is the point.</div>
           </div>
-        </div>
-        <div class="rule">
-          <div class="check">✓</div>
-          <div>
-            <div class="title">Reviewer not at load cap</div>
-            <div class="desc">≤ 2 active assignments per cycle. Spread the work.</div>
+          <div class="rule">
+            <span class="badge">✓</span>
+            <div class="title">Reviewer below load cap</div>
+            <div class="desc">≤ 2 active assignments per cycle.</div>
           </div>
         </div>
       </div>
-      <div class="col soft">
+      <div class="rules-block soft">
         <h3>Soft signals · rank among eligible</h3>
-        <div class="rule soft">
-          <div class="check">+1</div>
-          <div>
-            <div class="title">Different company (legal entity)</div>
-            <div class="desc">Broader cross-Visma exposure.</div>
-          </div>
-        </div>
-        <div class="rule soft">
-          <div class="check">+1</div>
-          <div>
+        <div class="rules-row">
+          <div class="rule soft">
+            <span class="badge">+1</span>
             <div class="title">Different tech stack</div>
-            <div class="desc">A .NET engineer learning event sourcing from a Python engineer — that's the point.</div>
+            <div class="desc">.NET ↔ Python on event sourcing is the whole point.</div>
           </div>
-        </div>
-        <div class="rule soft">
-          <div class="check">+2</div>
-          <div>
+          <div class="rule soft">
+            <span class="badge">+1</span>
+            <div class="title">Different BG</div>
+            <div class="desc">Cross-BG architecture perspectives.</div>
+          </div>
+          <div class="rule soft">
+            <span class="badge">+2</span>
             <div class="title">Rank gap of one</div>
-            <div class="desc">Closer rank usually transfers better than a chasm. Gap of 3+ scored down.</div>
+            <div class="desc">Closer rank transfers better than a chasm.</div>
           </div>
-        </div>
-        <div class="rule soft">
-          <div class="check">+1</div>
-          <div>
+          <div class="rule soft">
+            <span class="badge">+1</span>
             <div class="title">Lower current load</div>
-            <div class="desc">Per slot free. Spreads reviewer work evenly.</div>
+            <div class="desc">Per slot free. Spreads work evenly.</div>
           </div>
-        </div>
-        <div class="rule soft">
-          <div class="check">↓</div>
-          <div>
-            <div class="title">Re-validated at recording time</div>
-            <div class="desc">Hard filter runs again at submit. If a reviewer changed project in the meantime, the form rejects with a clear reason.</div>
+          <div class="rule soft">
+            <span class="badge">↓</span>
+            <div class="title">Re-validated at recording</div>
+            <div class="desc">Hard filter runs again at submit; rejects with reason.</div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="slide-foot">
-      <span>03 · Matching rules</span>
-      <span>Auto-pair fires T-7d before cycle close on still-unassigned coachees</span>
     </div>
   </section>
 
   <!-- 4. LOGIN -->
   <section class="slide mockup" data-name="login">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 01 · Login</span>
-      <span>4 / 19</span>
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">All users · 4 / 23</div>
+        <div class="eyebrow">The tool · 01</div>
+        <h2><em>Login<span class="dot">.</span></em></h2>
+        <p>Domain-restricted Google OAuth. The brand panel sets context for first-time visitors: peer learning across projects covering architecture, clean code, testing, and AI workflow.</p>
+        <div class="hint">Click anywhere or press <kbd>→</kbd> to see the screen</div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Login</em> — Google OAuth, @visma.com only<span class="dot">.</span></h2>
-      <span class="role">All users</span>
-    </div>
-    <div class="frame-wrap"><iframe src="../ux/screens/01-auth-and-dashboard/login.html" title="Login"></iframe></div>
-    <div class="slide-foot"><span>01 · Login</span><span>4 / 19</span></div>
+    <iframe src="../ux/screens/01-auth-and-dashboard/login.html" title="Login"></iframe>
   </section>
 
   <!-- 5. ENGINEER DASHBOARD -->
   <section class="slide mockup" data-name="dashboard">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 02 · Engineer dashboard</span>
-      <span>5 / 19</span>
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Engineer · 5 / 23</div>
+        <div class="eyebrow">The tool · 02</div>
+        <h2>Engineer <em>dashboard<span class="dot">.</span></em></h2>
+        <p>An engineer's home. Next session up top, current maturity level shown read-only, pending feedback nudges, recent sessions. The "What to cover" tag broadens beyond AI.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Dashboard</em> — your next session, your level, what's pending<span class="dot">.</span></h2>
-      <span class="role">Engineer</span>
-    </div>
-    <div class="frame-wrap"><iframe src="../ux/screens/01-auth-and-dashboard/dashboard.html" title="Dashboard"></iframe></div>
-    <div class="slide-foot"><span>02 · Engineer dashboard</span><span>5 / 19</span></div>
+    <iframe src="../ux/screens/01-auth-and-dashboard/dashboard.html" title="Dashboard"></iframe>
   </section>
 
-  <!-- 6. SESSIONS LIST + DETAIL -->
-  <section class="slide mockup" data-name="sessions">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 03 · Sessions</span>
-      <span>6 / 19</span>
+  <!-- 6. MY SESSIONS -->
+  <section class="slide mockup" data-name="sessions-list">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Engineer · 6 / 23</div>
+        <div class="eyebrow">The tool · 03</div>
+        <h2>My <em>sessions<span class="dot">.</span></em></h2>
+        <p>Tabbed by role — as reviewer, as reviewee, past. Filter chips for status. Each row shows counterpart, level diff, status, scheduled date.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>My sessions</em> &amp; <em>session detail<span class="dot">.</span></em></h2>
-      <span class="role">Engineer</span>
-    </div>
-    <div class="mockup-pair">
-      <div class="card"><div class="cap">My sessions — tabbed list</div><iframe src="../ux/screens/02-engineer-sessions/sessions-list.html"></iframe></div>
-      <div class="card"><div class="cap">Session detail — as reviewee</div><iframe src="../ux/screens/02-engineer-sessions/session-detail-reviewee.html"></iframe></div>
-    </div>
-    <div class="slide-foot"><span>03 · Sessions</span><span>6 / 19</span></div>
+    <iframe src="../ux/screens/02-engineer-sessions/sessions-list.html" title="My sessions"></iframe>
   </section>
 
-  <!-- 7. FEEDBACK FORMS -->
-  <section class="slide mockup" data-name="feedback">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 04 · Feedback</span>
-      <span>7 / 19</span>
+  <!-- 7. SESSION DETAIL -->
+  <section class="slide mockup" data-name="session-detail">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Engineer · 7 / 23</div>
+        <div class="eyebrow">The tool · 04</div>
+        <h2>Session <em>detail<span class="dot">.</span></em></h2>
+        <p>What to cover spelled out: architecture &amp; patterns, clean code, testing/observability/security, AI workflow. Shared prep notes. The feedback CTA appears after the session.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Feedback forms</em> — four sections + wrap-up<span class="dot">.</span></h2>
-      <span class="role">Engineer</span>
-    </div>
-    <div class="mockup-pair">
-      <div class="card"><div class="cap">Reviewer → reviewee · long-form, 5 sections</div><iframe src="../ux/screens/03-feedback-forms/feedback-reviewer.html"></iframe></div>
-      <div class="card"><div class="cap">Reviewee → reviewer · short, 6 questions</div><iframe src="../ux/screens/03-feedback-forms/feedback-reviewee.html"></iframe></div>
-    </div>
-    <div class="slide-foot"><span>04 · Feedback forms</span><span>7 / 19</span></div>
+    <iframe src="../ux/screens/02-engineer-sessions/session-detail-reviewee.html" title="Session detail"></iframe>
   </section>
 
-  <!-- 8. PROFILE -->
+  <!-- 8. REVIEWER FEEDBACK -->
+  <section class="slide mockup" data-name="feedback-reviewer">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Engineer · 8 / 23</div>
+        <div class="eyebrow">The tool · 05</div>
+        <h2>Reviewer <em>feedback<span class="dot">.</span></em></h2>
+        <p>Five sections, fifteen questions. Architecture &amp; patterns. Clean code. Testing/observability/security. AI workflow. Wrap-up. AI is dimension four of four — not the headline. Coverage tracker on the right rail; autosave throughout.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
+    </div>
+    <iframe src="../ux/screens/03-feedback-forms/feedback-reviewer.html" title="Reviewer feedback"></iframe>
+  </section>
+
+  <!-- 9. REVIEWEE FEEDBACK -->
+  <section class="slide mockup" data-name="feedback-reviewee">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Engineer · 9 / 23</div>
+        <div class="eyebrow">The tool · 06</div>
+        <h2>Reviewee <em>feedback<span class="dot">.</span></em></h2>
+        <p>Six questions including a coverage check — which topics were actually discussed. Top thing learned and what you'll try in two weeks. Shared with the reviewer; short and concrete.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
+    </div>
+    <iframe src="../ux/screens/03-feedback-forms/feedback-reviewee.html" title="Reviewee feedback"></iframe>
+  </section>
+
+  <!-- 10. PROFILE -->
   <section class="slide mockup" data-name="profile">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 05 · Profile</span>
-      <span>8 / 19</span>
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Engineer · 10 / 23</div>
+        <div class="eyebrow">The tool · 07</div>
+        <h2>Profile <em>&amp; history<span class="dot">.</span></em></h2>
+        <p>Current rank with vehicle metaphor, level history with reasons, past review feedback. Level is read-only here — set in the quarterly coach check-in.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Profile</em> — current rank, history, past feedback<span class="dot">.</span></h2>
-      <span class="role">Engineer</span>
-    </div>
-    <div class="frame-wrap"><iframe src="../ux/screens/04-profile/profile.html" title="Profile"></iframe></div>
-    <div class="slide-foot"><span>05 · Profile (level is read-only)</span><span>8 / 19</span></div>
+    <iframe src="../ux/screens/04-profile/profile.html" title="Profile"></iframe>
   </section>
 
-  <!-- 9. COACH ROSTER -->
+  <!-- 11. COACH ROSTER -->
   <section class="slide mockup" data-name="coach-roster">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 06 · Coach roster</span>
-      <span>9 / 19</span>
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Coach · 11 / 23</div>
+        <div class="eyebrow">The tool · 08</div>
+        <h2>Coachee <em>roster<span class="dot">.</span></em></h2>
+        <p>All your coachees this cycle in one table. Inline expand on a row shows suggested reviewers — each with hard-pass chips (different project, different coach, no prior pair, rank gap) and soft-score chips.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Coachee roster</em> — normal &amp; auto-pair warning<span class="dot">.</span></h2>
-      <span class="role">Coach</span>
-    </div>
-    <div class="mockup-pair">
-      <div class="card"><div class="cap">Mid-cycle</div><iframe src="../ux/screens/05-coach-roster/roster-normal.html"></iframe></div>
-      <div class="card"><div class="cap">T-1d before auto-pair</div><iframe src="../ux/screens/05-coach-roster/roster-autopair-warning.html"></iframe></div>
-    </div>
-    <div class="slide-foot"><span>06 · Coach roster</span><span>9 / 19</span></div>
+    <iframe src="../ux/screens/05-coach-roster/roster-normal.html" title="Coach roster"></iframe>
   </section>
 
-  <!-- 10. COACHEE DETAIL + ASSIGN -->
+  <!-- 12. COACH ROSTER — AUTO-PAIR WARNING -->
+  <section class="slide mockup" data-name="coach-roster-warn">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Coach · 12 / 23</div>
+        <div class="eyebrow">The tool · 09</div>
+        <h2>Auto-pair <em>imminent<span class="dot">.</span></em></h2>
+        <p>T-1d before the system pairs unassigned coachees. Live countdown, preview of who'd be paired with whom, "Assign them now" CTA or let auto-pair fire.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
+    </div>
+    <iframe src="../ux/screens/05-coach-roster/roster-autopair-warning.html" title="Auto-pair warning"></iframe>
+  </section>
+
+  <!-- 13. COACHEE DETAIL -->
   <section class="slide mockup" data-name="coachee-detail">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 07 · Coachee &amp; pairing</span>
-      <span>10 / 19</span>
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Coach · 13 / 23</div>
+        <div class="eyebrow">The tool · 10</div>
+        <h2>Coachee <em>detail<span class="dot">.</span></em></h2>
+        <p>Top 5 candidates ranked. Each row carries the hard-rule checks (✓ different project · ✓ different coach · ✓ no prior pair · ✓ rank gap) plus soft signals. Search fallback below for manual override.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Coachee detail</em> &amp; <em>assignment recorder<span class="dot">.</span></em></h2>
-      <span class="role">Coach</span>
-    </div>
-    <div class="mockup-pair">
-      <div class="card"><div class="cap">Top 5 candidates, hard rules ✓</div><iframe src="../ux/screens/06-coachee-detail/coachee-detail.html"></iframe></div>
-      <div class="card"><div class="cap">Record the pairing you've agreed on</div><iframe src="../ux/screens/06-coachee-detail/assignment-recorder.html"></iframe></div>
-    </div>
-    <div class="slide-foot"><span>07 · Coachee &amp; pairing</span><span>10 / 19</span></div>
+    <iframe src="../ux/screens/06-coachee-detail/coachee-detail.html" title="Coachee detail"></iframe>
   </section>
 
-  <!-- 11. ASSIGNMENTS BOARD -->
+  <!-- 14. ASSIGNMENT RECORDER -->
+  <section class="slide mockup" data-name="assignment-recorder">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Coach · 14 / 23</div>
+        <div class="eyebrow">The tool · 11</div>
+        <h2>Record the <em>pairing<span class="dot">.</span></em></h2>
+        <p>The coach has already agreed the pairing out-of-band in Slack or email. This screen just records it. All four cross-project rules re-validate at submit time; the form rejects with a specific reason if anything's drifted.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
+    </div>
+    <iframe src="../ux/screens/06-coachee-detail/assignment-recorder.html" title="Assignment recorder"></iframe>
+  </section>
+
+  <!-- 15. ASSIGNMENTS BOARD -->
   <section class="slide mockup" data-name="assignments-board">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 08 · Assignments board</span>
-      <span>11 / 19</span>
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Coach · 15 / 23</div>
+        <div class="eyebrow">The tool · 12</div>
+        <h2>Assignments <em>board<span class="dot">.</span></em></h2>
+        <p>Everything this cycle in one table — both directions (where you coach the reviewee and where you coach the reviewer). Two separate checkmarks track reviewer and reviewee feedback. Four metric tiles up top.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Assignments</em> — everything this cycle, both directions<span class="dot">.</span></h2>
-      <span class="role">Coach</span>
-    </div>
-    <div class="frame-wrap"><iframe src="../ux/screens/07-coach-assignments/assignments-board.html" title="Assignments board"></iframe></div>
-    <div class="slide-foot"><span>08 · Assignments board</span><span>11 / 19</span></div>
+    <iframe src="../ux/screens/07-coach-assignments/assignments-board.html" title="Assignments board"></iframe>
   </section>
 
-  <!-- 12. INSIGHTS COMPLETION -->
+  <!-- 16. INSIGHTS COMPLETION -->
   <section class="slide mockup" data-name="insights-completion">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 09 · Completion</span>
-      <span>12 / 19</span>
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">BG · MD · 16 / 23</div>
+        <div class="eyebrow">The tool · 13</div>
+        <h2>Completion <em>insights<span class="dot">.</span></em></h2>
+        <p>How the program is running. Completion rate per BG and project, on-track vs lagging, sparklines across cycles. Aggregated only — no individual identification.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Completion insights</em> — rate per BG, project, cycle<span class="dot">.</span></h2>
-      <span class="role">BG · MD</span>
-    </div>
-    <div class="frame-wrap"><iframe src="../ux/screens/08-insights/insights-completion.html" title="Completion"></iframe></div>
-    <div class="slide-foot"><span>09 · Completion (aggregates only)</span><span>12 / 19</span></div>
+    <iframe src="../ux/screens/08-insights/insights-completion.html" title="Insights completion"></iframe>
   </section>
 
-  <!-- 13. INSIGHTS LEVELS -->
+  <!-- 17. INSIGHTS LEVELS -->
   <section class="slide mockup" data-name="insights-levels">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 10 · Level distribution</span>
-      <span>13 / 19</span>
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">BG · MD · 17 / 23</div>
+        <div class="eyebrow">The tool · 14</div>
+        <h2>Level <em>distribution<span class="dot">.</span></em></h2>
+        <p>Where the org sits on the maturity grid, cycle over cycle. Distribution histogram, deltas, breakdown by BG/role/tenure. Survey-freshness banner flags when too many levels are stale.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Level distribution</em> &amp; cycle-over-cycle shift<span class="dot">.</span></h2>
-      <span class="role">BG · MD</span>
-    </div>
-    <div class="frame-wrap"><iframe src="../ux/screens/08-insights/insights-levels.html" title="Levels"></iframe></div>
-    <div class="slide-foot"><span>10 · Level distribution</span><span>13 / 19</span></div>
+    <iframe src="../ux/screens/08-insights/insights-levels.html" title="Insights levels"></iframe>
   </section>
 
-  <!-- 14. ADMIN CYCLES -->
-  <section class="slide mockup" data-name="admin-cycles">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 11 · Admin cycles</span>
-      <span>14 / 19</span>
+  <!-- 18. CYCLE EDITOR -->
+  <section class="slide mockup" data-name="cycle-editor">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Admin · 18 / 23</div>
+        <div class="eyebrow">The tool · 15</div>
+        <h2>Cycle <em>editor<span class="dot">.</span></em></h2>
+        <p>Editing an in-flight cycle. Plain-English target filter ("engineers whose last review was before X"). Scoring weight sliders. Warns clearly when a change re-targets the population vs. just tweaks auto-pair.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Cycle management</em> — list &amp; editor<span class="dot">.</span></h2>
-      <span class="role">Admin</span>
-    </div>
-    <div class="mockup-pair">
-      <div class="card"><div class="cap">Cycle list</div><iframe src="../ux/screens/09-admin-cycles/cycle-list.html"></iframe></div>
-      <div class="card"><div class="cap">Editing an active cycle</div><iframe src="../ux/screens/09-admin-cycles/cycle-editor-edit-active.html"></iframe></div>
-    </div>
-    <div class="slide-foot"><span>11 · Admin cycles</span><span>14 / 19</span></div>
+    <iframe src="../ux/screens/09-admin-cycles/cycle-editor-edit-active.html" title="Cycle editor"></iframe>
   </section>
 
-  <!-- 15. ADMIN IMPORTS + LEVEL -->
-  <section class="slide mockup" data-name="admin-imports">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 12 · Imports &amp; level entry</span>
-      <span>15 / 19</span>
+  <!-- 19. IMPORTS -->
+  <section class="slide mockup" data-name="imports">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">Admin · 19 / 23</div>
+        <div class="eyebrow">The tool · 16</div>
+        <h2>Imports <em>&amp; audit<span class="dot">.</span></em></h2>
+        <p>Sync from the HR sheet. Dry-run mandatory before live. Errors surface per row with the exact problem. Past runs kept as an audit trail.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Imports</em> &amp; <em>manual level entry<span class="dot">.</span></em></h2>
-      <span class="role">Admin · Coach</span>
-    </div>
-    <div class="mockup-pair">
-      <div class="card"><div class="cap">Sheet imports — dry-run, errors per row</div><iframe src="../ux/screens/10-admin-imports/imports.html"></iframe></div>
-      <div class="card"><div class="cap">Record level from a check-in</div><iframe src="../ux/screens/10-admin-imports/level-override.html"></iframe></div>
-    </div>
-    <div class="slide-foot"><span>12 · Imports &amp; level entry</span><span>15 / 19</span></div>
+    <iframe src="../ux/screens/10-admin-imports/imports.html" title="Imports"></iframe>
   </section>
 
-  <!-- 16. EMAILS A -->
-  <section class="slide mockup" data-name="emails-a">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 13 · Email reminders</span>
-      <span>16 / 19</span>
+  <!-- 20. EMAIL — PAIRING RECORDED -->
+  <section class="slide mockup" data-name="email-pairing">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">All · 20 / 23</div>
+        <div class="eyebrow">The tool · 17</div>
+        <h2>Email — <em>pairing recorded<span class="dot">.</span></em></h2>
+        <p>Transactional email sent the moment the coach records a pairing. Both parties see counterpart info, level diff, what to cover, what's next. Per-category opt-outs and quiet hours honored across the system.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Email reminders</em> — transactional &amp; nudges<span class="dot">.</span></h2>
-      <span class="role">All</span>
-    </div>
-    <div class="mockup-pair">
-      <div class="card"><div class="cap">Pairing recorded — to both parties</div><iframe src="../ux/screens/11-emails/email-pairing-recorded.html"></iframe></div>
-      <div class="card"><div class="cap">Auto-pair imminent — to coach</div><iframe src="../ux/screens/11-emails/email-autopair-imminent.html"></iframe></div>
-    </div>
-    <div class="slide-foot"><span>13 · Reminders (1/2) · quiet hours + per-category opt-outs honored</span><span>16 / 19</span></div>
+    <iframe src="../ux/screens/11-emails/email-pairing-recorded.html" title="Email: pairing recorded"></iframe>
   </section>
 
-  <!-- 17. EMAILS B -->
-  <section class="slide mockup" data-name="emails-b">
-    <div class="slide-meta">
-      <span><span class="brand">The tool</span> · 14 · Email reminders</span>
-      <span>17 / 19</span>
+  <!-- 21. EMAIL — DIGEST -->
+  <section class="slide mockup" data-name="email-digest">
+    <div class="intro-overlay">
+      <div class="intro-card">
+        <div class="role">All · 21 / 23</div>
+        <div class="eyebrow">The tool · 18</div>
+        <h2>Email — <em>cycle digest<span class="dot">.</span></em></h2>
+        <p>End-of-cycle wrap-up to every engineer. Their two sessions, level shift, what they said they'd try, a snapshot of where the org moved. BG/MD get an aggregated variant.</p>
+        <div class="hint">Click or press <kbd>→</kbd></div>
+      </div>
     </div>
-    <div class="mockup-head">
-      <h2><em>Email reminders</em> — feedback &amp; closing<span class="dot">.</span></h2>
-      <span class="role">All</span>
-    </div>
-    <div class="mockup-pair">
-      <div class="card"><div class="cap">Feedback overdue — to author</div><iframe src="../ux/screens/11-emails/email-feedback-overdue.html"></iframe></div>
-      <div class="card"><div class="cap">Cycle wrap-up digest — to engineer</div><iframe src="../ux/screens/11-emails/email-cycle-summary-digest.html"></iframe></div>
-    </div>
-    <div class="slide-foot"><span>14 · Reminders (2/2)</span><span>17 / 19</span></div>
+    <iframe src="../ux/screens/11-emails/email-cycle-summary-digest.html" title="Email: cycle digest"></iframe>
   </section>
 
-  <!-- 18. ROADMAP -->
+  <!-- 22. ROADMAP -->
   <section class="slide" data-name="roadmap">
     <div class="slide-meta">
       <span><span class="brand">Roadmap</span> · phasing</span>
-      <span>18 / 19</span>
+      <span>22 / 23</span>
     </div>
     <div style="margin-top: 16px;">
       <div class="eyebrow">Build order</div>
@@ -693,14 +719,13 @@
         <span class="pdur">TBD</span>
       </div>
     </div>
-    <div class="slide-foot"><span>Roadmap</span><span>18 / 19</span></div>
   </section>
 
-  <!-- 19. CLOSING -->
+  <!-- 23. CLOSING -->
   <section class="slide" data-name="closing">
     <div class="slide-meta">
       <span><span class="brand">Closing</span> · what we need next</span>
-      <span>19 / 19</span>
+      <span>23 / 23</span>
     </div>
     <div style="margin-top: 8px;">
       <div class="eyebrow">Build it?</div>
@@ -727,57 +752,103 @@
     <p style="font-family:'Fraunces',serif; font-style:italic; font-size: 26px; color: var(--muted); margin: 22px 0 0; max-width: 800px;">
       Then 4–6 weeks to MVP, ready for the next cycle.
     </p>
-    <div class="slide-foot"><span>Thank you — tomasz.szturo@visma.com</span><span>19 / 19</span></div>
+    <div style="position:absolute; bottom: 24px; left: 56px; font-family:'JetBrains Mono',monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em;">
+      Thank you · tomasz.szturo@visma.com
+    </div>
   </section>
 
 </div>
 
-<div class="progress" id="progress" style="width: 5%;"></div>
+<div class="progress" id="progress" style="width: 4%;"></div>
 <div class="nav">
   <button id="prev" aria-label="Previous">‹</button>
-  <span class="pos" id="pos">1 / 19</span>
+  <span class="pos" id="pos">1 / 23</span>
   <button id="next" aria-label="Next">›</button>
-</div>
-<div class="help">
-  <kbd>←</kbd><kbd>→</kbd> · <kbd>space</kbd> · <kbd>f</kbd> fullscreen
 </div>
 
 <script>
   const slides = Array.from(document.querySelectorAll('.slide'));
-  const stage = document.getElementById('stage');
   const progress = document.getElementById('progress');
   const pos = document.getElementById('pos');
   let idx = 0;
 
   function scaleStage() {
     const w = window.innerWidth, h = window.innerHeight;
-    const scale = Math.min(w / 1280, h / 720) * 0.96;
-    slides.forEach(s => s.style.transform = `scale(${scale})`);
+    const scale = Math.min(w / 1280, h / 720) * 0.98;
+    // Only scale content slides; mockup slides are full-bleed
+    slides.forEach(s => {
+      if (!s.classList.contains('mockup')) {
+        s.style.transform = `scale(${scale})`;
+      }
+    });
+  }
+
+  function resetMockupOverlay(slide) {
+    if (!slide.classList.contains('mockup')) return;
+    const overlay = slide.querySelector('.intro-overlay');
+    if (overlay) overlay.classList.remove('dismissed');
   }
 
   function show(i) {
     idx = Math.max(0, Math.min(slides.length - 1, i));
-    slides.forEach((s, j) => s.classList.toggle('active', j === idx));
+    slides.forEach((s, j) => {
+      const active = j === idx;
+      s.classList.toggle('active', active);
+      if (active) resetMockupOverlay(s);
+    });
     progress.style.width = ((idx + 1) / slides.length * 100) + '%';
     pos.textContent = `${idx + 1} / ${slides.length}`;
     if (history.replaceState) history.replaceState(null, '', '#' + (idx + 1));
   }
 
-  function next() { show(idx + 1); }
+  function currentSlide() { return slides[idx]; }
+
+  function tryAdvanceOrDismiss() {
+    const cur = currentSlide();
+    if (cur.classList.contains('mockup')) {
+      const overlay = cur.querySelector('.intro-overlay');
+      if (overlay && !overlay.classList.contains('dismissed')) {
+        overlay.classList.add('dismissed');
+        return;
+      }
+    }
+    show(idx + 1);
+  }
+
   function prev() { show(idx - 1); }
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
-    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
-    else if (e.key === 'Home') { show(0); }
+    // Don't intercept when typing into the iframe
+    if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+      // Still allow keys to pass through to the iframe, but also process slide nav
+    }
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault(); tryAdvanceOrDismiss();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault(); prev();
+    } else if (e.key === 'Home') { show(0); }
     else if (e.key === 'End') { show(slides.length - 1); }
     else if (e.key === 'f' || e.key === 'F') {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen();
       else document.exitFullscreen();
+    } else if (e.key === 'Escape') {
+      const cur = currentSlide();
+      if (cur.classList.contains('mockup')) {
+        const overlay = cur.querySelector('.intro-overlay');
+        if (overlay) overlay.classList.add('dismissed');
+      }
     }
   });
 
-  document.getElementById('next').addEventListener('click', next);
+  // Click on overlay dismisses it (don't advance slide)
+  document.querySelectorAll('.intro-overlay').forEach(ov => {
+    ov.addEventListener('click', (e) => {
+      e.stopPropagation();
+      ov.classList.add('dismissed');
+    });
+  });
+
+  document.getElementById('next').addEventListener('click', tryAdvanceOrDismiss);
   document.getElementById('prev').addEventListener('click', prev);
   window.addEventListener('resize', scaleStage);
 
