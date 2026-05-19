@@ -52,7 +52,7 @@
     border-radius: 999px;
   }
   .tl-node.filled { background: var(--ink); }
-  .tl-node.current { background: var(--magenta); border-color: var(--magenta); box-shadow: 0 0 0 4px rgba(225,0,120,0.10); }
+  .tl-node.current { background: var(--ink); border-color: var(--ink); box-shadow: 0 0 0 4px rgba(19,18,17,0.10); }
 
   /* Primary CTA */
   .btn-primary {
@@ -89,7 +89,7 @@
   /* Feedback row hover */
   .row { transition: background .12s ease; }
   .row:hover { background: #F4F2EE; }
-  .row:hover .row-cta { color: var(--magenta); }
+  .row:hover .row-cta { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 
   /* Big number */
   .figure {
@@ -99,7 +99,7 @@
   }
 
   /* Plus-sign progression marker */
-  .plus-mark { color: var(--magenta); }
+  .plus-mark { display: none; }
 </style>
 </head>
 <body class="min-h-screen">
@@ -111,7 +111,7 @@
   <aside class="border-r border-black/10 bg-[#F4F2EE] flex flex-col">
     <div class="px-6 pt-7 pb-8">
       <div class="flex items-center gap-2">
-        <div class="w-2 h-2 rounded-full" style="background: var(--magenta)"></div>
+        <div class="w-2 h-2 rounded-full" style="background: var(--ink)"></div>
         <span class="font-display text-[18px] tracking-tight">Visma <em class="not-italic font-medium">/ Reviews</em></span>
       </div>
       <div class="label mt-1 pl-4">Cross-project peer learning</div>
@@ -187,10 +187,6 @@
           </p>
         </div>
 
-        <button class="btn-primary px-5 py-3 rounded-md text-[13px] font-medium inline-flex items-center gap-2 shrink-0">
-          Re-take self-assessment
-          <span class="font-mono text-[11px] opacity-80">· 60s</span>
-        </button>
       </div>
 
       <!-- Spec sheet meta -->
@@ -245,7 +241,7 @@
             </div>
             <div class="relative h-2 bg-[var(--line)] rounded-full overflow-hidden">
               <div class="absolute inset-y-0 left-0 bg-[var(--ink)]" style="width: 50%"></div>
-              <div class="absolute inset-y-0" style="left: 50%; width: 2px; background: var(--magenta);"></div>
+              <div class="absolute inset-y-0" style="left: 50%; width: 2px; background: var(--ink);"></div>
             </div>
             <div class="flex justify-between mt-2 font-mono text-[10px] text-[var(--muted)] tnum">
               <span>Completion-only</span>
@@ -261,7 +257,7 @@
           <div class="mt-6 space-y-5">
             <div>
               <div class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Determined by</div>
-              <div class="text-[15px] mt-1">Self-assessment <span class="text-[var(--muted)]">— in-app, 5 questions</span></div>
+              <div class="text-[15px] mt-1">AI Skill Check-in <span class="text-[var(--muted)]">— coach + coachee, HR-side</span></div>
             </div>
             <div>
               <div class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Set on</div>
@@ -306,7 +302,7 @@
           <!-- Entry: Current -->
           <article class="relative pb-12">
             <div class="absolute -left-[18px] top-2 tl-node current"></div>
-            <div class="absolute -left-[6px] top-1.5 font-mono text-[10px] text-[var(--magenta)] tracking-widest"></div>
+            <div class="absolute -left-[6px] top-1.5 font-mono text-[10px] text-[var(--ink)] tracking-widest"></div>
             <div class="flex items-start gap-8">
               <div class="w-36 shrink-0">
                 <div class="font-mono text-[11px] text-[var(--ink)] tnum">14 Jan 2026</div>
@@ -316,15 +312,13 @@
                 <div class="flex items-center gap-3">
                   <span class="font-display text-[28px]">L3</span>
                   <span class="text-[var(--muted)] text-[13px]">CLI agent, permissioned</span>
-                  <span class="ml-auto text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">Self-assessment</span>
+                  <span class="ml-auto text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-[var(--line)]">Check-in</span>
                 </div>
                 <p class="text-[14px] text-[var(--ink-2)] mt-3 max-w-[60ch] leading-relaxed">
                   "Moved from per-action approval to running Claude Code in the terminal for most non-trivial tasks. Still reviewing every diff manually before commit. Running 2–3 parallel sessions on big refactors."
                 </p>
                 <div class="flex items-center gap-4 text-[11px] font-mono text-[var(--muted)] mt-3">
-                  <span>noted by you</span>
-                  <span>·</span>
-                  <span>confirmed by Aušra Petraitytė, 22 Jan</span>
+                  <span>set by Aušra Petraitytė (coach), 22 Jan</span>
                 </div>
               </div>
             </div>

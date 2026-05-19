@@ -17,7 +17,7 @@
 /sessions                  → my sessions list (as reviewer + reviewee)
   /sessions/[id]           → session detail (prep, schedule, feedback entry)
   /sessions/[id]/feedback  → feedback form (role-aware)
-/profile                   → my AI level, history, self-assessment
+/profile                   → my AI level, history
 /coach                     → coach hub
   /coach/coachees          → coachee roster
   /coach/coachees/[id]     → coachee detail + reviewer picker
@@ -65,8 +65,7 @@ Checklist — each row is a single screen a downstream agent can take.
 - [ ] **MySessionsList** — `/sessions` — engineer — Tabbed list (as reviewer / as reviewee / past).
 - [ ] **SessionDetail** — `/sessions/[id]` — engineer — Single assignment view: counterpart, status, schedule, prep notes, feedback CTA.
 - [ ] **FeedbackForm** — `/sessions/[id]/feedback` — engineer — Role-aware feedback form (reviewer or reviewee variant).
-- [ ] **ProfileScreen** — `/profile` — engineer — AI level, history timeline, self-assessment trigger.
-- [ ] **SelfAssessmentForm** — modal off `/profile` — engineer — 60-sec fallback when survey is stale.
+- [ ] **ProfileScreen** — `/profile` — engineer — AI level, history timeline.
 - [ ] **CoachCoacheeRoster** — `/coach/coachees` — coach — Table of coachees with level, status, action.
 - [ ] **CoacheeDetail** — `/coach/coachees/[id]` — coach — Coachee profile + reviewer suggestion panel + record-pairing action.
 - [ ] **AssignmentRecorder** — modal off CoacheeDetail — coach — Confirm pairing already agreed out-of-band.
@@ -101,7 +100,7 @@ Checklist — each row is a single screen a downstream agent can take.
 
 ### Flow A — First-time auth + onboarding
 1. `LoginScreen` → Google OAuth (Visma domain gate).
-2. Server resolves role from imported data; if level is `unverified`, route through `SelfAssessmentForm` (skippable once).
+2. Server resolves role from imported data; if level is `unverified`, the engineer's profile and dashboard surface a banner explaining they are excluded from matching until their coach records a level in the next AI Skill Check-in.
 3. Land on role-appropriate home (see §1).
 
 ### Flow B — Coach assigns a reviewer
@@ -141,7 +140,6 @@ Checklist — each row is a single screen a downstream agent can take.
 | **RevieweeFeedbackForm** | Reviewee | ≤ 7 days post-session | Reviewer stage actually higher? (Likert), top thing learned (text), what you'll try in 2 weeks (text), session quality (Likert), coverage check (multi-select of topics covered), program feedback (optional). See spec §7. | Submit closes their side; Cancel saves draft. |
 | **AssignmentRecorder** | Coach | After agreeing pairing out-of-band | Reviewee (prefilled), reviewer (picked or searched), note (optional), confirm-out-of-band checkbox | Submit creates assignment; Cancel returns to coachee detail. |
 | **AdminCycleForm** | Admin | Once per cycle | Name, start date, end date, auto-pair date, target filter (last-review-before date, BG/company scope) | Submit creates/updates cycle; Cancel discards. |
-| **SelfAssessmentForm** | Engineer | When level is missing / stale (> 6 months) | 5-question version of the survey mapped to L1–L5 + confidence | Submit writes `ai_levels` row (`source = survey`); Cancel re-prompts next login. |
 | **LevelOverrideForm** | Coach / Admin | Ad-hoc | Employee (prefilled if from row), new level (1–5), reason (required text) | Submit writes `ai_levels` row (`source = override`); Cancel closes. |
 | **ImportTriggerForm** | Admin | Ad-hoc | Sheet (employees / levels), dry-run toggle | Submit runs server action, shows result toast; Cancel closes. |
 

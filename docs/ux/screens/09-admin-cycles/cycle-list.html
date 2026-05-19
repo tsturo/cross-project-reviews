@@ -48,7 +48,7 @@
     .progress-track { background: #F3F4F6; border-radius: 999px; height: 6px; overflow: hidden; }
     .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #111827, #374151); }
     .ring-dot::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
-    .cycle-pill { background: #FFF1F8; color: #9D0356; border: 1px solid #FAD3E5; }
+    .cycle-pill { background: #F3F4F6; color: var(--ink); border: 1px solid var(--border); }
     .kbd { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; color: var(--muted); background: #fff; }
     /* faint sidebar texture */
     .sidebar-bg {
@@ -120,7 +120,7 @@
 
         <div class="ml-auto flex items-center gap-3">
           <!-- CyclePill -->
-          <span class="cycle-pill pill"><span class="pill-dot" style="background:#E70641;"></span> H1·2026 active · <span class="font-mono">37 d left</span></span>
+          <span class="cycle-pill pill"><span class="pill-dot" style="background:var(--ink);"></span> H1·2026 active · <span class="font-mono">37 d left</span></span>
 
           <div class="relative">
             <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--muted)]"></i>
@@ -227,8 +227,8 @@
               <tr class="row">
                 <td class="pl-5 pr-3 py-3.5 align-middle">
                   <div class="flex items-center gap-3">
-                    <div class="h-8 w-8 rounded-md bg-[#FFF1F8] border border-[#FAD3E5] grid place-items-center">
-                      <i data-lucide="play" class="w-3.5 h-3.5" style="color:#9D0356;"></i>
+                    <div class="h-8 w-8 rounded-md bg-[#F3F4F6] border border-[var(--border)] grid place-items-center">
+                      <i data-lucide="play" class="w-3.5 h-3.5" style="color:var(--ink);"></i>
                     </div>
                     <div>
                       <div class="font-medium text-[13.5px]">H1 · 2026 — Spring ladder</div>

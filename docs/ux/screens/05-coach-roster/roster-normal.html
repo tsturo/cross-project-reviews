@@ -79,11 +79,17 @@
     display: inline-grid; place-items: center;
     font-size: 9px; line-height: 1; font-weight: 700;
   }
-  .level-mark {
-    display:inline-flex; align-items:center; justify-content:center;
-    width: 22px; height: 22px; border-radius: 5px;
-    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+  /* Canonical LevelBadge: neutral chip body, ink text, small colored dot */
+  :root {
+    --L1: #64748B; --L2: #0EA5E9; --L3: #10B981; --L4: #F59E0B; --L5: #BE185D;
   }
+  .lvl {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 8px 3px 5px; border-radius: 999px;
+    background: #F3F4F6; color: #131211; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .lvl-dot { width: 8px; height: 8px; border-radius: 999px; box-shadow: 0 0 0 2px #fff; display: inline-block; }
   .status-pill {
     display:inline-flex; align-items:center; gap:6px;
     font-size: 11.5px; padding: 3px 9px 3px 8px; border-radius: 999px; font-weight: 500;
@@ -344,7 +350,7 @@
               </details>
             </td>
             <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
-            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td><span class="lvl"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></td>
             <td class="text-[13px] tabular text-muted">14 Nov 2025</td>
             <td>
               <span class="status-pill" style="background:#FEF2F2;color:#B91C1C;border-color:#FECACA">
@@ -375,7 +381,7 @@
                     <span class="font-mono text-[11px] text-subtle tabular">01</span>
                     <span class="avatar" style="background:#0EA5E9">MJ</span>
                     <div class="leading-tight">
-                      <div class="text-[13.5px] font-medium">Mantas Jankauskas <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
+                      <div class="text-[13.5px] font-medium">Mantas Jankauskas <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L5)"></span>L5</span></div>
                       <div class="text-[11.5px] text-muted">Staff Engineer · Payroll 4867 · Visma Lithuania</div>
                     </div>
                     <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
@@ -393,7 +399,7 @@
                     <span class="font-mono text-[11px] text-subtle tabular">02</span>
                     <span class="avatar" style="background:#10B981">AP</span>
                     <div class="leading-tight">
-                      <div class="text-[13.5px] font-medium">Aušra Petraitytė <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
+                      <div class="text-[13.5px] font-medium">Aušra Petraitytė <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L5)"></span>L5</span></div>
                       <div class="text-[11.5px] text-muted">Principal · Visma.net AutoInvoice · Visma Lithuania</div>
                     </div>
                     <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
@@ -412,7 +418,7 @@
                     <span class="font-mono text-[11px] text-subtle tabular">03</span>
                     <span class="avatar" style="background:#7C3AED">HV</span>
                     <div class="leading-tight">
-                      <div class="text-[13.5px] font-medium">Henrik Vatne <span class="level-mark ml-1" style="background:#FEF3C7;color:#92400E">L4</span></div>
+                      <div class="text-[13.5px] font-medium">Henrik Vatne <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></div>
                       <div class="text-[11.5px] text-muted">Senior · Visma Sign · Visma Norge</div>
                     </div>
                     <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
@@ -430,7 +436,7 @@
                     <span class="font-mono text-[11px] text-subtle tabular">04</span>
                     <span class="avatar" style="background:#BE185D">RB</span>
                     <div class="leading-tight">
-                      <div class="text-[13.5px] font-medium">Rasa Bertašius <span class="level-mark ml-1" style="background:#FCE7F3;color:#9D174D">L5</span></div>
+                      <div class="text-[13.5px] font-medium">Rasa Bertašius <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L5)"></span>L5</span></div>
                       <div class="text-[11.5px] text-muted">Staff · Severa · Visma Lithuania</div>
                     </div>
                     <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
@@ -448,7 +454,7 @@
                     <span class="font-mono text-[11px] text-subtle tabular">05</span>
                     <span class="avatar" style="background:#131211">JN</span>
                     <div class="leading-tight">
-                      <div class="text-[13.5px] font-medium">Jonas Naujokas <span class="level-mark ml-1" style="background:#FEF3C7;color:#92400E">L4</span></div>
+                      <div class="text-[13.5px] font-medium">Jonas Naujokas <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></div>
                       <div class="text-[11.5px] text-muted">Senior · Visma Spcs · Visma Sverige</div>
                     </div>
                     <div class="flex flex-wrap gap-1.5 max-w-[480px] justify-end">
@@ -489,7 +495,7 @@
               </div>
             </td>
             <td class="text-[13px]">Payroll <span class="text-subtle font-mono text-[11.5px]">4867</span></td>
-            <td><span class="level-mark" style="background:#E0F2FE;color:#075985">L2</span></td>
+            <td><span class="lvl"><span class="lvl-dot" style="background:var(--L2)"></span>L2</span></td>
             <td class="text-[13px] tabular text-muted">22 Sep 2025</td>
             <td>
               <span class="status-pill" style="background:#FEF2F2;color:#B91C1C;border-color:#FECACA">
@@ -515,7 +521,7 @@
             </td>
             <td class="text-[13px]">Visma Sign <span class="text-subtle font-mono text-[11.5px]">221</span></td>
             <td>
-              <span class="level-mark" style="background:#F1F5F9;color:#334155">L1</span>
+              <span class="lvl"><span class="lvl-dot" style="background:var(--L1)"></span>L1</span>
               <span class="ml-1.5 text-[10.5px] text-muted italic">unverified</span>
             </td>
             <td class="text-[13px] tabular text-muted">— first cycle</td>
@@ -542,7 +548,7 @@
               </div>
             </td>
             <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
-            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td><span class="lvl"><span class="lvl-dot" style="background:var(--L3)"></span>L3</span></td>
             <td class="text-[13px] tabular text-muted">06 Feb 2026</td>
             <td>
               <div>
@@ -570,7 +576,7 @@
               </div>
             </td>
             <td class="text-[13px]">Severa <span class="text-subtle font-mono text-[11.5px]">312</span></td>
-            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td><span class="lvl"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></td>
             <td class="text-[13px] tabular text-muted">11 Oct 2025</td>
             <td>
               <div>
@@ -598,7 +604,7 @@
               </div>
             </td>
             <td class="text-[13px]">Visma.net AutoInvoice <span class="text-subtle font-mono text-[11.5px]">901</span></td>
-            <td><span class="level-mark" style="background:#E0F2FE;color:#075985">L2</span></td>
+            <td><span class="lvl"><span class="lvl-dot" style="background:var(--L2)"></span>L2</span></td>
             <td class="text-[13px] tabular text-muted">04 Dec 2025</td>
             <td>
               <div>
@@ -626,7 +632,7 @@
               </div>
             </td>
             <td class="text-[13px]">Payroll <span class="text-subtle font-mono text-[11.5px]">4867</span></td>
-            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td><span class="lvl"><span class="lvl-dot" style="background:var(--L3)"></span>L3</span></td>
             <td class="text-[13px] tabular text-muted">19 Aug 2025</td>
             <td>
               <div>
@@ -654,7 +660,7 @@
               </div>
             </td>
             <td class="text-[13px]">Visma Spcs <span class="text-subtle font-mono text-[11.5px]">188</span></td>
-            <td><span class="level-mark" style="background:#FEF3C7;color:#92400E">L4</span></td>
+            <td><span class="lvl"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></td>
             <td class="text-[13px] tabular text-muted">02 May 2026</td>
             <td>
               <div>
@@ -682,7 +688,7 @@
               </div>
             </td>
             <td class="text-[13px]">Visma.net Expense <span class="text-subtle font-mono text-[11.5px]">755</span></td>
-            <td><span class="level-mark" style="background:#D1FAE5;color:#065F46">L3</span></td>
+            <td><span class="lvl"><span class="lvl-dot" style="background:var(--L3)"></span>L3</span></td>
             <td class="text-[13px] tabular text-muted">28 Apr 2026</td>
             <td>
               <div>

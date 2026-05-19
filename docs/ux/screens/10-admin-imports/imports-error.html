@@ -43,7 +43,7 @@
     .tabular { font-variant-numeric: tabular-nums; }
     .ring-soft { box-shadow: 0 0 0 1px rgba(19,18,17,0.05), 0 1px 2px rgba(19,18,17,0.04); }
     .nav-item.active { background: #F4F4F5; color: var(--ink); }
-    .nav-item.active .dot { background: var(--magenta); }
+    .nav-item.active .dot { background: var(--ink); }
     .status-ok    { background: #ECFDF5; color: #065F46; }
     .status-warn  { background: #FFFBEB; color: #92400E; }
     .status-err   { background: #FEF2F2; color: #991B1B; }
@@ -106,7 +106,7 @@
       <div>
         <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Admin</p>
         <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Cycles</a>
-        <a href="imports.html" class="nav-item active flex items-center gap-2.5 px-3 h-8 rounded-md"><span class="dot w-1.5 h-1.5 rounded-full bg-[var(--magenta)]"></span><i data-lucide="database" class="w-4 h-4"></i> Imports</a>
+        <a href="imports.html" class="nav-item active flex items-center gap-2.5 px-3 h-8 rounded-md"><span class="dot w-1.5 h-1.5 rounded-full bg-[var(--ink)]"></span><i data-lucide="database" class="w-4 h-4"></i> Imports</a>
         <a href="level-override.html" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="shield-alert" class="w-4 h-4"></i> Level overrides</a>
       </div>
     </nav>
@@ -136,7 +136,7 @@
           <i data-lucide="search" class="w-3.5 h-3.5"></i> Search
           <span class="ml-2 font-mono text-[11px] text-[var(--muted)] border border-[var(--border)] rounded px-1">⌘K</span>
         </button>
-        <div class="h-8 w-8 rounded-full bg-[#FCE7F3] grid place-items-center text-[12px] font-medium text-[var(--magenta-deep)]">TS</div>
+        <div class="h-8 w-8 rounded-full bg-[#F3F4F6] grid place-items-center text-[12px] font-medium text-[var(--ink)]">TS</div>
       </div>
     </header>
 
@@ -265,7 +265,7 @@
               <div class="font-mono text-[12.5px]">ai_level</div>
               <div>
                 <p>Empty value · column is required.</p>
-                <p class="text-[12px] text-[var(--muted)] mt-0.5">Engineer skipped the level question. Trigger a self-assessment in-app.</p>
+                <p class="text-[12px] text-[var(--muted)] mt-0.5">Engineer has no level on file. Coach must record one from the next AI Skill Check-in before they can be matched.</p>
               </div>
               <div class="text-right"><span class="status-err text-[11px] px-2 py-0.5 rounded-full font-medium">error</span></div>
             </li>

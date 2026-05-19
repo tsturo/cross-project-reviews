@@ -29,8 +29,8 @@ AI maturity matters as a **pairing mechanic** — the reviewer is at a higher ra
 
 | Role | Who | What they do in the app |
 |---|---|---|
-| **Engineer** | Every employee (~660) | See own upcoming sessions (as reviewer & reviewee), fill feedback forms, view own AI level & history |
-| **Coach** | ~100 employees (line managers) | See coachee roster, pick a reviewer per coachee, approve auto-pair suggestions, see status |
+| **Engineer** | Every employee (~200) | See own upcoming sessions (as reviewer & reviewee), fill feedback forms, view own AI level & history |
+| **Coach** | ~30 employees (line managers) | See coachee roster, pick a reviewer per coachee, approve auto-pair suggestions, see status |
 | **BG Manager / MD** | ~10 | Org-wide view: completion rates, level distribution, level-shift trends |
 | **Admin** | 1–2 platform owners | Manage cycles, override pairings, import data, reset levels |
 
@@ -149,39 +149,28 @@ Two short forms (one per side), filled within 7 days of the session. Anonymized 
 
 ### Reviewer → Reviewee form
 
-Four sections; each ≈ equal weight. Likert (1–5) + short free text.
+Short by design — ~7 minutes. The session itself does the heavy lifting; the form captures take-aways, not appraisal grades. Free-text dominant, no Likerts. The session conversation still covers all four dimensions (architecture, clean code, testing/obs/security, AI workflow); the form measures three of them explicitly — testing/obs/security is folded into the engineering-hygiene prompt.
 
 **Section 1 — Architecture & design patterns**
 
 1. Strength: which architectural decision or pattern did they use well? (free text)
-2. Growth area: which architecture / pattern would have served them better? (free text — e.g. "event sourcing for the audit log instead of a side table")
-3. Overall architectural awareness (Likert).
+2. Growth area: which architecture / pattern would have served them better? (free text)
 
-**Section 2 — Clean code & engineering hygiene**
+**Section 2 — Engineering hygiene**
 
-4. SOLID / DRY / KISS application (Likert + one example each way).
-5. Testability and test coverage of the change (Likert + comment).
-6. Code organization & naming (Likert + comment).
+3. One example of engineering hygiene done well, one example of where it could be tighter. (free text)
 
-**Section 3 — Testing, observability, security**
+**Section 3 — AI-powered workflow**
 
-7. Test strategy fit (unit / integration / contract — Likert + comment).
-8. Telemetry & observability (logs, metrics, traces — Likert).
-9. Security / threat-model awareness (Likert + comment if flagged).
+4. Prompting & context-setting — strength + growth. (paired free text)
+5. Verification habits. (radio: blind / spot-check / systematic)
 
-**Section 4 — AI-powered workflow**
+**Section 4 — Wrap-up (required)**
 
-10. Observed AI maturity — what cell on the 9-grid did they operate at? (cell picker + can diverge from declared)
-11. Tool stack — what AI tooling did they use? (multi-select)
-12. Prompting & context-setting — strength + growth (paired text).
-13. Verification habits — radio (blind / spot-check / systematic).
+6. One concrete habit (any section) they should adopt from your workflow. (free text)
+7. One thing they're doing well that you'll steal. (free text)
 
-**Section 5 — Wrap-up**
-
-14. One concrete habit (any section) they should adopt from your workflow.
-15. One thing they're doing well that you'll steal.
-
-The form is long. We accept that — a real review session is 1–1.5h, the form takes ~10 min. Autosave drafts. Don't require every Likert; sections can be skipped if not observed during the session ("not covered").
+Autosave drafts. Sections can be skipped if not observed during the session ("not covered"). Only Q6 and Q7 are required.
 
 ### Reviewee → Reviewer form
 
@@ -324,7 +313,7 @@ This is a separate workflow from cross-project reviews — same data model, diff
 ## 13. Risks & open questions
 
 - **Coach data coverage is sparse** (16% missing). MVP must surface this and let admins fix it in-app.
-- **Survey freshness** — 144 unique employees responded vs. ~660 total. Need a re-survey push at cycle start; consider a 60-second in-app self-assessment as a fallback.
+- **Survey freshness** — 144 unique employees responded vs. ~200 total. Need a re-survey push at cycle start. If no level is on file, the engineer's badge shows "unverified" and they are excluded from matching until their coach records a level from the next AI Skill Check-in.
 - **Cross-language naming** — Lithuanian/English mix in sheet #1. Normalize at import; display as-is.
 - **Calendar privacy** — `freebusy` only reveals busy/free, no event details, so this is fine; document it explicitly in the privacy notice.
 - **GDPR** — feedback is personal data tied to an identified employee. Retention: keep raw feedback 2 years, anonymized aggregates indefinitely. Confirm with Visma DPO.
@@ -333,5 +322,5 @@ This is a separate workflow from cross-project reviews — same data model, diff
 
 - ≥ 80% of eligible engineers complete one cross-project review per cycle.
 - ≥ 70% of feedback forms submitted within 7 days of session.
-- Year-over-year: median AI level +1 across the org.
+- Year-over-year: median AI level moves upward, with measurable cohort progression (% of engineers who advanced ≥1 level). Target: 30–40% cohort advance per year in early cycles, normalising as the population matures.
 - Coaches assign reviewers manually ≥ 70% of the time (auto-pair is the safety net, not the norm).

@@ -60,14 +60,14 @@
       color: var(--ink-2);
     }
     .pill .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ink); }
-    .level-chip {
+    /* Canonical LevelBadge: neutral chip body, ink text, small colored dot */
+    .lvl {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 2px 8px; border-radius: 4px;
-      font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em;
-      color: white;
+      padding: 3px 8px 3px 5px; border-radius: 999px;
+      background: #F3F4F6; color: var(--ink); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.02em;
     }
-    .level-L4 { background: var(--L4); }
-    .level-L2 { background: var(--L2); }
+    .lvl-dot { width: 8px; height: 8px; border-radius: 999px; box-shadow: 0 0 0 2px #fff; display: inline-block; }
     .magenta { color: var(--magenta); }
     .bg-magenta { background-color: var(--magenta); }
 
@@ -557,9 +557,9 @@
                 Feedback for <span class="italic">Karolis Petrauskas</span>
               </h1>
               <span class="level-arrow">
-                <span class="level-chip level-L4">L4</span>
+                <span class="lvl"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span>
                 <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                <span class="level-chip level-L2">L2</span>
+                <span class="lvl"><span class="lvl-dot" style="background:var(--L2)"></span>L2</span>
                 <span class="ml-1 text-[var(--muted)]">level diff −2</span>
               </span>
             </div>
@@ -574,21 +574,13 @@
             <div class="flex items-center justify-end gap-5">
               <div class="text-right">
                 <div class="text-[11px] font-mono text-[var(--muted)]">PROGRESS</div>
-                <div class="font-display text-[22px] leading-none mt-0.5">9<span class="text-[var(--muted)]">/15</span></div>
+                <div class="font-display text-[22px] leading-none mt-0.5">3<span class="text-[var(--muted)]">/7</span></div>
               </div>
               <div class="flex flex-wrap items-center gap-1 pl-5 border-l hairline max-w-[260px]">
                 <div class="progress-cell done"></div>
                 <div class="progress-cell done"></div>
                 <div class="progress-cell done"></div>
-                <div class="progress-cell done"></div>
-                <div class="progress-cell done"></div>
-                <div class="progress-cell done"></div>
-                <div class="progress-cell done"></div>
-                <div class="progress-cell done"></div>
-                <div class="progress-cell done"></div>
                 <div class="progress-cell current"></div>
-                <div class="progress-cell"></div>
-                <div class="progress-cell"></div>
                 <div class="progress-cell"></div>
                 <div class="progress-cell"></div>
                 <div class="progress-cell"></div>
@@ -608,7 +600,7 @@
     <!-- Body: form + right rail -->
     <div class="flex-1 relative">
       <div class="absolute left-3 top-12 bottom-12 hidden xl:flex items-start">
-        <span class="side-rail">FEEDBACK · REVIEWER VARIANT · v2.0</span>
+        <span class="side-rail">FEEDBACK · REVIEWER VARIANT · v3.0</span>
       </div>
 
       <div class="max-w-[1240px] mx-auto px-10 py-10 grid grid-cols-12 gap-10">
@@ -618,7 +610,7 @@
 
           <!-- Intent -->
           <p class="text-[14px] text-[var(--ink-2)] max-w-[640px] leading-relaxed mb-8">
-            Four equally-weighted dimensions, plus a short wrap-up. The form is intentionally long — <em class="font-display italic">~10–15 minutes</em>. Skip sections you didn't cover; nothing here is mandatory except the two wrap-up questions.
+            Three dimensions, plus a short wrap-up. Aim for <em class="font-display italic">~7 minutes</em>. Skip sections you didn't cover; nothing here is mandatory except the two wrap-up questions.
           </p>
 
           <!-- ============================================ -->
@@ -627,7 +619,7 @@
           <section class="section-h">
             <div>
               <div class="section-numeral">01</div>
-              <div class="section-tag">Dimension 1 / 4</div>
+              <div class="section-tag">Dimension 1 / 3</div>
             </div>
             <div>
               <div class="flex items-start justify-between gap-4 flex-wrap">
@@ -676,38 +668,18 @@
             </div>
           </div>
 
-          <!-- Q3 — Likert -->
-          <div class="q-block grid grid-cols-12 gap-6">
-            <div class="col-span-12">
-              <div class="q-label-row">
-                <span class="q-num">03</span>
-                <span class="q-title">Overall architectural awareness</span>
-              </div>
-              <p class="helper mt-1 ml-[40px]">A single calibration mark — how aware they are of the trade-offs at play.</p>
-            </div>
-            <div class="col-start-2 col-span-11 mt-1">
-              <div class="likert" role="radiogroup" aria-label="Architectural awareness">
-                <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">unaware</span></button>
-                <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">surface</span></button>
-                <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">solid</span></button>
-                <button class="likert-stop" data-selected="true"><span class="num">4</span><span class="detent"></span><span class="lab">trade-off<br/>fluent</span></button>
-                <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">teaches<br/>others</span></button>
-              </div>
-            </div>
-          </div>
-
           <!-- ============================================ -->
-          <!-- SECTION 02 — CLEAN CODE                      -->
+          <!-- SECTION 02 — ENGINEERING HYGIENE             -->
           <!-- ============================================ -->
           <section class="section-h">
             <div>
               <div class="section-numeral">02</div>
-              <div class="section-tag">Dimension 2 / 4</div>
+              <div class="section-tag">Dimension 2 / 3</div>
             </div>
             <div>
               <div class="flex items-start justify-between gap-4 flex-wrap">
                 <div>
-                  <h2 class="section-title">Clean code & engineering hygiene</h2>
+                  <h2 class="section-title">Engineering hygiene</h2>
                   <p class="section-sub">SOLID, DRY, KISS, testability, naming, refactoring discipline, code organisation.</p>
                 </div>
                 <span class="skip-link"><i data-lucide="circle-slash" class="w-3 h-3"></i>not covered — skip</span>
@@ -715,193 +687,31 @@
             </div>
           </section>
 
-          <!-- Q4 — Likert + paired example (expanded since text exists) -->
+          <!-- Q3 — Engineering hygiene merged free text -->
           <div class="q-block grid grid-cols-12 gap-6">
             <div class="col-span-12">
               <div class="q-label-row">
-                <span class="q-num">04</span>
-                <span class="q-title">SOLID / DRY / KISS application</span>
+                <span class="q-num">03</span>
+                <span class="q-title">One example of engineering hygiene done well, one example of where it could be tighter</span>
               </div>
-              <p class="helper mt-1 ml-[40px]">Mark the scale, then drop one example that landed well and (optionally) one that didn't.</p>
+              <p class="helper mt-1 ml-[40px]">Specifics over labels. Naming, testability, refactor discipline, organisation — whichever stood out.</p>
             </div>
             <div class="col-start-2 col-span-11 mt-1">
-              <div class="likert-row">
-                <div class="likert" role="radiogroup" aria-label="SOLID/DRY/KISS">
-                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">violated</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">inconsistent</span></button>
-                  <button class="likert-stop" data-selected="true"><span class="num">3</span><span class="detent"></span><span class="lab">applied</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">disciplined</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">exemplary</span></button>
-                </div>
-
-                <div class="grid grid-cols-1 gap-3">
-                  <div>
-                    <div class="flex items-center gap-2 mb-1">
-                      <span class="num-marker">EXAMPLE · WORKED WELL</span>
-                      <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[var(--ok)]"></i>
-                    </div>
-                    <textarea class="textarea" style="min-height: 68px;">ISP cleanly applied in the IngestPort splitting — nice. Two adapters, two narrow interfaces, no shared bag of methods.</textarea>
-                  </div>
-                  <div>
-                    <span class="comment-stub"><i data-lucide="plus" class="w-3 h-3"></i>Add a "didn't work" example (optional)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Q5 — Likert + comment (collapsed, no text) -->
-          <div class="q-block grid grid-cols-12 gap-6">
-            <div class="col-span-12">
-              <div class="q-label-row">
-                <span class="q-num">05</span>
-                <span class="q-title">Testability of the change under review</span>
-              </div>
-              <p class="helper mt-1 ml-[40px]">Could you have written the test before the code without contorting the design?</p>
-            </div>
-            <div class="col-start-2 col-span-11 mt-1">
-              <div class="likert-row">
-                <div class="likert" role="radiogroup" aria-label="Testability">
-                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">hostile</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">awkward</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">workable</span></button>
-                  <button class="likert-stop" data-selected="true"><span class="num">4</span><span class="detent"></span><span class="lab">friendly</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">test-first<br/>shaped</span></button>
-                </div>
-                <div class="flex flex-col justify-start gap-2 pt-2">
-                  <span class="num-marker">COMMENT</span>
-                  <span class="comment-stub"><i data-lucide="message-square-plus" class="w-3 h-3"></i>Add a comment (optional)</span>
-                  <span class="helper">Skipped by ~30% of reviewers — that's fine.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Q6 — Likert + comment (collapsed) -->
-          <div class="q-block grid grid-cols-12 gap-6">
-            <div class="col-span-12">
-              <div class="q-label-row">
-                <span class="q-num">06</span>
-                <span class="q-title">Code organisation & naming</span>
-              </div>
-              <p class="helper mt-1 ml-[40px]">Could a stranger find the right file in 30 seconds?</p>
-            </div>
-            <div class="col-start-2 col-span-11 mt-1">
-              <div class="likert-row">
-                <div class="likert" role="radiogroup" aria-label="Code organisation">
-                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">chaotic</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">noisy</span></button>
-                  <button class="likert-stop" data-selected="true"><span class="num">3</span><span class="detent"></span><span class="lab">readable</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">tidy</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">obvious</span></button>
-                </div>
-                <div class="flex flex-col justify-start gap-2 pt-2">
-                  <span class="num-marker">COMMENT</span>
-                  <span class="comment-stub"><i data-lucide="message-square-plus" class="w-3 h-3"></i>Add a comment (optional)</span>
-                </div>
+              <textarea class="textarea" style="min-height: 120px;" placeholder="Worked well: ISP cleanly applied in the IngestPort split — two adapters, two narrow interfaces.&#10;Could be tighter: shared helpers in services/util/ are starting to bag-of-methods; a couple deserve their own modules."></textarea>
+              <div class="flex justify-between items-center mt-1">
+                <span class="helper">Optional but encouraged.</span>
+                <span class="counter">0 / 600</span>
               </div>
             </div>
           </div>
 
           <!-- ============================================ -->
-          <!-- SECTION 03 — TESTING / OBSERVABILITY / SECURITY -->
+          <!-- SECTION 03 — AI WORKFLOW                     -->
           <!-- ============================================ -->
           <section class="section-h">
             <div>
               <div class="section-numeral">03</div>
-              <div class="section-tag">Dimension 3 / 4</div>
-            </div>
-            <div>
-              <div class="flex items-start justify-between gap-4 flex-wrap">
-                <div>
-                  <h2 class="section-title">Testing, observability, security</h2>
-                  <p class="section-sub">Test strategy fit, telemetry depth, threat-model awareness, secrets & dependency hygiene.</p>
-                </div>
-                <span class="skip-link"><i data-lucide="circle-slash" class="w-3 h-3"></i>not covered — skip</span>
-              </div>
-            </div>
-          </section>
-
-          <!-- Q7 — Likert + comment (expanded) -->
-          <div class="q-block grid grid-cols-12 gap-6">
-            <div class="col-span-12">
-              <div class="q-label-row">
-                <span class="q-num">07</span>
-                <span class="q-title">Test strategy fit — unit / integration / contract</span>
-              </div>
-              <p class="helper mt-1 ml-[40px]">Right tests at the right layer, or pyramid inverted?</p>
-            </div>
-            <div class="col-start-2 col-span-11 mt-1">
-              <div class="likert-row">
-                <div class="likert" role="radiogroup" aria-label="Test strategy">
-                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">inverted</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">patchy</span></button>
-                  <button class="likert-stop" data-selected="true"><span class="num">3</span><span class="detent"></span><span class="lab">balanced</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">deliberate</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">contract<br/>first</span></button>
-                </div>
-                <div>
-                  <span class="num-marker">COMMENT</span>
-                  <textarea class="textarea mt-2" style="min-height: 78px;">Unit coverage is fine on the projector. The gap is contract tests against the upstream Kafka schema — currently relying on integration runs to catch breaks, which is too late.</textarea>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Q8 — Likert only -->
-          <div class="q-block grid grid-cols-12 gap-6">
-            <div class="col-span-12">
-              <div class="q-label-row">
-                <span class="q-num">08</span>
-                <span class="q-title">Telemetry & observability</span>
-              </div>
-              <p class="helper mt-1 ml-[40px]">Logs, metrics, traces — could you have debugged this in production at 2am?</p>
-            </div>
-            <div class="col-start-2 col-span-11 mt-1">
-              <div class="likert" role="radiogroup" aria-label="Telemetry">
-                <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">blind</span></button>
-                <button class="likert-stop" data-selected="true"><span class="num">2</span><span class="detent"></span><span class="lab">log-only</span></button>
-                <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">metrics<br/>added</span></button>
-                <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">traced</span></button>
-                <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">slo-shaped</span></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Q9 — Likert + flagged comment placeholder -->
-          <div class="q-block grid grid-cols-12 gap-6">
-            <div class="col-span-12">
-              <div class="q-label-row">
-                <span class="q-num">09</span>
-                <span class="q-title">Security & threat-model awareness</span>
-              </div>
-              <p class="helper mt-1 ml-[40px]">Comment required only if you flag the work below 3.</p>
-            </div>
-            <div class="col-start-2 col-span-11 mt-1">
-              <div class="likert-row">
-                <div class="likert" role="radiogroup" aria-label="Security awareness">
-                  <button class="likert-stop" data-selected="false"><span class="num">1</span><span class="detent"></span><span class="lab">naive</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">2</span><span class="detent"></span><span class="lab">reactive</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">3</span><span class="detent"></span><span class="lab">checks<br/>basics</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">4</span><span class="detent"></span><span class="lab">models<br/>threats</span></button>
-                  <button class="likert-stop" data-selected="false"><span class="num">5</span><span class="detent"></span><span class="lab">teaches<br/>it</span></button>
-                </div>
-                <div class="flex flex-col gap-2 pt-2">
-                  <span class="num-marker">COMMENT (IF FLAGGED)</span>
-                  <span class="comment-stub"><i data-lucide="message-square-plus" class="w-3 h-3"></i>Add a comment (optional)</span>
-                  <span class="helper">Not yet scored.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ============================================ -->
-          <!-- SECTION 04 — AI WORKFLOW                     -->
-          <!-- ============================================ -->
-          <section class="section-h">
-            <div>
-              <div class="section-numeral">04</div>
-              <div class="section-tag">Dimension 4 / 4 · peer of 01–03</div>
+              <div class="section-tag">Dimension 3 / 3</div>
             </div>
             <div>
               <div class="flex items-start justify-between gap-4 flex-wrap">
@@ -914,76 +724,11 @@
             </div>
           </section>
 
-          <!-- Q10 — Observed AI maturity (9-cell picker) -->
+          <!-- Q4 — Prompting paired (not started) -->
           <div class="q-block grid grid-cols-12 gap-6">
             <div class="col-span-12">
               <div class="q-label-row">
-                <span class="q-num">10</span>
-                <span class="q-title">Observed AI maturity — which cell did they operate at?</span>
-              </div>
-              <p class="helper mt-1 ml-[40px]">Pick the cell on the 9-grid that matches what you actually saw. You can diverge from their declared level.</p>
-            </div>
-            <div class="col-start-2 col-span-11 mt-1">
-              <div class="flex items-end gap-4 mb-2 helper">
-                <div>
-                  <div class="font-mono text-[9.5px] tracking-[0.16em] uppercase text-[var(--muted)]">columns →</div>
-                  <div class="font-mono text-[10px] text-[var(--ink-2)]">in-loop · on-loop</div>
-                </div>
-                <div class="ml-auto">
-                  <div class="font-mono text-[9.5px] tracking-[0.16em] uppercase text-[var(--muted)] text-right">rows ↓</div>
-                  <div class="font-mono text-[10px] text-[var(--ink-2)] text-right">L1 → L5</div>
-                </div>
-              </div>
-              <div class="grid9" style="grid-template-columns: repeat(2, 1fr);">
-                <!-- L1 -->
-                <button class="cell9" data-selected="false"><span class="glyph">🚶</span><div class="nm">L1 · Walker</div><div class="lab">no AI</div></button>
-                <button class="cell9 empty"><span class="lab">—</span></button>
-                <!-- L2 -->
-                <button class="cell9" data-selected="false"><span class="glyph">🛴</span><div class="nm">L2 · Scooter</div><div class="lab">IDE · in-loop</div><span class="declared">DECLARED</span></button>
-                <button class="cell9" data-selected="false"><span class="glyph">🏍️</span><div class="nm">L2 · Motorbike</div><div class="lab">IDE · on-loop</div></button>
-                <!-- L3 -->
-                <button class="cell9" data-selected="true"><span class="glyph">🚲</span><div class="nm">L3 · Bicycle</div><div class="lab">CLI · in-loop</div></button>
-                <button class="cell9" data-selected="false"><span class="glyph">🏎️</span><div class="nm">L3 · Race car</div><div class="lab">CLI · on-loop</div></button>
-                <!-- L4 -->
-                <button class="cell9" data-selected="false"><span class="glyph">🏍️</span><div class="nm">L4 · Motorbike</div><div class="lab">multi · in-loop</div></button>
-                <button class="cell9" data-selected="false"><span class="glyph">✈️</span><div class="nm">L4 · Plane</div><div class="lab">multi · on-loop</div></button>
-                <!-- L5 -->
-                <button class="cell9 empty"><span class="lab">—</span></button>
-                <button class="cell9" data-selected="false"><span class="glyph">🚀</span><div class="nm">L5 · Rocket</div><div class="lab">fleet · on-loop</div></button>
-              </div>
-              <div class="mt-2 flex items-center gap-2 helper">
-                <i data-lucide="info" class="w-3.5 h-3.5"></i>
-                You marked <span class="text-[var(--ink)]">L3 in-loop (Bicycle)</span> — one rank above their declared <span class="text-[var(--ink)]">L2 in-loop</span>. That gap shows on the coach view.
-              </div>
-            </div>
-          </div>
-
-          <!-- Q11 — Tooling chips -->
-          <div class="q-block grid grid-cols-12 gap-6">
-            <div class="col-span-12">
-              <div class="q-label-row">
-                <span class="q-num">11</span>
-                <span class="q-title">Tool stack observed</span>
-              </div>
-              <p class="helper mt-1 ml-[40px]">What they actually used, not what they said they use.</p>
-            </div>
-            <div class="col-start-2 col-span-11 mt-1 flex flex-wrap gap-2">
-              <button class="chip" data-selected="true"><i data-lucide="terminal" class="icon"></i>Claude Code</button>
-              <button class="chip" data-selected="true"><i data-lucide="square-mouse-pointer" class="icon"></i>Cursor</button>
-              <button class="chip" data-selected="false"><i data-lucide="git-branch" class="icon"></i>GitHub Copilot</button>
-              <button class="chip" data-selected="false"><i data-lucide="message-circle" class="icon"></i>ChatGPT</button>
-              <button class="chip" data-selected="false"><i data-lucide="sparkles" class="icon"></i>Gemini</button>
-              <button class="chip" data-selected="false"><i data-lucide="puzzle" class="icon"></i>Aider</button>
-              <button class="chip" data-selected="false"><i data-lucide="bot" class="icon"></i>Codex CLI</button>
-              <button class="chip" data-selected="false"><i data-lucide="plus" class="icon"></i>Add custom…</button>
-            </div>
-          </div>
-
-          <!-- Q12 — Prompting paired (not started) -->
-          <div class="q-block grid grid-cols-12 gap-6">
-            <div class="col-span-12">
-              <div class="q-label-row">
-                <span class="q-num">12</span>
+                <span class="q-num">04</span>
                 <span class="q-title">Prompting & context-setting — strength + growth</span>
               </div>
               <p class="helper mt-1 ml-[40px]">One thing they're already good at, one thing to grow into.</p>
@@ -1006,11 +751,11 @@
             </div>
           </div>
 
-          <!-- Q13 — Verification radio -->
+          <!-- Q5 — Verification radio -->
           <div class="q-block grid grid-cols-12 gap-6">
             <div class="col-span-12">
               <div class="q-label-row">
-                <span class="q-num">13</span>
+                <span class="q-num">05</span>
                 <span class="q-title">Verification habits</span>
               </div>
               <p class="helper mt-1 ml-[40px]">How did they treat the agent's output?</p>
@@ -1032,11 +777,11 @@
           </div>
 
           <!-- ============================================ -->
-          <!-- SECTION 05 — WRAP-UP                          -->
+          <!-- SECTION 04 — WRAP-UP                          -->
           <!-- ============================================ -->
           <section class="section-h">
             <div>
-              <div class="section-numeral">05</div>
+              <div class="section-numeral">04</div>
               <div class="section-tag">Wrap-up · required</div>
             </div>
             <div>
@@ -1045,11 +790,11 @@
             </div>
           </section>
 
-          <!-- Q14 -->
+          <!-- Q6 -->
           <div class="q-block grid grid-cols-12 gap-6">
             <div class="col-span-12">
               <div class="q-label-row">
-                <span class="q-num">14</span>
+                <span class="q-num">06</span>
                 <span class="q-title">One concrete habit they should adopt from your workflow</span>
               </div>
               <p class="helper mt-1 ml-[40px]">Any section. Specific enough they could try it tomorrow.</p>
@@ -1063,11 +808,11 @@
             </div>
           </div>
 
-          <!-- Q15 -->
+          <!-- Q7 -->
           <div class="q-block grid grid-cols-12 gap-6">
             <div class="col-span-12">
               <div class="q-label-row">
-                <span class="q-num">15</span>
+                <span class="q-num">07</span>
                 <span class="q-title">One thing they're doing that <em class="italic font-display">you're</em> stealing</span>
               </div>
               <p class="helper mt-1 ml-[40px]">The bit that surprised you. Feedback is two-way.</p>
@@ -1084,7 +829,7 @@
           <!-- Submit bar -->
           <div class="mt-14 border-t hairline-strong pt-6 flex items-center gap-4 flex-wrap">
             <div class="text-[12px] font-mono text-[var(--muted)]">
-              <div>FORM v2.0 · REVIEWER VARIANT</div>
+              <div>FORM v3.0 · REVIEWER VARIANT</div>
               <div class="mt-0.5">Visible to: reviewee, their coach. Anonymised in BG roll-ups.</div>
             </div>
             <div class="ml-auto flex items-center gap-3">
@@ -1093,7 +838,7 @@
               <button class="btn-primary" disabled style="background: var(--rule); color: var(--muted); box-shadow: none; cursor: not-allowed;"><span class="font-display text-[15px]">Submit feedback</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div class="text-right mt-2"><span class="helper">Submit unlocks once Q14 and Q15 are answered.</span></div>
+          <div class="text-right mt-2"><span class="helper">Submit unlocks once Q06 and Q07 are answered.</span></div>
 
           <div class="h-16"></div>
         </div>
@@ -1107,36 +852,28 @@
                 <span class="ix">01</span>
                 <div>
                   <div class="title font-display text-[14px]">Architecture & patterns</div>
-                  <div class="helper">3 of 3 answered</div>
+                  <div class="helper">2 of 2 answered</div>
                 </div>
                 <span class="meta">DONE</span>
               </div>
               <div class="rail-row" data-state="done">
                 <span class="ix">02</span>
                 <div>
-                  <div class="title font-display text-[14px]">Clean code & hygiene</div>
-                  <div class="helper">3 of 3 answered · 2 comments skipped</div>
+                  <div class="title font-display text-[14px]">Engineering hygiene</div>
+                  <div class="helper">1 of 1 answered</div>
                 </div>
                 <span class="meta">DONE</span>
               </div>
-              <div class="rail-row" data-state="done">
+              <div class="rail-row" data-state="active">
                 <span class="ix">03</span>
                 <div>
-                  <div class="title font-display text-[14px]">Testing · obs · security</div>
-                  <div class="helper">2 of 3 answered</div>
-                </div>
-                <span class="meta">2/3</span>
-              </div>
-              <div class="rail-row" data-state="active">
-                <span class="ix">04</span>
-                <div>
                   <div class="title font-display text-[14px]">AI workflow</div>
-                  <div class="helper">1 of 4 answered · in progress</div>
+                  <div class="helper">0 of 2 · in progress</div>
                 </div>
-                <span class="meta">1/4</span>
+                <span class="meta">0/2</span>
               </div>
               <div class="rail-row" data-state="todo">
-                <span class="ix">05</span>
+                <span class="ix">04</span>
                 <div>
                   <div class="title font-display text-[14px]">Wrap-up</div>
                   <div class="helper">0 of 2 · required</div>
@@ -1145,19 +882,9 @@
               </div>
             </div>
 
-            <div class="num-marker mb-2 mt-7">FORM CONVENTIONS</div>
-            <div class="rail-card" style="padding: 12px 14px;">
-              <ul class="text-[12.5px] text-[var(--ink-2)] space-y-2 leading-[1.45]">
-                <li class="flex items-start gap-2"><i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 mt-[3px]"></i><span><span class="font-mono text-[10px] tracking-[0.06em] text-[var(--muted)] uppercase">Likert</span> = a value on a scale.</span></li>
-                <li class="flex items-start gap-2"><i data-lucide="circle-dot" class="w-3.5 h-3.5 mt-[3px]"></i><span><span class="font-mono text-[10px] tracking-[0.06em] text-[var(--muted)] uppercase">Radio</span> = one of several states.</span></li>
-                <li class="flex items-start gap-2"><i data-lucide="circle-slash" class="w-3.5 h-3.5 mt-[3px]"></i><span>Any section you didn't cover can be skipped — that's signal, not failure.</span></li>
-                <li class="flex items-start gap-2"><i data-lucide="message-square-plus" class="w-3.5 h-3.5 mt-[3px]"></i><span>Comments stay collapsed until you have something to say.</span></li>
-              </ul>
-            </div>
-
             <div class="mt-6 text-[11px] font-mono text-[var(--muted)] leading-[1.6]">
               <div>Estimated time remaining</div>
-              <div class="font-display text-[22px] text-[var(--ink)] leading-none mt-1">~6 min</div>
+              <div class="font-display text-[22px] text-[var(--ink)] leading-none mt-1">~7 min</div>
             </div>
           </div>
         </aside>

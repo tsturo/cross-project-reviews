@@ -46,7 +46,7 @@
     .btn-outline { transition: background 120ms ease, border-color 120ms ease; }
     .btn-outline:hover { background: #F9FAFB; border-color: #E4DED2; }
     .nav-item.active { background: #F4F4F5; color: var(--ink); }
-    .nav-item.active .dot { background: var(--magenta); }
+    .nav-item.active .dot { background: var(--ink); }
     .ring-soft { box-shadow: 0 0 0 1px rgba(19,18,17,0.05), 0 1px 2px rgba(19,18,17,0.04); }
     .tabular { font-variant-numeric: tabular-nums; }
     .status-ok    { background: #ECFDF5; color: #065F46; }
@@ -127,13 +127,13 @@
         <p class="px-3 mb-2 text-[10.5px] uppercase tracking-[0.18em] text-[var(--muted)] font-medium">Admin</p>
         <a href="#" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Cycles</a>
         <a href="imports.html" class="nav-item flex items-center gap-2.5 px-3 h-8 rounded-md text-[var(--muted)] hover:text-[var(--ink)]"><i data-lucide="database" class="w-4 h-4"></i> Imports</a>
-        <a href="#" class="nav-item active flex items-center gap-2.5 px-3 h-8 rounded-md"><span class="dot w-1.5 h-1.5 rounded-full bg-[var(--magenta)]"></span><i data-lucide="shield-alert" class="w-4 h-4"></i> Level overrides</a>
+        <a href="#" class="nav-item active flex items-center gap-2.5 px-3 h-8 rounded-md"><span class="dot w-1.5 h-1.5 rounded-full bg-[var(--ink)]"></span><i data-lucide="shield-alert" class="w-4 h-4"></i> Level overrides</a>
       </div>
     </nav>
 
     <div class="m-3 p-3 rounded-lg border border-[var(--border)] bg-[#F6F2EA]">
       <div class="flex items-center gap-2 text-[12px] text-[var(--muted)]">
-        <i data-lucide="circle-dot" class="w-3.5 h-3.5 text-[var(--magenta)]"></i>
+        <i data-lucide="circle-dot" class="w-3.5 h-3.5 text-[var(--ink)]"></i>
         Cycle H1 · 2026
       </div>
       <div class="mt-1 text-[12px] text-[var(--ink)] tabular">39 days remaining</div>
@@ -154,7 +154,7 @@
           <i data-lucide="search" class="w-3.5 h-3.5"></i> Search
           <span class="ml-2 font-mono text-[11px] text-[var(--muted)] border border-[var(--border)] rounded px-1">⌘K</span>
         </button>
-        <div class="h-8 w-8 rounded-full bg-[#FCE7F3] grid place-items-center text-[12px] font-medium text-[var(--magenta-deep)]">TS</div>
+        <div class="h-8 w-8 rounded-full bg-[#F3F4F6] grid place-items-center text-[12px] font-medium text-[var(--ink)]">TS</div>
       </div>
     </header>
 
@@ -231,7 +231,7 @@
             </li>
             <li class="px-3 py-2.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#F6F2EA]">
               <div class="flex items-center gap-3 min-w-0">
-                <div class="h-7 w-7 rounded-full bg-[#FCE7F3] grid place-items-center text-[11px] font-medium text-[var(--magenta-deep)] shrink-0">AL</div>
+                <div class="h-7 w-7 rounded-full bg-[#F3F4F6] grid place-items-center text-[11px] font-medium text-[var(--ink)] shrink-0">AL</div>
                 <div class="min-w-0">
                   <div class="font-medium truncate">Aleksei Lopatin</div>
                   <div class="text-[12px] text-[var(--muted)] font-mono truncate">aleksei.l@visma.com · Visma Spcs · payroll-pipeline</div>
@@ -407,21 +407,21 @@
               <label class="text-[12.5px] font-medium">Expiry</label>
               <div class="mt-2 space-y-2">
                 <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#F6F2EA]">
-                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" checked />
+                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--ink)]" checked />
                   <div>
                     <span class="text-[13px] font-medium">Auto-expire on next survey</span>
                     <p class="text-[12px] text-[var(--muted)] mt-0.5">A new <span class="font-mono">survey</span> row in <span class="font-mono">ai_levels</span> will supersede this override automatically.</p>
                   </div>
                 </label>
                 <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#F6F2EA]">
-                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" />
+                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--ink)]" />
                   <div>
                     <span class="text-[13px] font-medium">Pin until manually changed</span>
                     <p class="text-[12px] text-[var(--muted)] mt-0.5">Survey responses will be ignored for this engineer. Use sparingly.</p>
                   </div>
                 </label>
                 <label class="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] cursor-pointer hover:bg-[#F6F2EA]">
-                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--magenta)]" />
+                  <input type="radio" name="expiry" class="mt-0.5 accent-[var(--ink)]" />
                   <div class="flex-1">
                     <span class="text-[13px] font-medium">Custom date</span>
                     <input type="date" class="block mt-1 h-8 px-2 rounded-md border border-[var(--border)] text-[12.5px] font-mono outline-none focus:border-[var(--ink)]" value="2026-09-01" />
@@ -478,7 +478,7 @@
           <ul class="divide-y divide-[var(--border)] text-[13px]">
             <li class="grid grid-cols-[1.4fr_0.9fr_0.7fr_1.4fr_140px] px-5 py-3 items-center">
               <div class="flex items-center gap-2.5 min-w-0">
-                <div class="h-7 w-7 rounded-full bg-[#FCE7F3] grid place-items-center text-[11px] font-medium text-[var(--magenta-deep)] shrink-0">MR</div>
+                <div class="h-7 w-7 rounded-full bg-[#F3F4F6] grid place-items-center text-[11px] font-medium text-[var(--ink)] shrink-0">MR</div>
                 <div class="min-w-0">
                   <div class="font-medium truncate">Mette Rasmussen</div>
                   <div class="text-[11.5px] text-[var(--muted)] font-mono truncate">mette.r@visma.no</div>
