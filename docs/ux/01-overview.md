@@ -21,10 +21,8 @@
 /coach                     → coach hub
   /coach/coachees          → coachee roster
   /coach/coachees/[id]     → coachee detail + reviewer picker
-  /coach/assignments       → all assignments this cycle
 /insights                  → BG manager / MD analytics (gated)
   /insights/completion
-  /insights/levels
   /insights/themes         → Phase 3
 /admin                     → admin console (gated)
   /admin/cycles
@@ -69,9 +67,7 @@ Checklist — each row is a single screen a downstream agent can take.
 - [ ] **CoachCoacheeRoster** — `/coach/coachees` — coach — Table of coachees with level, status, action.
 - [ ] **CoacheeDetail** — `/coach/coachees/[id]` — coach — Coachee profile + reviewer suggestion panel + record-pairing action.
 - [ ] **AssignmentRecorder** — modal off CoacheeDetail — coach — Confirm pairing already agreed out-of-band.
-- [ ] **CoachAssignmentsBoard** — `/coach/assignments` — coach — All this cycle's assignments, filter by status.
 - [ ] **InsightsCompletion** — `/insights/completion` — BG/MD — Completion rate by BG/project/cycle.
-- [ ] **InsightsLevels** — `/insights/levels` — BG/MD — Level distribution histogram + filters.
 - [ ] **AdminCycleList** — `/admin/cycles` — admin — List of cycles with status, create button.
 - [ ] **AdminCycleEditor** — `/admin/cycles/[id]` — admin — Cycle metadata + target filter + auto-pair date.
 - [ ] **AdminImports** — `/admin/imports` — admin — Trigger sheet sync, view last run, errors.
@@ -90,7 +86,6 @@ Checklist — each row is a single screen a downstream agent can take.
 ### Phase 3
 
 - [ ] **InsightsThemes** — `/insights/themes` — BG/MD — LLM-extracted feedback themes.
-- [ ] **InsightsLevelShift** — `/insights/levels?view=shift` — BG/MD — Cohort movement +1 level cycle-over-cycle.
 - [ ] **AdminFormEditor** — `/admin/forms` — admin — Version & edit feedback forms.
 - [ ] **AutoPairPreview** — modal off CoachCoacheeRoster — coach — "Auto-suggest all remaining" preview before commit.
 
@@ -127,8 +122,7 @@ Checklist — each row is a single screen a downstream agent can take.
 
 ### Flow F — BG manager explores adoption trends
 1. Lands on `InsightsCompletion` → sees BG/project completion %.
-2. Switches to `InsightsLevels` → histogram, filters by BG/company/project/role.
-3. (Phase 3) `InsightsLevelShift` cohort + `InsightsThemes` for qualitative drill-down.
+2. (Phase 3) `InsightsThemes` for anonymised qualitative drill-down.
 
 ---
 

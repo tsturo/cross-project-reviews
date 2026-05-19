@@ -196,17 +196,19 @@ Forms are **versioned**; admin can edit between cycles without losing history.
 
 ### 8.2 Coach dashboard
 
+A single surface — the coachee roster — answers all of a coach's cycle questions. No separate "assignments board": the same table is filtered to surface what needs doing.
+
 - Coachee table: name, level, last review date, status this cycle, action button.
 - Suggested reviewers panel inline on row expand.
-- "Needs attention" filter: unassigned + cycle deadline approaching.
+- Filter chips: **All · Needs attention · Unassigned · Pending feedback · Scheduled · Completed**. "Needs attention" rolls up unassigned + cycle-deadline approaching + feedback overdue into one view.
 - Bulk action: "auto-suggest for all remaining" (preview before commit).
 
 ### 8.3 BG Manager / MD dashboard
 
-- Completion rate per BG, project, cycle.
-- AI-level distribution histogram (filterable by BG, company, project, role).
-- Level-shift cohort view: % of engineers who moved +1 level cycle-over-cycle.
-- Drill-down to anonymized session feedback themes (top tags from free-text).
+- Completion rate per BG, project, cycle. (MVP)
+- _Phase 3:_ Drill-down to anonymized session feedback themes (top tags from free-text).
+
+Level distribution histograms and cohort-shift views were dropped from MVP to keep this developmental rather than appraisal-coded. BG/MD readers see whether the program is happening, not how individual engineers score.
 
 ## 9. Data model (Postgres / Supabase)
 
@@ -239,22 +241,16 @@ Email is the only system-driven channel in MVP (Slack is out). Every send is log
 
 ### Trigger matrix
 
-| Trigger | Recipient | When | Type | Opt-out? |
-|---|---|---|---|---|
-| Cycle opens | All targeted engineers + coaches | Day 0 of cycle | Transactional | No |
-| Pairing recorded by coach | Reviewer + Reviewee | Immediately | Transactional | No |
-| Session in 24h | Both parties | T-24h before `scheduled_at` | Reminder | Yes |
-| Session in 1h | Both parties | T-1h | Reminder | Yes |
-| Session marked complete, schedule a date | Both parties | If no `scheduled_at` set 7 days into cycle | Reminder | Yes |
-| Feedback due in 3 days | Author (reviewer / reviewee) | T-3d before 7-day post-session deadline | Reminder | Yes |
-| Feedback overdue | Author + Coach (cc on second nudge) | T+1d and T+5d after deadline | Reminder | Yes |
-| Feedback received | Reviewee | Within 5 min of reviewer submit | Transactional | No |
-| Coachee still unassigned | Coach | T-14d, T-7d, T-1d before cycle deadline | Reminder | Yes |
-| Auto-pair imminent | Coach | T-24h before auto-pair fires | Reminder | Yes |
-| Auto-pair fired | Coach + Reviewer + Reviewee | Immediately | Transactional | No |
-| Cycle ends, summary | All engineers, BG/MD digest | Day after cycle ends | Digest | Yes |
-| Level changed (coach override) | Affected engineer | Immediately | Transactional | No |
-| Import failed | Admin | On error | Operational | No |
+MVP ships with **six** templates. Other notifications listed in earlier drafts (T-1h session reminder, T+5d cc-coach overdue nudge, T-14d coachee-unassigned, separate pairing-recorded transactional, level-changed transactional, import-failed operational) were cut to keep the inbox load light. Pairing details are folded into the cycle-opens email when pairing is recorded before the cycle starts.
+
+| Trigger | Recipient | When | Type | Opt-out? | Template |
+|---|---|---|---|---|---|
+| Cycle opens (with pairing if recorded) | All targeted engineers + coaches | Day 0 of cycle | Transactional | No | `email-cycle-opens-with-pairing` |
+| Session in 24h | Both parties | T-24h before `scheduled_at` | Reminder | Yes | `email-session-24h` |
+| Feedback received | Reviewee | Within 5 min of reviewer submit | Transactional | No | `email-feedback-received` |
+| Feedback overdue | Author only (no cc-coach) | T+1d after deadline | Reminder | Yes | `email-feedback-overdue` |
+| Auto-pair imminent | Coach | T-7d before auto-pair fires | Reminder | Yes | `email-autopair-imminent` |
+| Cycle ends, summary | All engineers | Day after cycle ends | Digest | Yes | `email-cycle-summary-digest` |
 
 ### Delivery rules
 
