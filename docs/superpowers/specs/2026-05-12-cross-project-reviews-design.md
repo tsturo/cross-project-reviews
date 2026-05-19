@@ -52,7 +52,7 @@ ReviewCycle (id, name, starts_at, ends_at, auto_pair_after)
         └── Feedback (assignment_id, author_id, answers_json, submitted_at)
 ```
 
-`Assignment.status`: `assigned → scheduled → completed → feedback_submitted`. Auto-paired assignments carry an `auto_paired = true` flag.
+`Assignment.status`: `assigned → scheduled → completed → feedback_submitted`, plus a terminal `declined` state for cycle-level off-ramps (see §5). Auto-paired assignments carry an `auto_paired = true` flag.
 
 Approval between coach and reviewer happens out-of-band (Slack / email / hallway). The coach only records the agreed pairing in the app — no in-app accept/decline flow.
 
@@ -115,6 +115,8 @@ Assignment closes; data feeds analytics + next-cycle level recalc
 ```
 
 A cycle is typically **6 months** (matches the "1–2 reviews per year" rhythm). Admin creates cycles; each cycle has a target set (e.g. "everyone whose last review > 6 months ago").
+
+**Off-ramp.** A coachee can decline participation in a cycle by writing to their coach (Slack, email, hallway). The coach records the decline by setting `Assignment.status = declined` in the assignment recorder. Common reasons: sickness, parental leave, recent project change, no eligible reviewer who meets the hard constraints. No in-app UI is built for the engineer to decline directly — keeping the conversation out-of-band keeps the program developmental. The declined state is terminal for the cycle and excluded from completion metrics.
 
 ## 6. Matching rules
 
@@ -313,11 +315,36 @@ This is a separate workflow from cross-project reviews — same data model, diff
 
 ## 13. Risks & open questions
 
-- **Coach data coverage is sparse** (16% missing). MVP must surface this and let admins fix it in-app.
+- **Coach data coverage is sparse** (16% missing). MVP must surface this and let admins fix it in-app. The coach roster shows a banner *"Level missing for N of your coachees — set in your next 1:1"*; in MVP the link routes to admin-contact instructions, and a Phase-4 inline level-set form replaces it.
 - **Survey freshness** — 144 unique employees responded vs. ~200 total. Need a re-survey push at cycle start. If no level is on file, the engineer's badge shows "unverified" and they are excluded from matching until their coach records a level from the next AI Skill Check-in.
 - **Cross-language naming** — Lithuanian/English mix in sheet #1. Normalize at import; display as-is.
 - **Calendar privacy** — `freebusy` only reveals busy/free, no event details, so this is fine; document it explicitly in the privacy notice.
-- **GDPR** — feedback is personal data tied to an identified employee. Retention: keep raw feedback 2 years, anonymized aggregates indefinitely. Confirm with Visma DPO.
+- **GDPR — concrete retention proposal (pending DPO sign-off).** Feedback is personal data tied to an identified employee. Proposal:
+  - Raw feedback (free-text and Likert) retained for **one cycle (6 months)**; after that it is anonymised (author and reviewee identifiers removed, free text optionally truncated or summarised) and rolled into aggregates.
+  - Anonymised aggregates retained indefinitely.
+  - An engineer can request deletion of their own feedback (as author or as reviewee) via a "My data" link in the profile; the link is reserved in the design and slated for a follow-up release, not MVP.
+  - On employee offboarding, all raw feedback authored by the leaver is purged within **30 days**; anonymised aggregates persist.
+  - This section is **pending DPO sign-off** — the concrete proposal goes to the Visma DPO for review before launch. The previous "2 years raw" target is superseded.
+
+## 13.5 Privacy notice (engineer-facing)
+
+The reviewer form must show the following disclosure block immediately above the Submit button, every time. Copy is read-only; admins can edit between cycles via the form versioning workflow.
+
+```
+This feedback is developmental, not appraisal. Specifically:
+
+- It will NOT be used in performance reviews, salary decisions, or
+  promotion processes.
+- It will NOT be visible to your line manager (unless they are your
+  coach), HR, or compensation team.
+- It IS visible to: the reviewee, the reviewee's coach, the program
+  admin (for moderation only).
+- Raw text is retained for 6 months, then anonymised.
+- You can request deletion of your own feedback at any time via the
+  program admin.
+```
+
+The reviewer-form mockup reserves a slot for this block; the implementation reads the copy from a versioned constant alongside the form schema.
 
 ## 14. Success metrics
 
