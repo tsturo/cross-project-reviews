@@ -27,14 +27,18 @@ AI maturity matters as a **pairing mechanic** — the reviewer is at a higher ra
 
 ## 2. Users & roles
 
+Two first-class roles plus one permission modifier. Earlier drafts had four (Engineer / Coach / BG MD / Admin); this collapses to two surfaces (Engineer / Admin) because at 200 people the role count was carrying more weight than the actual access differences justified.
+
 | Role | Who | What they do in the app |
 |---|---|---|
-| **Engineer** | Every employee (~200) | See own upcoming sessions (as reviewer & reviewee), fill feedback forms, view own AI level & history |
-| **Coach** | ~30 employees (line managers) | See coachee roster, pick a reviewer per coachee, approve auto-pair suggestions, see status |
-| **BG Manager / MD** | ~10 | Org-wide view: completion rates, level distribution, level-shift trends |
-| **Admin** | 1–2 platform owners | Manage cycles, override pairings, import data, reset levels |
+| **Engineer** | Every employee (~200) | See own upcoming sessions (as reviewer & reviewee), fill feedback forms, view own AI level & history. If they have coachees, additionally see a Coachees view and the cycle pairing-approval surface. |
+| **Admin** | 1–2 platform owners | Manage cycles, override pairings, import data, reset levels, generate the quarterly org-completion CSV for BG/MD readers. |
 
-Roles are derived from the imported data (`Is Coach?` column, `Department Manager`, etc.), not stored as enums on users — except `admin`, which is set manually.
+**Coach** is no longer a distinct identity. Coaches are engineers who happen to have coachees on file (resolved at request time from the import). Their "coach surfaces" — Coachees, Approve pairings, Coachee detail — appear inside the same workspace alongside their own sessions, rather than as a separate persona.
+
+**BG Manager / MD** is no longer a first-class role. Their data needs (completion rate per BG / project / cycle) are served by the admin-generated quarterly CSV, not an in-app dashboard. Level distribution and cohort-shift views were dropped from MVP to keep the program developmental rather than appraisal-coded.
+
+Role information is derived from the imported data (`Is Coach?` column, `Department Manager`, etc.), not stored as enums on users — except `admin`, which is set manually.
 
 ## 3. Core domain model
 
@@ -203,12 +207,13 @@ A single surface — the coachee roster — answers all of a coach's cycle quest
 - Filter chips: **All · Needs attention · Unassigned · Pending feedback · Scheduled · Completed**. "Needs attention" rolls up unassigned + cycle-deadline approaching + feedback overdue into one view.
 - Bulk action: "auto-suggest for all remaining" (preview before commit).
 
-### 8.3 BG Manager / MD dashboard
+### 8.3 Admin org export (replaces BG Manager / MD dashboard)
 
-- Completion rate per BG, project, cycle. (MVP)
-- _Phase 3:_ Drill-down to anonymized session feedback themes (top tags from free-text).
+There is no in-app dashboard for BG managers or MDs in MVP. The admin can generate a **quarterly org-completion CSV** — one row per cycle × BG × project with completion rate, sessions held, feedback submitted, unmatched counts. The CSV is delivered out-of-band (email or shared drive) on request.
 
-Level distribution histograms and cohort-shift views were dropped from MVP to keep this developmental rather than appraisal-coded. BG/MD readers see whether the program is happening, not how individual engineers score.
+_Phase 3:_ Drill-down to anonymized session feedback themes (top tags from free-text), still admin-only.
+
+Level distribution histograms and cohort-shift views were intentionally dropped to keep the program developmental rather than appraisal-coded. Readers see whether the program is happening, not how individual engineers score.
 
 ## 9. Data model (Postgres / Supabase)
 
@@ -222,7 +227,7 @@ Tables (PK omitted, all FKs `on delete restrict`):
 - `feedback_submissions` — `(assignment_id, form_id, author_id, answers_json, submitted_at)`.
 - `notifications` — `(employee_id, channel, payload_json, sent_at, status)`. Audit trail.
 
-Row-Level Security: engineers see only their own rows; coaches see coachees' rows; BG/MD see their BG; admins see all. Implemented via Supabase RLS policies tied to a `role` claim on the JWT.
+Row-Level Security: engineers see only their own rows; engineers with coachees additionally see their coachees' rows (resolved at query time from `employees.coach_email`); admins see all. Implemented via Supabase RLS policies tied to a `role` claim on the JWT plus a derived `is_coach_of(user_id, target_id)` helper. No BG/MD tier — the org-completion view is admin-only and emitted as a CSV.
 
 ## 10. Integrations
 

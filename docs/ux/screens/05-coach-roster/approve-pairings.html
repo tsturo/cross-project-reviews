@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Approve cycle pairings — Cross-Project Reviews</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper:   '#F6F2EA',
+          paper2:  '#FBFAF7',
+          ink:     '#131211',
+          muted:   '#6B6258',
+          line:    '#E4DED2',
+          subtle:  '#A09B92',
+          magenta: '#E70641',
+        },
+        fontFamily: {
+          display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+          sans:    ['"Inter"', 'ui-sans-serif', 'system-ui'],
+          mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  html, body { background: #F6F2EA; color: #131211; font-family: 'Inter', system-ui, sans-serif; }
+  .font-display { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; }
+  .smallcaps { text-transform: uppercase; letter-spacing: 0.14em; font-size: 10.5px; font-weight: 500; }
+  .hairline { border-color: #E4DED2; }
+  .hairline-soft { border-color: #F1EEE7; }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(rgba(22,20,15,0.025) 1px, transparent 1px);
+    background-size: 3px 3px; opacity: 0.6;
+  }
+  .row-hover:hover { background: #F7F4ED; }
+  .focus-ring:focus { outline: 2px solid #E70641; outline-offset: 2px; }
+  .tabular { font-variant-numeric: tabular-nums; }
+  /* Canonical LevelBadge */
+  :root {
+    --L1: #64748B; --L2: #0EA5E9; --L3: #10B981; --L4: #F59E0B; --L5: #BE185D;
+  }
+  .lvl {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 8px 3px 5px; border-radius: 999px;
+    background: #F3F4F6; color: #131211; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .lvl-dot { width: 8px; height: 8px; border-radius: 999px; box-shadow: 0 0 0 2px #fff; display: inline-block; }
+  .reason-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border: 1px solid #E4DED2; border-radius: 999px;
+    font-size: 11.5px; color: #4A463F; background: #FFFFFF;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 7px 10px;
+    border-radius: 6px; font-size: 13.5px; color: #3A3630;
+  }
+  .nav-item:hover { background: #F1EEE7; }
+  .nav-item.active { background: #131211; color: #FBFAF7; }
+  .nav-ico { display: inline-block; width: 14px; text-align: center; opacity: 0.7; }
+  .nav-section { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #A09B92; padding: 0 10px; }
+  .avatar {
+    width: 28px; height: 28px; border-radius: 999px;
+    display: inline-grid; place-items: center;
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+    color: white;
+  }
+  .btn-primary {
+    background: #E70641; color: #fff; padding: 8px 14px;
+    border-radius: 6px; font-size: 13px; font-weight: 500;
+    box-shadow: 0 1px 0 rgba(22,20,15,0.06), inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  .btn-primary:hover { background: #C20068; }
+  .btn-ghost {
+    padding: 6px 11px; border-radius: 6px; font-size: 12.5px;
+    color: #3A3630; border: 1px solid #E4DED2; background: #fff;
+  }
+  .btn-ghost:hover { border-color: #131211; }
+  .check {
+    width: 18px; height: 18px; border: 1.5px solid #131211;
+    border-radius: 4px; background: #fff;
+    display: inline-grid; place-items: center; cursor: pointer;
+  }
+  .check[data-checked="true"] { background: #131211; }
+  .check[data-checked="true"]::after {
+    content: ""; width: 9px; height: 5px;
+    border-left: 2px solid #FBFAF7; border-bottom: 2px solid #FBFAF7;
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+  .table-row { border-bottom: 1px solid #F1EEE7; }
+  .table-row td { padding: 16px 16px; vertical-align: top; }
+  .arrow { font-family: 'Fraunces', serif; color: #6B6258; font-size: 16px; }
+  .kbd {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    padding: 1px 5px; border: 1px solid #E4DED2; border-bottom-width: 2px;
+    border-radius: 4px; color: #6B6258; background: #FBFAF7;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="relative z-10 grid grid-cols-[240px_1fr] min-h-screen">
+
+  <!-- SideNav -->
+  <aside class="border-r hairline bg-[#FBFAF7] flex flex-col">
+    <div class="px-5 pt-6 pb-5 border-b hairline">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full" style="background:#131211"></div>
+        <span class="font-display text-[18px] tracking-tight">Visma <em class="not-italic font-medium">/ Reviews</em></span>
+      </div>
+      <div class="mt-1 pl-4 smallcaps text-subtle">Cross-project peer learning</div>
+      <div class="mt-4 flex items-center justify-between text-[11px] font-mono">
+        <span class="text-subtle">CYCLE 26-H1</span>
+        <span>37d left</span>
+      </div>
+    </div>
+
+    <nav class="flex-1 px-3 py-4 space-y-5 text-[13.5px]">
+      <div>
+        <div class="nav-section pb-2">Workspace</div>
+        <a class="nav-item" href="#"><span class="nav-ico">◇</span> Dashboard</a>
+        <a class="nav-item" href="#"><span class="nav-ico">▢</span> My sessions
+          <span class="ml-auto text-[10.5px] text-muted tabular">2</span>
+        </a>
+        <a class="nav-item" href="#"><span class="nav-ico">○</span> Profile</a>
+      </div>
+
+      <div>
+        <a class="nav-item active" href="approve-pairings.html"><span class="nav-ico">▣</span> Approve pairings
+          <span class="ml-auto text-[10.5px] tabular opacity-80">3</span>
+        </a>
+        <a class="nav-item" href="roster-normal.html"><span class="nav-ico">▦</span> Coachees
+          <span class="ml-auto text-[10.5px] tabular opacity-80">8</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="px-4 py-4 border-t hairline-soft">
+      <div class="flex items-center gap-3">
+        <div class="avatar" style="background:#131211">TŠ</div>
+        <div class="leading-tight">
+          <div class="text-[13px]">Tomas Šturas</div>
+          <div class="text-[11px] text-muted">Engineer · Coach</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="min-w-0">
+
+    <!-- Top bar -->
+    <div class="h-12 border-b hairline bg-[#FBFAF7] flex items-center px-6 gap-4">
+      <div class="flex items-center gap-2 text-[12px] text-muted font-mono">
+        <a href="#" class="hover:text-ink">Coachees</a>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <span class="text-ink">Approve cycle pairings</span>
+      </div>
+      <div class="ml-auto flex items-center gap-3 text-[11.5px] font-mono text-muted">
+        <span>Pairing window closes <span class="text-ink">in 9 days</span> · auto-pair fires after</span>
+      </div>
+    </div>
+
+    <!-- Page header -->
+    <section class="px-8 pt-9 pb-6">
+      <div class="flex items-end justify-between gap-8 flex-wrap">
+        <div class="max-w-[680px]">
+          <div class="smallcaps text-muted">Coach · Cycle H1·2026</div>
+          <h1 class="font-display text-[42px] leading-[1.05] tracking-tight mt-3">Approve cycle pairings</h1>
+          <p class="mt-3 text-[14px] text-[#3A3630] leading-[1.55]">
+            One row per coachee in this cycle. The system suggests a reviewer using the matching rules — different project, different coach, no repeat in the last two cycles, reviewer one rank up on the maturity grid. Approve in bulk or override per row. Anyone you don't approve before <span class="font-mono">Sat 28 May</span> gets auto-paired and notified.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 shrink-0">
+          <button class="btn-ghost">Export CSV</button>
+          <button class="btn-primary inline-flex items-center gap-2">
+            <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+            Approve all (8)
+          </button>
+        </div>
+      </div>
+
+      <!-- Status strip -->
+      <div class="mt-7 flex items-center gap-6 text-[12px] font-mono text-muted">
+        <span class="inline-flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full" style="background:#131211"></span> 5 approved</span>
+        <span class="inline-flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full" style="background:#B91C1C"></span> 3 awaiting</span>
+        <span class="inline-flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-[var(--line)] border border-[var(--line)]"></span> 0 unmatched</span>
+        <span class="ml-auto">Last save: 2 minutes ago</span>
+      </div>
+    </section>
+
+    <!-- Filter bar -->
+    <div class="px-8 py-3 flex items-center gap-3 border-y hairline-soft bg-[#FBFAF7] text-[12.5px]">
+      <span class="smallcaps text-subtle pr-1">Show</span>
+      <button class="btn-ghost">All <span class="tabular text-[11px] opacity-70 ml-1">8</span></button>
+      <button class="btn-ghost" style="background:#131211;color:#FBFAF7;border-color:#131211">Awaiting <span class="tabular text-[11px] opacity-80 ml-1">3</span></button>
+      <button class="btn-ghost">Approved <span class="tabular text-[11px] opacity-70 ml-1">5</span></button>
+      <span class="ml-auto text-muted font-mono text-[11px]">Tip: press <span class="kbd">A</span> to approve highlighted row</span>
+    </div>
+
+    <!-- Table -->
+    <section class="px-8 py-6">
+      <table class="w-full text-[13.5px]">
+        <thead>
+          <tr class="smallcaps text-muted border-b hairline">
+            <th class="w-10 text-left px-3 py-3"></th>
+            <th class="text-left px-2 py-3">Coachee</th>
+            <th class="w-6 px-2 py-3"></th>
+            <th class="text-left px-2 py-3">Proposed reviewer</th>
+            <th class="text-left px-2 py-3">Reason</th>
+            <th class="text-right px-2 py-3">Status</th>
+            <th class="w-24 text-right px-2 py-3"></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Row 1 — awaiting -->
+          <tr class="table-row row-hover">
+            <td class="text-center"><span class="check" data-checked="false" role="checkbox" aria-checked="false"></span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#1F2937">RB</div>
+                <div>
+                  <div class="font-medium">Rasa Bertašius <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L2)"></span>L2</span></div>
+                  <div class="text-[12px] text-muted">Visma Severa · Vilnius · Python · they</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="arrow">→</span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#374151">HS</div>
+                <div>
+                  <div class="font-medium">Henrik Sørensen <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></div>
+                  <div class="text-[12px] text-muted">Visma e-conomic · Aarhus · Go</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="reason-chip">+2 rank</span>
+                <span class="reason-chip">Diff project</span>
+                <span class="reason-chip">Diff stack</span>
+                <span class="reason-chip">0/2 load</span>
+              </div>
+            </td>
+            <td class="text-right text-[12px] font-mono text-[#B91C1C]">awaiting</td>
+            <td class="text-right">
+              <button class="btn-ghost">Override</button>
+            </td>
+          </tr>
+
+          <!-- Row 2 — approved -->
+          <tr class="table-row row-hover">
+            <td class="text-center"><span class="check" data-checked="true" role="checkbox" aria-checked="true"></span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#1F2937">MJ</div>
+                <div>
+                  <div class="font-medium">Mantas Jankauskas <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L3)"></span>L3</span></div>
+                  <div class="text-[12px] text-muted">Onguard · Risk Engine · .NET</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="arrow">→</span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#374151">SP</div>
+                <div>
+                  <div class="font-medium">Sigrid Pedersen <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></div>
+                  <div class="text-[12px] text-muted">Visma Public · Oslo · TypeScript</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="reason-chip">+1 rank</span>
+                <span class="reason-chip">Diff project</span>
+                <span class="reason-chip">Diff stack</span>
+                <span class="reason-chip">Diff BG</span>
+              </div>
+            </td>
+            <td class="text-right text-[12px] font-mono" style="color:#15803D">approved</td>
+            <td class="text-right">
+              <button class="btn-ghost">Override</button>
+            </td>
+          </tr>
+
+          <!-- Row 3 — awaiting -->
+          <tr class="table-row row-hover">
+            <td class="text-center"><span class="check" data-checked="false" role="checkbox" aria-checked="false"></span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#1F2937">UB</div>
+                <div>
+                  <div class="font-medium">Ugnė Balčiūnaitė <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L1)"></span>L1</span></div>
+                  <div class="text-[12px] text-muted">Visma Severa · Vilnius · Python · she</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="arrow">→</span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#374151">AP</div>
+                <div>
+                  <div class="font-medium">Aušra Petraitytė <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L3)"></span>L3</span></div>
+                  <div class="text-[12px] text-muted">Visma Connect · Kaunas · Java</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="reason-chip">+2 rank</span>
+                <span class="reason-chip">Diff project</span>
+                <span class="reason-chip">Same lang</span>
+                <span class="reason-chip">1/2 load</span>
+              </div>
+            </td>
+            <td class="text-right text-[12px] font-mono text-[#B91C1C]">awaiting</td>
+            <td class="text-right">
+              <button class="btn-ghost">Override</button>
+            </td>
+          </tr>
+
+          <!-- Row 4 — approved -->
+          <tr class="table-row row-hover">
+            <td class="text-center"><span class="check" data-checked="true" role="checkbox" aria-checked="true"></span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#1F2937">HV</div>
+                <div>
+                  <div class="font-medium">Henrik Vatne <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></div>
+                  <div class="text-[12px] text-muted">Visma Connect · Oslo · Kotlin</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="arrow">→</span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#374151">JN</div>
+                <div>
+                  <div class="font-medium">Jonas Naujokas <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L5)"></span>L5</span></div>
+                  <div class="text-[12px] text-muted">Visma Vinnu · Helsinki · Rust</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="reason-chip">+1 rank</span>
+                <span class="reason-chip">Diff project</span>
+                <span class="reason-chip">Diff stack</span>
+                <span class="reason-chip">Diff BG</span>
+                <span class="reason-chip">0/2 load</span>
+              </div>
+            </td>
+            <td class="text-right text-[12px] font-mono" style="color:#15803D">approved</td>
+            <td class="text-right">
+              <button class="btn-ghost">Override</button>
+            </td>
+          </tr>
+
+          <!-- Row 5 — awaiting -->
+          <tr class="table-row row-hover">
+            <td class="text-center"><span class="check" data-checked="false" role="checkbox" aria-checked="false"></span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#1F2937">LM</div>
+                <div>
+                  <div class="font-medium">Linnea Mårtensson <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L3)"></span>L3</span></div>
+                  <div class="text-[12px] text-muted">Visma Tellus · Stockholm · TypeScript</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="arrow">→</span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#374151">EB</div>
+                <div>
+                  <div class="font-medium">Eglė Butkevičiūtė <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L4)"></span>L4</span></div>
+                  <div class="text-[12px] text-muted">Visma Severa · Vilnius · Python</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="reason-chip">+1 rank</span>
+                <span class="reason-chip">Diff project</span>
+                <span class="reason-chip">Diff stack</span>
+                <span class="reason-chip">Diff BG</span>
+              </div>
+            </td>
+            <td class="text-right text-[12px] font-mono text-[#B91C1C]">awaiting</td>
+            <td class="text-right">
+              <button class="btn-ghost">Override</button>
+            </td>
+          </tr>
+
+          <!-- Row 6 — approved -->
+          <tr class="table-row row-hover">
+            <td class="text-center"><span class="check" data-checked="true" role="checkbox" aria-checked="true"></span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#1F2937">KP</div>
+                <div>
+                  <div class="font-medium">Karolis Petrauskas <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L2)"></span>L2</span></div>
+                  <div class="text-[12px] text-muted">Severa · Vilnius · Python</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="arrow">→</span></td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:#374151">PS</div>
+                <div>
+                  <div class="font-medium">Per Solberg <span class="lvl ml-1"><span class="lvl-dot" style="background:var(--L3)"></span>L3</span></div>
+                  <div class="text-[12px] text-muted">Visma Connect · Oslo · TypeScript</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="reason-chip">+1 rank</span>
+                <span class="reason-chip">Diff project</span>
+                <span class="reason-chip">Diff stack</span>
+                <span class="reason-chip">Diff BG</span>
+                <span class="reason-chip">2/2 load</span>
+              </div>
+            </td>
+            <td class="text-right text-[12px] font-mono" style="color:#15803D">approved</td>
+            <td class="text-right">
+              <button class="btn-ghost">Override</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <!-- Footer help -->
+      <div class="mt-6 flex items-center justify-between text-[11.5px] text-muted font-mono">
+        <span>Showing 6 of 8 · 2 hidden by filter</span>
+        <span>Override opens a panel with the top-5 ranked candidates and search.</span>
+      </div>
+    </section>
+
+    <!-- Footer rule -->
+    <div class="px-8 py-6 border-t hairline mt-4 flex items-center justify-between text-[12px] text-muted font-mono">
+      <span>cross-project · approve-pairings · v1.0</span>
+      <span>Hard rules: rank↑ · diff project · diff coach · no repeat · ≤ 2 active · same lang</span>
+    </div>
+  </main>
+</div>
+
+<script>
+  lucide.createIcons();
+  document.querySelectorAll('.check').forEach(box => {
+    box.addEventListener('click', () => {
+      const next = box.dataset.checked !== 'true';
+      box.dataset.checked = next ? 'true' : 'false';
+      box.setAttribute('aria-checked', next ? 'true' : 'false');
+    });
+  });
+</script>
+
+</body>
+</html>

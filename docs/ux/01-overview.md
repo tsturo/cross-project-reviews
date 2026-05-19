@@ -18,8 +18,9 @@
   /sessions/[id]           → session detail (prep, schedule, feedback entry)
   /sessions/[id]/feedback  → feedback form (role-aware)
 /profile                   → my AI level, history
-/coach                     → coach hub
-  /coach/coachees          → coachee roster
+/coach                     → coach surfaces (shown only if user has coachees)
+  /coach/approve-pairings  → primary surface during the pairing window
+  /coach/coachees          → coachee roster (browsing view)
   /coach/coachees/[id]     → coachee detail + reviewer picker
 /insights                  → BG manager / MD analytics (gated)
   /insights/completion
@@ -41,14 +42,16 @@ Rationale: most users wear 1–2 hats; sidebar avoids context switching and keep
 
 ### Post-auth landing
 
-| Role | Lands on |
+Roles collapsed to two surfaces: **Engineer** and **Admin**. Coach status is a permission modifier on Engineer, resolved from the data; users with coachees see extra surfaces in the same sidebar, not a separate persona.
+
+| Situation | Lands on |
 |---|---|
-| Engineer (no coach hat) | `/dashboard` — "Your next session" + "Your AI level" |
-| Coach | `/coach/coachees` if any coachee is unassigned this cycle, else `/dashboard` |
-| BG Manager / MD | `/insights/completion` |
+| Engineer with 0 coachees | `/dashboard` — "Your next session" + "Your AI level" |
+| Engineer with coachees, cycle in pairing window | `/coach/approve-pairings` — one row per coachee, system-proposed reviewer + reason + override |
+| Engineer with coachees, cycle mid-flight (sessions running) | `/dashboard` with Coachees nav item visible |
 | Admin | `/admin/cycles` (most recent cycle) |
 
-A user with multiple hats lands on the most action-demanding view (unassigned coachees > pending feedback > dashboard).
+A user with multiple hats lands on the most action-demanding view (pairings to approve > pending feedback > dashboard). BG manager / MD readers are served by an admin-generated quarterly CSV, not an in-app landing — they no longer have a dedicated landing target.
 
 ---
 
@@ -64,7 +67,8 @@ Checklist — each row is a single screen a downstream agent can take.
 - [ ] **SessionDetail** — `/sessions/[id]` — engineer — Single assignment view: counterpart, status, schedule, prep notes, feedback CTA.
 - [ ] **FeedbackForm** — `/sessions/[id]/feedback` — engineer — Role-aware feedback form (reviewer or reviewee variant).
 - [ ] **ProfileScreen** — `/profile` — engineer — AI level, history timeline.
-- [ ] **CoachCoacheeRoster** — `/coach/coachees` — coach — Table of coachees with level, status, action.
+- [ ] **ApprovePairings** — `/coach/approve-pairings` — coach — Primary coach surface during the pairing window: one row per coachee, system-proposed reviewer + reason chips + override.
+- [ ] **CoachCoacheeRoster** — `/coach/coachees` — coach — Browsing view of coachees with level, status, action.
 - [ ] **CoacheeDetail** — `/coach/coachees/[id]` — coach — Coachee profile + reviewer suggestion panel + record-pairing action.
 - [ ] **AssignmentRecorder** — modal off CoacheeDetail — coach — Confirm pairing already agreed out-of-band.
 - [ ] **InsightsCompletion** — `/insights/completion` — BG/MD — Completion rate by BG/project/cycle.
@@ -98,11 +102,11 @@ Checklist — each row is a single screen a downstream agent can take.
 2. Server resolves role from imported data; if level is `unverified`, the engineer's profile and dashboard surface a banner explaining they are excluded from matching until their coach records a level in the next AI Skill Check-in.
 3. Land on role-appropriate home (see §1).
 
-### Flow B — Coach assigns a reviewer
-1. `CoachCoacheeRoster` → click coachee row.
-2. `CoacheeDetail` → `ReviewerSuggestionPanel` lists top 5 ranked candidates with reasons.
-3. Coach picks one (or searches via `ReviewerSearchDialog`) → confirms in `AssignmentRecorder` (note: pairing already agreed out-of-band).
-4. Assignment created; both parties get email; row in roster moves to `Assigned`.
+### Flow B — Coach approves cycle pairings
+1. Lands on `ApprovePairings` during the pairing window — one row per coachee with a system-proposed reviewer and reason chips.
+2. Approve all in one click, approve per row, or click `Override` on a row → opens a chooser with the top-5 ranked candidates plus search.
+3. Once all rows are approved or auto-pair fires, both parties get email and rows move to `Assigned`.
+4. `CoacheeDetail` remains available for deeper context on any individual row.
 
 ### Flow C — Auto-pair sweep (T-7 days before cycle end)
 1. Cron creates assignments for all unassigned coachees using top-1 scoring.
